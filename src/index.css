@@ -86,15 +86,16 @@
   .nav-link-reveal {
     overflow: hidden;
     position: relative;
-    padding: 0.5rem 0;
-    /* Add padding to prevent clipping */
+    padding: 2rem 0;
+    line-height: 1.2;
+    margin: -1rem 0;
   }
 
   .nav-link-text {
-    display: block;
-    transform: translateY(110%);
-    /* Start slightly lower */
-    transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    align-items: center;
+    transform: translateY(130%);
+    transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .menu-overlay.is-open .nav-link-text {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Menu, X, ArrowUpRight, Instagram, Linkedin, Twitter } from 'lucide-react';
+import { ArrowUpRight, Instagram, Linkedin, Twitter } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
 export default function Navbar() {
@@ -65,13 +65,13 @@ export default function Navbar() {
       <div className={`menu-overlay fixed inset-0 z-[50] bg-dark-950/98 backdrop-blur-3xl flex flex-col pt-32 md:pt-48 px-6 sm:px-20 ${isOpen ? 'is-open' : ''}`}>
         <div className="max-w-7xl mx-auto w-full flex flex-col lg:flex-row justify-between h-full pb-20">
 
-          <div className="flex flex-col space-y-4 md:space-y-6 lg:space-y-8">
+          <div className="flex flex-col space-y-2 md:space-y-6 lg:space-y-8">
             {navLinks.map((link, idx) => (
-              <div key={link.title} className="nav-link-reveal group">
+              <div key={link.title} className="nav-link-reveal group py-2">
                 {link.path.startsWith('/#') ? (
                   <a
                     href={link.path}
-                    className="nav-link-text block text-5xl sm:text-7xl lg:text-[90px] font-bold font-display text-white/40 hover:text-white transition-all duration-700 hover:translate-x-6 flex items-center gap-6"
+                    className="nav-link-text block text-5xl sm:text-7xl lg:text-[85px] font-bold font-display text-white/40 hover:text-white transition-all duration-700 hover:translate-x-6 flex items-center gap-6"
                     style={{ transitionDelay: `${0.1 + idx * 0.05}s` }}
                     onClick={() => setIsOpen(false)}
                   >
@@ -81,7 +81,7 @@ export default function Navbar() {
                 ) : (
                   <Link
                     to={link.path}
-                    className="nav-link-text block text-5xl sm:text-7xl lg:text-[90px] font-bold font-display text-white/40 hover:text-white transition-all duration-700 hover:translate-x-6 flex items-center gap-6"
+                    className="nav-link-text block text-5xl sm:text-7xl lg:text-[85px] font-bold font-display text-white/40 hover:text-white transition-all duration-700 hover:translate-x-6 flex items-center gap-6"
                     style={{ transitionDelay: `${0.1 + idx * 0.05}s` }}
                   >
                     {link.title}
@@ -92,7 +92,7 @@ export default function Navbar() {
             ))}
           </div>
 
-          <div className="mt-20 lg:mt-0 flex flex-col justify-end space-y-12 mb-20 lg:mb-10 text-center lg:text-left">
+          <div className="mt-16 lg:mt-0 flex flex-col justify-end space-y-10 mb-20 lg:mb-10 text-center lg:text-left">
             <div className="space-y-6">
               <span className="text-[11px] uppercase tracking-[0.4em] text-white/20 font-bold block">Follow Us</span>
               <div className="flex justify-center lg:justify-start gap-8">
@@ -109,7 +109,7 @@ export default function Navbar() {
               </div>
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-6 border-l border-white/5 pl-8 md:border-0 md:pl-0">
               <span className="text-[11px] uppercase tracking-[0.4em] text-white/20 font-bold block">Get in Touch</span>
               <a href="mailto:hello@lovelli.com" className="block text-2xl lg:text-3xl font-bold text-white hover:text-primary-400 transition-colors">
                 hello@lovelli.com
