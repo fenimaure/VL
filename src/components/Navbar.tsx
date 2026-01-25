@@ -1,11 +1,29 @@
 import { useState, useEffect } from 'react';
 import { ArrowUpRight, Instagram, Linkedin, Twitter } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import { supabase } from '../lib/supabase';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [links, setLinks] = useState<Record<string, string>>({});
   const location = useLocation();
+
+  useEffect(() => {
+    async function fetchLinks() {
+      try {
+        const { data } = await supabase.from('footer_content').select('*');
+        const map: Record<string, string> = {};
+        data?.forEach((item: any) => map[item.key_name] = item.value);
+        setLinks(map);
+      } catch (e) {
+        console.error('Error fetching navbar links:', e);
+      }
+    }
+    fetchLinks();
+  }, []);
+
+  const contactEmail = links.contact_email || 'hello@lovelli.com';
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -68,7 +86,7 @@ export default function Navbar() {
               )
             ))}
             <a
-              href="#contact"
+              href={`mailto:${contactEmail}`}
               className="ml-4 px-6 py-2 border border-white/10 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-dark-950 transition-all duration-500"
             >
               Start Project
@@ -126,13 +144,12 @@ export default function Navbar() {
               <span className="text-[11px] uppercase tracking-[0.4em] text-white/20 font-bold block">Follow Us</span>
               <div className="flex justify-center lg:justify-start gap-8">
                 {[
-                  { icon: Instagram, label: 'IG' },
-                  { icon: Linkedin, label: 'LN' },
-                  { icon: Twitter, label: 'TW' }
-                ].map((social, idx) => (
-                  <a key={idx} href="#" className="text-white/60 hover:text-primary-400 transition-colors flex items-center gap-2 text-sm font-bold tracking-widest">
+                  { icon: Instagram, href: links.instagram_url },
+                  { icon: Linkedin, href: links.linkedin_url },
+                  { icon: Twitter, href: links.twitter_url }
+                ].filter(s => s.href).map((social, idx) => (
+                  <a key={idx} href={social.href} target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-primary-400 transition-colors flex items-center gap-2 text-sm font-bold tracking-widest">
                     <social.icon className="h-5 w-5" />
-                    {social.label}
                   </a>
                 ))}
               </div>
@@ -140,8 +157,8 @@ export default function Navbar() {
 
             <div className="space-y-6">
               <span className="text-[11px] uppercase tracking-[0.4em] text-white/20 font-bold block">Get in Touch</span>
-              <a href="mailto:hello@lovelli.com" className="block text-2xl lg:text-3xl font-bold text-white hover:text-primary-400 transition-colors">
-                hello@lovelli.com
+              <a href={`mailto:${contactEmail}`} className="block text-2xl lg:text-3xl font-bold text-white hover:text-primary-400 transition-colors">
+                {contactEmail}
               </a>
             </div>
           </div>

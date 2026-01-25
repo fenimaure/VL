@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
-import { Save, Loader2, Linkedin, Youtube, Facebook, Instagram } from 'lucide-react';
+import { Save, Loader2, Linkedin, Youtube, Facebook, Instagram, Twitter, Mail } from 'lucide-react';
 
 const TikTokIcon = ({ className }: { className?: string }) => (
     <svg className={className} viewBox="0 0 24 24" fill="currentColor">
@@ -42,7 +42,7 @@ export default function FooterManager() {
 
             const { error } = await supabase.from('footer_content').upsert(updates, { onConflict: 'key_name' });
             if (error) throw error;
-            alert('Footer links saved!');
+            alert('Settings saved!');
         } catch (error) {
             console.error(error);
             alert('Failed to save');
@@ -58,11 +58,13 @@ export default function FooterManager() {
     if (loading) return <div>Loading...</div>;
 
     const socialFields = [
+        { key: 'contact_email', label: 'Contact Email', icon: Mail },
         { key: 'linkedin_url', label: 'LinkedIn URL', icon: Linkedin },
+        { key: 'twitter_url', label: 'Twitter URL', icon: Twitter },
+        { key: 'instagram_url', label: 'Instagram URL', icon: Instagram },
+        { key: 'facebook_url', label: 'Facebook URL', icon: Facebook },
         { key: 'youtube_url', label: 'YouTube URL', icon: Youtube },
         { key: 'tiktok_url', label: 'TikTok URL', icon: TikTokIcon },
-        { key: 'facebook_url', label: 'Facebook URL', icon: Facebook },
-        { key: 'instagram_url', label: 'Instagram URL', icon: Instagram },
     ];
 
     return (

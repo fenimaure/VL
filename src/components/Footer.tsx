@@ -1,4 +1,4 @@
-import { Linkedin, Facebook, Instagram, ArrowUpRight } from 'lucide-react';
+import { Linkedin, Facebook, Instagram, Twitter, ArrowUpRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { Link } from 'react-router-dom';
@@ -26,6 +26,8 @@ export default function Footer() {
     fetchLinks();
   }, []);
 
+  const contactEmail = links.contact_email || 'hello@lovelli.com';
+
   return (
     <footer className="bg-dark-950 pt-40 pb-20 relative overflow-hidden text-white mt-20">
       <div className="absolute inset-0 bg-primary-500/5 blur-[120px] rounded-full pointer-events-none -bottom-1/2"></div>
@@ -33,7 +35,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
         {/* Massive CTA Section */}
         <div className="mb-40 group cursor-pointer border-b border-white/10 pb-20">
-          <a href="#contact" className="block">
+          <a href={`mailto:${contactEmail}`} className="block">
             <div className="flex items-center gap-4 mb-8">
               <span className="w-12 h-[1px] bg-primary-500"></span>
               <span className="text-primary-500 font-bold tracking-[0.3em] text-xs uppercase">Get Started</span>
@@ -62,6 +64,7 @@ export default function Footer() {
             <div className="flex gap-6">
               {[
                 { Icon: Linkedin, href: links.linkedin_url || '#' },
+                { Icon: Twitter, href: links.twitter_url || '#' },
                 { Icon: TikTokIcon, href: links.tiktok_url || '#' },
                 { Icon: Facebook, href: links.facebook_url || '#' },
                 { Icon: Instagram, href: links.instagram_url || '#' }
@@ -69,6 +72,8 @@ export default function Footer() {
                 <a
                   key={index}
                   href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-white/40 hover:text-white transition-colors"
                 >
                   <Icon className="h-5 w-5" />
@@ -104,8 +109,8 @@ export default function Footer() {
             <div className="col-span-2 md:col-span-1">
               <span className="footer-section-label">Contact</span>
               <div className="space-y-6">
-                <a href="mailto:hello@lovelli.com" className="block text-xl md:text-2xl font-bold hover:text-primary-500 transition-colors underline underline-offset-8">
-                  hello@lovelli.com
+                <a href={`mailto:${contactEmail}`} className="block text-xl md:text-2xl font-bold hover:text-primary-500 transition-colors underline underline-offset-8">
+                  {contactEmail}
                 </a>
                 <p className="text-white/40 font-light max-w-[15ch]">
                   Global Reach. <br />

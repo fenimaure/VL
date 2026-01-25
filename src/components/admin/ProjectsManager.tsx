@@ -21,6 +21,7 @@ interface Project {
 
 export default function ProjectsManager() {
     const [projects, setProjects] = useState<Project[]>([]);
+    const [services, setServices] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [editing, setEditing] = useState<Project | null>(null);
     const [isNew, setIsNew] = useState(false);
@@ -29,20 +30,23 @@ export default function ProjectsManager() {
     const [formData, setFormData] = useState<Partial<Project>>({});
 
     useEffect(() => {
-        fetchProjects();
+        fetchData();
     }, []);
 
-    async function fetchProjects() {
+    async function fetchData() {
         try {
-            const { data, error } = await supabase
-                .from('projects')
-                .select('*')
-                .order('created_at', { ascending: false });
+            const [projectsRes, servicesRes] = await Promise.all([
+                supabase.from('projects').select('*').order('created_at', { ascending: false }),
+                supabase.from('services').select('title').order('title', { ascending: true })
+            ]);
 
-            if (error) throw error;
-            setProjects(data || []);
+            if (projectsRes.error) throw projectsRes.error;
+            if (servicesRes.error) throw servicesRes.error;
+
+            setProjects(projectsRes.data || []);
+            setServices(servicesRes.data || []);
         } catch (error) {
-            console.error('Error fetching projects:', error);
+            console.error('Error fetching data:', error);
         } finally {
             setLoading(false);
         }
@@ -55,8 +59,9 @@ export default function ProjectsManager() {
     }
 
     function handleAddNew() {
+        const defaultCategory = services.length > 0 ? services[0].title : 'General';
         setEditing({ id: '', title: '', category: '', description: '', image_url: '', tags: [], slug: '', content: '', client: '', duration: '', role: '', live_url: '', is_featured: false });
-        setFormData({ title: '', category: 'Web Development', description: '', image_url: '', tags: [], slug: '', content: '', client: '', duration: '', role: '', live_url: '', is_featured: false });
+        setFormData({ title: '', category: defaultCategory, description: '', image_url: '', tags: [], slug: '', content: '', client: '', duration: '', role: '', live_url: '', is_featured: false });
         setIsNew(true);
     }
 
@@ -86,7 +91,7 @@ export default function ProjectsManager() {
                 if (error) throw error;
             }
             setEditing(null);
-            fetchProjects();
+            fetchData();
         } catch (error) {
             console.error('Error saving project:', error);
             alert('Failed to save project');
@@ -98,7 +103,7 @@ export default function ProjectsManager() {
         try {
             const { error } = await supabase.from('projects').delete().eq('id', id);
             if (error) throw error;
-            fetchProjects();
+            fetchData();
         } catch (error) {
             console.error('Error deleting project:', error);
         }
@@ -144,16 +149,17 @@ export default function ProjectsManager() {
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm text-gray-400 mb-1">Category</label>
+                                        <label className="block text-sm text-gray-400 mb-1">Category (Linked to Services)</label>
                                         <select
                                             value={formData.category || ''}
                                             onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                                             className="w-full bg-dark-950 border border-white/10 rounded-lg px-4 py-2 text-white focus:border-primary-500 outline-none"
+                                            required
                                         >
-                                            <option value="Web Development">Web Development</option>
-                                            <option value="Mobile Development">Mobile Development</option>
-                                            <option value="Design">Design</option>
-                                            <option value="Consulting">Consulting</option>
+                                            {services.map(s => (
+                                                <option key={s.title} value={s.title}>{s.title}</option>
+                                            ))}
+                                            {services.length === 0 && <option value="General">No services found - using General</option>}
                                         </select>
                                     </div>
                                 </div>
