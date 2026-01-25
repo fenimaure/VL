@@ -61,11 +61,7 @@ export default function FeaturedProjects() {
   }, [loading, projects]);
 
   if (loading && projects.length === 0) {
-    return (
-      <section className="py-40 bg-dark-950 flex items-center justify-center">
-        <div className="w-12 h-12 border-2 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
-      </section>
-    );
+    return null;
   }
 
   return (

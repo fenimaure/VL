@@ -79,10 +79,7 @@ export default function Blog() {
             <section className="pb-40 relative">
                 <div className="max-w-7xl mx-auto px-6 lg:px-8">
                     {loading ? (
-                        <div className="text-center py-20 flex flex-col items-center gap-4">
-                            <div className="w-12 h-12 border-2 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
-                            <p className="text-gray-500 font-mono text-sm tracking-widest uppercase">Archiving...</p>
-                        </div>
+                        null
                     ) : posts.length > 0 ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                             {posts.map((post) => (

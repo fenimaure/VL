@@ -88,8 +88,8 @@ export default function Projects() {
                                 key={category}
                                 onClick={() => setSelectedCategory(category)}
                                 className={`px-4 py-2 rounded-full font-medium transition-all duration-300 whitespace-nowrap ${selectedCategory === category
-                                        ? 'bg-primary-500 text-white'
-                                        : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10'
+                                    ? 'bg-primary-500 text-white'
+                                    : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10'
                                     }`}
                             >
                                 {category}
@@ -103,10 +103,7 @@ export default function Projects() {
             <section className="py-20 bg-dark-950">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     {loading ? (
-                        <div className="text-center py-20">
-                            <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-primary-500 border-r-transparent"></div>
-                            <p className="mt-4 text-gray-400">Loading projects...</p>
-                        </div>
+                        null
                     ) : filteredProjects.length === 0 ? (
                         <div className="text-center py-20">
                             <p className="text-xl text-gray-400">No projects found in this category.</p>

@@ -125,10 +125,7 @@ export default function Careers() {
                     </div>
 
                     {loading ? (
-                        <div className="text-center py-20 flex flex-col items-center gap-4">
-                            <div className="w-12 h-12 border-2 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
-                            <p className="text-gray-500 font-mono text-sm tracking-widest uppercase">Fetching Roles...</p>
-                        </div>
+                        null
                     ) : careers.length > 0 ? (
                         <div className="border-t border-white/10">
                             {careers.map((job) => (

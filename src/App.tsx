@@ -1,4 +1,6 @@
+import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 import Home from './pages/Home';
 import Login from './pages/admin/Login';
 import Dashboard from './pages/admin/Dashboard';
@@ -15,13 +17,25 @@ import Contact from './pages/Contact';
 import CustomCursor from './components/CustomCursor';
 import PageTransition from './components/PageTransition';
 import FloatingContact from './components/FloatingContact';
+import Preloader from './components/Preloader';
 
 function AppContent() {
   const location = useLocation();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <>
       <div className="noise-bg"></div>
+      <AnimatePresence mode="wait">
+        {loading && <Preloader key="preloader" />}
+      </AnimatePresence>
       <CustomCursor />
       <FloatingContact />
       <PageTransition>
