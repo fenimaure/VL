@@ -62,56 +62,56 @@ export default function Navbar() {
       </nav>
 
       {/* Full Screen Menu Overlay */}
-      <div className={`menu-overlay fixed inset-0 z-[50] bg-dark-950/95 backdrop-blur-3xl flex flex-col pt-40 px-6 sm:px-20 ${isOpen ? 'is-open' : ''}`}>
+      <div className={`menu-overlay fixed inset-0 z-[50] bg-dark-950/98 backdrop-blur-3xl flex flex-col pt-32 md:pt-48 px-6 sm:px-20 ${isOpen ? 'is-open' : ''}`}>
         <div className="max-w-7xl mx-auto w-full flex flex-col lg:flex-row justify-between h-full pb-20">
 
-          <div className="flex flex-col space-y-4 lg:space-y-6">
+          <div className="flex flex-col space-y-4 md:space-y-6 lg:space-y-8">
             {navLinks.map((link, idx) => (
               <div key={link.title} className="nav-link-reveal group">
                 {link.path.startsWith('/#') ? (
                   <a
                     href={link.path}
-                    className="nav-link-text block text-5xl sm:text-7xl lg:text-8xl font-bold font-display text-white/40 hover:text-white transition-all duration-500 hover:translate-x-4 flex items-center gap-4"
+                    className="nav-link-text block text-5xl sm:text-7xl lg:text-[90px] font-bold font-display text-white/40 hover:text-white transition-all duration-700 hover:translate-x-6 flex items-center gap-6"
                     style={{ transitionDelay: `${0.1 + idx * 0.05}s` }}
                     onClick={() => setIsOpen(false)}
                   >
                     {link.title}
-                    <ArrowUpRight className="h-8 w-8 opacity-0 group-hover:opacity-100 -translate-x-10 group-hover:translate-x-0 transition-all duration-500 text-primary-500" />
+                    <ArrowUpRight className="h-10 w-10 opacity-0 group-hover:opacity-100 -translate-x-10 group-hover:translate-x-0 transition-all duration-500 text-primary-500" />
                   </a>
                 ) : (
                   <Link
                     to={link.path}
-                    className="nav-link-text block text-5xl sm:text-7xl lg:text-8xl font-bold font-display text-white/40 hover:text-white transition-all duration-500 hover:translate-x-4 flex items-center gap-4"
+                    className="nav-link-text block text-5xl sm:text-7xl lg:text-[90px] font-bold font-display text-white/40 hover:text-white transition-all duration-700 hover:translate-x-6 flex items-center gap-6"
                     style={{ transitionDelay: `${0.1 + idx * 0.05}s` }}
                   >
                     {link.title}
-                    <ArrowUpRight className="h-8 w-8 opacity-0 group-hover:opacity-100 -translate-x-10 group-hover:translate-x-0 transition-all duration-500 text-primary-500" />
+                    <ArrowUpRight className="h-10 w-10 opacity-0 group-hover:opacity-100 -translate-x-10 group-hover:translate-x-0 transition-all duration-500 text-primary-500" />
                   </Link>
                 )}
               </div>
             ))}
           </div>
 
-          <div className="mt-20 lg:mt-0 flex flex-col justify-end space-y-12 mb-10">
-            <div className="space-y-4">
-              <span className="text-[10px] uppercase tracking-[0.4em] text-white/30 font-bold">Follow Us</span>
-              <div className="flex gap-6">
+          <div className="mt-20 lg:mt-0 flex flex-col justify-end space-y-12 mb-20 lg:mb-10 text-center lg:text-left">
+            <div className="space-y-6">
+              <span className="text-[11px] uppercase tracking-[0.4em] text-white/20 font-bold block">Follow Us</span>
+              <div className="flex justify-center lg:justify-start gap-8">
                 {[
                   { icon: Instagram, label: 'IG' },
                   { icon: Linkedin, label: 'LN' },
                   { icon: Twitter, label: 'TW' }
                 ].map((social, idx) => (
-                  <a key={idx} href="#" className="text-white hover:text-primary-400 transition-colors flex items-center gap-2 text-sm font-bold tracking-widest">
-                    <social.icon className="h-4 w-4" />
+                  <a key={idx} href="#" className="text-white/60 hover:text-primary-400 transition-colors flex items-center gap-2 text-sm font-bold tracking-widest">
+                    <social.icon className="h-5 w-5" />
                     {social.label}
                   </a>
                 ))}
               </div>
             </div>
 
-            <div className="space-y-4">
-              <span className="text-[10px] uppercase tracking-[0.4em] text-white/30 font-bold">Get in Touch</span>
-              <a href="mailto:hello@lovelli.com" className="block text-2xl font-bold text-white hover:text-primary-400 transition-colors">
+            <div className="space-y-6">
+              <span className="text-[11px] uppercase tracking-[0.4em] text-white/20 font-bold block">Get in Touch</span>
+              <a href="mailto:hello@lovelli.com" className="block text-2xl lg:text-3xl font-bold text-white hover:text-primary-400 transition-colors">
                 hello@lovelli.com
               </a>
             </div>
@@ -119,8 +119,8 @@ export default function Navbar() {
         </div>
 
         {/* Decorative Background Text */}
-        <div className="absolute bottom-0 right-0 p-10 select-none pointer-events-none opacity-[0.02] text-[20vw] font-black font-display leading-none whitespace-nowrap">
-          LOVELLI. LOVELLI.
+        <div className="absolute bottom-0 right-0 p-10 select-none pointer-events-none opacity-[0.015] text-[15vw] font-black font-display leading-[0.8] whitespace-nowrap">
+          LOVELLI.
         </div>
       </div>
     </>
