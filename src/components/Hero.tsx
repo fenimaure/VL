@@ -21,7 +21,13 @@ export default function Hero() {
     fetchHero();
   }, []);
 
-  if (loading) return null; // Prevent showing fallbacks while switching/loading
+  if (loading && !heroData) {
+    return (
+      <section className="relative min-h-screen flex items-center justify-center bg-dark-950 text-white overflow-hidden">
+        <div className="w-12 h-12 border-2 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
+      </section>
+    );
+  }
 
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center bg-dark-950 text-white overflow-hidden selection:bg-primary-500/30">

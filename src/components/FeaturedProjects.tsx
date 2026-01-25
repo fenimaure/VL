@@ -60,8 +60,13 @@ export default function FeaturedProjects() {
     return () => observer.disconnect();
   }, [loading, projects]);
 
-  if (loading) return null;
-  if (projects.length === 0) return null;
+  if (loading && projects.length === 0) {
+    return (
+      <section className="py-40 bg-dark-950 flex items-center justify-center">
+        <div className="w-12 h-12 border-2 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
+      </section>
+    );
+  }
 
   return (
     <section id="projects" className="py-40 bg-dark-950 relative overflow-hidden">

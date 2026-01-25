@@ -53,8 +53,13 @@ export default function Testimonials() {
     setActiveIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
   };
 
-  if (loading) return null;
-  if (testimonials.length === 0) return null;
+  if (loading && testimonials.length === 0) {
+    return (
+      <section className="py-40 bg-dark-950 flex items-center justify-center">
+        <div className="w-12 h-12 border-2 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
+      </section>
+    );
+  }
 
   const activeTestimonial = testimonials[activeIndex];
 

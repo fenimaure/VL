@@ -147,8 +147,13 @@ export default function Services() {
     navigate(`/services/${slug}`);
   };
 
-  if (loading) return null;
-  if (services.length === 0) return null;
+  if (loading && services.length === 0) {
+    return (
+      <section className="py-40 bg-dark-950 flex items-center justify-center">
+        <div className="w-12 h-12 border-2 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
+      </section>
+    );
+  }
 
   const cardWidth = 100 / cardsPerView;
   const translateX = -(currentIndex * cardWidth);
