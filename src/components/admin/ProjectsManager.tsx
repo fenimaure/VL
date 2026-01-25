@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
-import { Plus, Trash2, Edit2, X, Save, Image as ImageIcon, Link, RefreshCw } from 'lucide-react';
+import { Plus, Trash2, Edit2, X, Save, Image as ImageIcon, Link, RefreshCw, Upload, Loader2 } from 'lucide-react';
 
 interface Project {
     id: string;
@@ -25,6 +25,7 @@ export default function ProjectsManager() {
     const [loading, setLoading] = useState(true);
     const [editing, setEditing] = useState<Project | null>(null);
     const [isNew, setIsNew] = useState(false);
+    const [uploading, setUploading] = useState(false);
 
     // Form State
     const [formData, setFormData] = useState<Partial<Project>>({});
@@ -49,6 +50,36 @@ export default function ProjectsManager() {
             console.error('Error fetching data:', error);
         } finally {
             setLoading(false);
+        }
+    }
+
+    async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
+        try {
+            setUploading(true);
+            if (!e.target.files || e.target.files.length === 0) return;
+
+            const file = e.target.files[0];
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${Math.random()}.${fileExt}`;
+            const filePath = `projects/${fileName}`;
+
+            const { error: uploadError } = await supabase.storage
+                .from('assets')
+                .upload(filePath, file);
+
+            if (uploadError) throw uploadError;
+
+            const { data: { publicUrl } } = supabase.storage
+                .from('assets')
+                .getPublicUrl(filePath);
+
+            setFormData(prev => ({ ...prev, image_url: publicUrl }));
+            alert('Image uploaded successfully!');
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            alert('Error uploading image!');
+        } finally {
+            setUploading(false);
         }
     }
 
@@ -113,13 +144,19 @@ export default function ProjectsManager() {
 
     return (
         <div className="space-y-6">
-            <div className="flex justify-between items-center">
-                <h2 className="text-xl font-bold text-white">Manage Projects</h2>
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-dark-900/50 p-8 rounded-[2rem] border border-white/5 backdrop-blur-xl">
+                <div>
+                    <h2 className="text-3xl font-bold text-white font-display mb-2">Portfolio Management</h2>
+                    <p className="text-sm text-white/40 font-light uppercase tracking-widest">Active Exhibition: {projects.length} Works</p>
+                </div>
                 <button
                     onClick={handleAddNew}
-                    className="flex items-center gap-2 bg-primary-600 hover:bg-primary-500 text-white px-4 py-2 rounded-lg transition-colors"
+                    className="flex items-center gap-3 bg-white text-dark-950 px-8 py-4 rounded-full font-bold uppercase tracking-[0.2em] text-[10px] hover:scale-105 active:scale-95 transition-all shadow-xl shadow-white/10 group"
                 >
-                    <Plus className="h-4 w-4" /> Add Project
+                    <div className="bg-dark-950 rounded-full p-2 group-hover:rotate-90 transition-transform duration-500">
+                        <Plus className="h-4 w-4 text-white" />
+                    </div>
+                    Curate New Project
                 </button>
             </div>
 
@@ -175,21 +212,52 @@ export default function ProjectsManager() {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm text-gray-400 mb-1">Main Image URL</label>
-                                    <div className="flex gap-2">
-                                        <input
-                                            type="text"
-                                            value={formData.image_url || ''}
-                                            onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                                            className="w-full bg-dark-950 border border-white/10 rounded-lg px-4 py-2 text-white focus:border-primary-500 outline-none"
-                                            placeholder="https://..."
-                                        />
-                                        <div className="w-10 h-10 bg-dark-950 rounded flex items-center justify-center border border-white/10 overflow-hidden">
-                                            {formData.image_url ? (
-                                                <img src={formData.image_url} alt="Preview" className="w-full h-full object-cover" />
-                                            ) : (
-                                                <ImageIcon className="h-4 w-4 text-gray-600" />
-                                            )}
+                                    <label className="block text-sm text-gray-400 mb-1">Project Image</label>
+                                    <div className="flex flex-col gap-4">
+                                        <div className="flex gap-4">
+                                            <div className="flex-1">
+                                                <input
+                                                    type="text"
+                                                    value={formData.image_url || ''}
+                                                    onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
+                                                    className="w-full bg-dark-950 border border-white/10 rounded-lg px-4 py-2 text-white focus:border-primary-500 outline-none"
+                                                    placeholder="External URL (or upload below)"
+                                                />
+                                            </div>
+                                            <div className="w-12 h-12 bg-dark-950 rounded-xl flex items-center justify-center border border-white/10 overflow-hidden shrink-0">
+                                                {formData.image_url ? (
+                                                    <img src={formData.image_url} alt="Preview" className="w-full h-full object-cover" />
+                                                ) : (
+                                                    <ImageIcon className="h-5 w-5 text-gray-600" />
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        <div className="relative">
+                                            <input
+                                                type="file"
+                                                id="project-image-upload"
+                                                className="hidden"
+                                                accept="image/*"
+                                                onChange={handleUpload}
+                                                disabled={uploading}
+                                            />
+                                            <label
+                                                htmlFor="project-image-upload"
+                                                className={`flex items-center justify-center gap-3 w-full py-4 border-2 border-dashed border-white/10 rounded-2xl cursor-pointer hover:border-primary-500/50 hover:bg-white/5 transition-all duration-300 ${uploading ? 'opacity-50 pointer-events-none' : ''}`}
+                                            >
+                                                {uploading ? (
+                                                    <>
+                                                        <Loader2 className="h-5 w-5 animate-spin text-primary-500" />
+                                                        <span className="text-sm font-bold uppercase tracking-wider text-white/40">Uploading to Studio...</span>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <Upload className="h-5 w-5 text-primary-500" />
+                                                        <span className="text-sm font-bold uppercase tracking-wider text-white/40">Upload Direct Shot</span>
+                                                    </>
+                                                )}
+                                            </label>
                                         </div>
                                     </div>
                                 </div>

@@ -69,17 +69,50 @@ export default function Careers() {
                             Shape the <br />
                             <span className="text-stroke-white italic font-light">Digital</span> Era<span className="text-primary-500">.</span>
                         </h1>
-                        <p className="text-xl md:text-2xl text-gray-400 max-w-2xl leading-relaxed font-light">
+                        <p className="text-xl md:text-2xl text-gray-400 max-w-2xl leading-relaxed font-light mb-12">
                             We're a collective of designers, engineers, and visionaries redefining the boundaries of digital craft. Join us on the frontier.
                         </p>
                     </div>
                 </div>
             </section>
 
+            {/* Cinematic Agency Banner */}
+            <section className="px-6 lg:px-8 stagger-item mb-20">
+                <div className="max-w-[1600px] mx-auto">
+                    <div className="relative aspect-[21/9] rounded-[3rem] overflow-hidden border border-white/10 group shadow-2xl">
+                        {/* Immersive Overlays */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-dark-950 via-dark-950/20 to-transparent z-10 opacity-80"></div>
+                        <div className="absolute inset-0 bg-primary-500/5 mix-blend-overlay z-10"></div>
 
+                        <img
+                            src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=2000"
+                            alt="Agency Studio Culture"
+                            className="parallax-image w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-[6s] ease-out opacity-60 group-hover:opacity-100 transition-opacity"
+                        />
+
+                        {/* Banner Caption */}
+                        <div className="absolute bottom-12 left-12 z-20 flex flex-col md:flex-row md:items-end justify-between right-12 gap-8">
+                            <div>
+                                <div className="flex items-center gap-4 mb-4">
+                                    <div className="h-2 w-2 bg-primary-500 rounded-full animate-pulse"></div>
+                                    <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-white">Studio Sanctuary</span>
+                                </div>
+                                <h2 className="text-4xl md:text-7xl font-bold font-display text-white italic tracking-tighter shadow-text">The Art of <span className="text-stroke-white not-italic">Co</span>llaboration.</h2>
+                            </div>
+
+                            <div className="glass-card px-8 py-4 rounded-2xl border border-white/10 backdrop-blur-xl">
+                                <span className="block text-[8px] font-bold uppercase tracking-widest text-primary-500 mb-2">Location Status</span>
+                                <p className="text-xs font-bold text-white uppercase tracking-widest flex items-center gap-2">
+                                    Manila Studios <span className="h-1.5 w-1.5 bg-green-500 rounded-full animate-pulse"></span> Open
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
             {/* Job Openings - Minimalist Elite Style */}
-            <section className="py-40 relative">
+            <section className="py-20 relative">
                 <div className="max-w-7xl mx-auto px-6 lg:px-8">
                     <div className="flex flex-col md:flex-row md:items-end justify-between mb-24 gap-8 stagger-item">
                         <div>

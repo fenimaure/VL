@@ -1,7 +1,8 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, ArrowUpRight, Send, Mail, Globe, Clock, Sparkles } from 'lucide-react';
+import { ArrowLeft, Send, Globe, Clock, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { supabase } from '../lib/supabase';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
@@ -17,15 +18,43 @@ export default function Contact() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitted, setSubmitted] = useState(false);
 
-    const formRef = useRef<HTMLDivElement>(null);
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
-        // Simulate premium submission
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        setIsSubmitting(false);
-        setSubmitted(true);
+
+        try {
+            // Fetch the set contact email from Supabase
+            const { data } = await supabase.from('footer_content').select('value').eq('key_name', 'contact_email').single();
+            const targetEmail = data?.value || 'hello@lovelli.com';
+
+            // Simulate premium processing delay
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            // Construct professional email body
+            const subject = `New Project Brief: ${formData.service} - ${formData.name}`;
+            const body = `
+Digital Briefing Received:
+-------------------------
+Client Identity: ${formData.name}
+Digital Address: ${formData.email}
+Project Vector: ${formData.service}
+Investment Range: ${formData.budget}
+
+The Vision:
+${formData.message}
+            `.trim();
+
+            const mailtoUrl = `mailto:${targetEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+            // Open user's email client
+            window.location.href = mailtoUrl;
+
+            setIsSubmitting(false);
+            setSubmitted(true);
+        } catch (error) {
+            console.error('Submission error:', error);
+            setIsSubmitting(false);
+        }
     };
 
     const budgets = [

@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { ArrowUpRight, Plus } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface Project {
@@ -119,15 +119,9 @@ export default function FeaturedProjects() {
                   <img
                     src={project.image_url}
                     alt={project.title}
-                    className="parallax-image w-full h-full object-cover grayscale-[0.5] group-hover:grayscale-0 transition-all duration-700"
+                    className="parallax-image w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
                   />
 
-                  {/* Floating Action Button inside image */}
-                  <div className="absolute bottom-8 right-8 z-20 translate-y-20 group-hover:translate-y-0 transition-all duration-700 ease-out">
-                    <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-2xl">
-                      <Plus className="h-6 w-6 text-dark-950" />
-                    </div>
-                  </div>
                 </Link>
               </div>
 

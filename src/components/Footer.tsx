@@ -99,7 +99,7 @@ export default function Footer() {
             <div>
               <span className="footer-section-label">Expertise</span>
               <ul className="space-y-4">
-                {['Web Excellence', 'Design Language', 'Brand Strategy', 'Technical Architecture'].map((item) => (
+                {['Social Media Management', 'Brand Strategy', 'Virtual Assistance', 'Talent Acquisition'].map((item) => (
                   <li key={item} className="text-white/40 font-light text-lg italic tracking-wider">
                     {item}
                   </li>

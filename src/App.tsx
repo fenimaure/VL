@@ -14,6 +14,7 @@ import Contact from './pages/Contact';
 
 import CustomCursor from './components/CustomCursor';
 import PageTransition from './components/PageTransition';
+import FloatingContact from './components/FloatingContact';
 
 function AppContent() {
   const location = useLocation();
@@ -22,6 +23,7 @@ function AppContent() {
     <>
       <div className="noise-bg"></div>
       <CustomCursor />
+      <FloatingContact />
       <PageTransition>
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<Home />} />
