@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Home from './pages/Home';
 import Login from './pages/admin/Login';
 import Dashboard from './pages/admin/Dashboard';
@@ -12,25 +12,38 @@ import BlogPost from './pages/BlogPost';
 import About from './pages/About';
 
 import CustomCursor from './components/CustomCursor';
+import PageTransition from './components/PageTransition';
+
+function AppContent() {
+  const location = useLocation();
+
+  return (
+    <>
+      <div className="noise-bg"></div>
+      <CustomCursor />
+      <PageTransition>
+        <Routes location={location} key={location.pathname}>
+          <Route path="/" element={<Home />} />
+          <Route path="/admin" element={<Login />} />
+          <Route path="/admin/dashboard" element={<Dashboard />} />
+          <Route path="/services/:slug" element={<ServiceDetail />} />
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/projects/:slug" element={<ProjectDetail />} />
+          <Route path="/careers" element={<Careers />} />
+          <Route path="/careers/:slug" element={<CareerDetail />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/about" element={<About />} />
+        </Routes>
+      </PageTransition>
+    </>
+  );
+}
 
 function App() {
   return (
     <Router>
-      <div className="noise-bg"></div>
-      <CustomCursor />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/admin" element={<Login />} />
-        <Route path="/admin/dashboard" element={<Dashboard />} />
-        <Route path="/services/:slug" element={<ServiceDetail />} />
-        <Route path="/projects" element={<Projects />} />
-        <Route path="/projects/:slug" element={<ProjectDetail />} />
-        <Route path="/careers" element={<Careers />} />
-        <Route path="/careers/:slug" element={<CareerDetail />} />
-        <Route path="/blog" element={<Blog />} />
-        <Route path="/blog/:slug" element={<BlogPost />} />
-        <Route path="/about" element={<About />} />
-      </Routes>
+      <AppContent />
     </Router>
   );
 }
