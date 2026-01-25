@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { motion, useSpring, useMotionValue } from 'framer-motion';
 
 export default function CustomCursor() {
-    const [isVisible, setIsVisible] = useState(false);
     const [isHovering, setIsHovering] = useState(false);
 
     const cursorX = useMotionValue(-100);
@@ -18,30 +17,26 @@ export default function CustomCursor() {
             cursorY.set(e.clientY);
         };
 
-        const handleMouseEnter = () => setIsVisible(true);
-        const handleMouseLeave = () => setIsVisible(false);
-
-        window.addEventListener('mousemove', moveCursor);
-        window.addEventListener('mouseover', (e: any) => {
+        const handleMouseOver = (e: MouseEvent) => {
             const target = e.target as HTMLElement;
-            setIsHovering(
+            const isInteractive = !!(
                 target.tagName === 'A' ||
                 target.tagName === 'BUTTON' ||
                 target.closest('button') ||
                 target.closest('a') ||
                 target.classList.contains('cursor-pointer')
             );
-        });
+            setIsHovering(isInteractive);
+        };
 
-        document.body.addEventListener('mouseenter', handleMouseEnter);
-        document.body.addEventListener('mouseleave', handleMouseLeave);
+        window.addEventListener('mousemove', moveCursor);
+        window.addEventListener('mouseover', handleMouseOver);
 
         return () => {
             window.removeEventListener('mousemove', moveCursor);
-            document.body.removeEventListener('mouseenter', handleMouseEnter);
-            document.body.removeEventListener('mouseleave', handleMouseLeave);
+            window.removeEventListener('mouseover', handleMouseOver);
         };
-    }, []);
+    }, [cursorX, cursorY]);
 
     if (typeof window === 'undefined') return null;
 

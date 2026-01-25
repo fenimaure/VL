@@ -85,12 +85,12 @@ export default function Navbar() {
                 </Link>
               )
             ))}
-            <a
-              href={`mailto:${contactEmail}`}
+            <Link
+              to="/contact"
               className="ml-4 px-6 py-2 border border-white/10 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-dark-950 transition-all duration-500"
             >
               Start Project
-            </a>
+            </Link>
           </div>
 
           {/* Modern Menu Button (Mobile/Tablet Only) */}

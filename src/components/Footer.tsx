@@ -35,7 +35,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
         {/* Massive CTA Section */}
         <div className="mb-40 group cursor-pointer border-b border-white/10 pb-20">
-          <a href={`mailto:${contactEmail}`} className="block">
+          <Link to="/contact" className="block">
             <div className="flex items-center gap-4 mb-8">
               <span className="w-12 h-[1px] bg-primary-500"></span>
               <span className="text-primary-500 font-bold tracking-[0.3em] text-xs uppercase">Get Started</span>
@@ -49,7 +49,7 @@ export default function Footer() {
                 <ArrowUpRight className="h-16 w-16 md:h-24 md:w-24 text-white group-hover:text-dark-950 transition-colors" />
               </div>
             </div>
-          </a>
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-20 mb-40">
