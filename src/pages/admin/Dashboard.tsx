@@ -2,9 +2,11 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
     LogOut, LayoutGrid, FileText, BookOpen, Briefcase,
-    BarChart3, Plus, Star, Search, Bell, Info, Settings
+    BarChart3, Plus, Star, Search, Bell, Info, Settings,
+    Menu, X, ChevronLeft, ChevronRight
 } from 'lucide-react';
 
 import ProjectsManager from '../../components/admin/ProjectsManager';
@@ -22,6 +24,8 @@ export default function Dashboard() {
     const [user, setUser] = useState<any>(null);
     const [activeModule, setActiveModule] = useState<ModuleType>('Overview');
     const [stats, setStats] = useState({ projects: 0, blogs: 0, careers: 0, services: 0 });
+    const [isCollapsed, setIsCollapsed] = useState(false);
+    const [isMobileOpen, setIsMobileOpen] = useState(false);
 
     useEffect(() => {
         supabase.auth.getUser().then(({ data: { user } }) => {
@@ -64,76 +68,172 @@ export default function Dashboard() {
 
     if (!user) return null;
 
-    return (
-        <div className="flex h-screen bg-dark-950 text-white overflow-hidden font-sans selection:bg-primary-500/30">
-            {/* Sidebar */}
-            <aside className="w-64 bg-dark-900/50 border-r border-white/5 flex flex-col backdrop-blur-xl z-20">
-                <div className="p-6 flex items-center gap-2 border-b border-white/5 h-20">
-                    <div className="h-8 w-8 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-lg flex items-center justify-center font-bold text-white shadow-lg shadow-primary-500/20">L</div>
-                    <span className="font-display font-bold text-xl tracking-tight">Admin<span className="text-gray-500">Panel</span></span>
+    const SidebarContent = () => (
+        <>
+            <div className={`p-6 flex items-center justify-between border-b border-white/5 h-20 overflow-hidden`}>
+                <div className="flex items-center gap-3">
+                    <div className="h-9 w-9 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-xl flex items-center justify-center font-bold text-white shadow-lg shadow-primary-500/30 shrink-0">L</div>
+                    {!isCollapsed && (
+                        <motion.span
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            className="font-display font-bold text-xl tracking-tight whitespace-nowrap"
+                        >
+                            Admin<span className="text-gray-500">Panel</span>
+                        </motion.span>
+                    )}
                 </div>
+                {/* Desktop Toggle Button */}
+                <button
+                    onClick={() => setIsCollapsed(!isCollapsed)}
+                    className="hidden lg:flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 text-gray-400 hover:text-white hover:bg-white/10 transition-all border border-white/5"
+                >
+                    {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+                </button>
+                {/* Mobile Close Button */}
+                <button
+                    onClick={() => setIsMobileOpen(false)}
+                    className="lg:hidden h-8 w-8 flex items-center justify-center rounded-lg bg-white/5 text-gray-400 hover:text-white"
+                >
+                    <X className="h-5 w-5" />
+                </button>
+            </div>
 
-                <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-                    <p className="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 mt-2">Main Menu</p>
-                    {modules.map((m) => {
-                        const Icon = m.icon;
-                        const isActive = activeModule === m.id;
-                        return (
-                            <button
-                                key={m.id}
-                                onClick={() => setActiveModule(m.id as ModuleType)}
-                                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${isActive
-                                    ? 'bg-primary-500/10 text-primary-400 font-medium'
-                                    : 'text-gray-400 hover:bg-white/5 hover:text-white'
-                                    }`}
-                            >
-                                <Icon className={`h-5 w-5 ${isActive ? 'text-primary-400' : 'text-gray-500 group-hover:text-white'}`} />
-                                {m.label}
-                                {m.id === 'Overview' && <span className="ml-auto w-2 h-2 rounded-full bg-primary-500"></span>}
-                            </button>
-                        );
-                    })}
-                </nav>
+            <nav className="flex-1 p-4 space-y-1 overflow-y-auto scrollbar-hide">
+                <p className={`px-4 text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em] mb-4 mt-2 ${isCollapsed ? 'text-center opacity-0 h-0 overflow-hidden' : ''}`}>Main Menu</p>
+                {modules.map((m) => {
+                    const Icon = m.icon;
+                    const isActive = activeModule === m.id;
+                    return (
+                        <button
+                            key={m.id}
+                            onClick={() => {
+                                setActiveModule(m.id as ModuleType);
+                                if (window.innerWidth < 1024) setIsMobileOpen(false);
+                            }}
+                            title={isCollapsed ? m.label : ''}
+                            className={`w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 group relative ${isActive
+                                ? 'bg-primary-500/10 text-primary-400 font-bold'
+                                : 'text-gray-400 hover:bg-white/5 hover:text-white'
+                                }`}
+                        >
+                            <Icon className={`h-5 w-5 shrink-0 transition-transform duration-300 ${isActive ? 'text-primary-400 scale-110' : 'text-gray-500 group-hover:text-white group-hover:scale-110'}`} />
+                            {!isCollapsed && (
+                                <motion.span
+                                    initial={{ opacity: 0, x: -10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    className="whitespace-nowrap"
+                                >
+                                    {m.label}
+                                </motion.span>
+                            )}
+                            {isActive && <motion.div layoutId="active-pill" className="absolute left-0 w-1 h-6 bg-primary-500 rounded-full" />}
+                            {m.id === 'Overview' && !isCollapsed && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-primary-500 shadow-glow"></span>}
+                        </button>
+                    );
+                })}
+            </nav>
 
-                <div className="p-4 border-t border-white/5">
-                    <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5 mb-3">
-                        <div className="h-9 w-9 rounded-full bg-gradient-to-br from-gray-700 to-gray-600 flex items-center justify-center text-xs font-bold">
+            <div className="p-4 border-t border-white/5 bg-dark-900/40">
+                {!isCollapsed ? (
+                    <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="flex items-center gap-3 p-3 rounded-2xl bg-white/5 border border-white/5 mb-4 group hover:border-primary-500/30 transition-all cursor-pointer"
+                    >
+                        <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center text-xs font-black shadow-inner">
                             {user.email?.[0].toUpperCase()}
                         </div>
                         <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-white truncate">Admin Account</p>
-                            <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                            <p className="text-sm font-bold text-white truncate">Admin</p>
+                            <p className="text-[10px] text-gray-500 truncate uppercase tracking-widest">{user.email}</p>
+                        </div>
+                    </motion.div>
+                ) : (
+                    <div className="flex justify-center mb-4">
+                        <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center text-xs font-black shadow-inner cursor-pointer hover:border hover:border-primary-500/30">
+                            {user.email?.[0].toUpperCase()}
                         </div>
                     </div>
-                    <button
-                        onClick={handleLogout}
-                        className="w-full flex items-center justify-center gap-2 p-2 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors text-sm font-medium"
-                    >
-                        <LogOut className="h-4 w-4" /> Sign Out
-                    </button>
-                </div>
-            </aside>
+                )}
+                <button
+                    onClick={handleLogout}
+                    className={`w-full flex items-center justify-center gap-3 py-3 text-red-400 hover:bg-red-500/10 rounded-xl transition-all duration-300 text-xs font-bold uppercase tracking-widest ${isCollapsed ? 'px-0' : ''}`}
+                >
+                    <LogOut className="h-4 w-4 shrink-0" /> {!isCollapsed && "Logout"}
+                </button>
+            </div>
+        </>
+    );
+
+    return (
+        <div className="flex h-screen bg-dark-950 text-white overflow-hidden font-sans selection:bg-primary-500/30">
+            {/* Desktop Sidebar (Collapsible) */}
+            <motion.aside
+                initial={false}
+                animate={{ width: isCollapsed ? 100 : 280 }}
+                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                className="hidden lg:flex flex-col bg-dark-900/50 border-r border-white/5 backdrop-blur-2xl relative z-30"
+            >
+                <SidebarContent />
+            </motion.aside>
+
+            {/* Mobile Sidebar (Drawer) */}
+            <AnimatePresence>
+                {isMobileOpen && (
+                    <>
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setIsMobileOpen(false)}
+                            className="fixed inset-0 bg-black/80 backdrop-blur-md z-[60] lg:hidden"
+                        />
+                        <motion.aside
+                            initial={{ x: '-100%' }}
+                            animate={{ x: 0 }}
+                            exit={{ x: '-100%' }}
+                            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                            className="fixed top-0 left-0 bottom-0 w-80 bg-dark-900 z-[70] flex flex-col border-r border-white/10 lg:hidden shadow-2xl"
+                        >
+                            <SidebarContent />
+                        </motion.aside>
+                    </>
+                )}
+            </AnimatePresence>
+
 
             {/* Main Content */}
             <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-gradient-to-br from-dark-950 to-dark-900">
                 {/* Header */}
-                <header className="h-20 border-b border-white/5 flex items-center justify-between px-8 bg-dark-950/50 backdrop-blur-sm z-10 sticky top-0">
-                    <h2 className="text-xl font-bold text-white font-display">
-                        {activeModule === 'Overview' ? 'Dashboard Overview' : `Manage ${activeModule}`}
-                    </h2>
+                <header className="h-20 border-b border-white/5 flex items-center justify-between px-6 md:px-8 bg-dark-950/50 backdrop-blur-sm z-10 sticky top-0">
                     <div className="flex items-center gap-4">
-                        <div className="relative hidden md:block group">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 group-focus-within:text-primary-400 transition-colors" />
+                        <button
+                            onClick={() => setIsMobileOpen(true)}
+                            className="lg:hidden p-2 -ml-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-all"
+                        >
+                            <Menu className="h-6 w-6" />
+                        </button>
+                        <h2 className="text-xl font-bold text-white font-display tracking-tight">
+                            {activeModule === 'Overview' ? 'Dashboard Overview' : `${activeModule}`}
+                        </h2>
+                    </div>
+
+                    <div className="flex items-center gap-3 md:gap-6">
+                        <div className="relative hidden sm:block group">
+                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 group-focus-within:text-primary-400 transition-colors" />
                             <input
                                 type="text"
-                                placeholder="Search..."
-                                className="bg-dark-900 border border-white/10 rounded-full pl-10 pr-4 py-2 text-sm text-white focus:outline-none focus:border-primary-500/50 focus:ring-1 focus:ring-primary-500/50 w-64 transition-all"
+                                placeholder="Search modules..."
+                                className="bg-dark-900/50 border border-white/10 rounded-2xl pl-11 pr-4 py-2 text-sm text-white focus:outline-none focus:border-primary-500/50 focus:ring-1 focus:ring-primary-500/50 w-40 md:w-64 transition-all placeholder:text-gray-600"
                             />
                         </div>
-                        <button className="p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-full relative">
-                            <Bell className="h-5 w-5" />
-                            <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-dark-950"></span>
-                        </button>
+                        <div className="flex items-center gap-2">
+                            <button className="p-2.5 text-gray-400 hover:text-white hover:bg-white/5 rounded-2xl relative transition-all border border-white/5">
+                                <Bell className="h-5 w-5" />
+                                <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-primary-500 rounded-full border-2 border-dark-950 shadow-glow"></span>
+                            </button>
+                        </div>
                     </div>
                 </header>
 

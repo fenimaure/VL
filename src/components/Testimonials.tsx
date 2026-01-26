@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { Quote, ChevronLeft, ChevronRight, Star } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Star } from 'lucide-react';
 
 interface Testimonial {
   id: string;
@@ -54,94 +54,100 @@ export default function Testimonials() {
   };
 
   if (loading && testimonials.length === 0) {
-    return (
-      <section className="py-40 bg-dark-950 flex items-center justify-center">
-        <div className="w-12 h-12 border-2 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
-      </section>
-    );
+    return null;
   }
 
   const activeTestimonial = testimonials[activeIndex];
 
   return (
     <section id="testimonials" className="py-40 bg-dark-950 relative overflow-hidden text-white">
-      {/* Background Decor */}
-      <div className="absolute top-[20%] left-[-10%] w-[500px] h-[500px] bg-primary-500/5 blur-[150px] rounded-full pointer-events-none"></div>
+      {/* Immersive Background Blur */}
+      <div className="absolute top-[20%] right-[-10%] w-[600px] h-[600px] bg-primary-500/10 blur-[180px] rounded-full pointer-events-none opacity-30"></div>
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-24 gap-8">
           <div className="max-w-2xl stagger-item">
             <div className="flex items-center gap-3 mb-6">
               <span className="w-12 h-[1px] bg-primary-500"></span>
-              <span className="text-primary-500 font-bold tracking-[0.3em] text-xs uppercase">Kind Words</span>
+              <span className="text-primary-500 font-bold tracking-[0.4em] text-[10px] uppercase">Appreciation</span>
             </div>
-            <h2 className="text-5xl lg:text-7xl font-bold font-display mb-8 leading-none">
-              <span className="text-white">Client </span>
-              <span className="text-white/20 italic">Voices</span>
+            <h2 className="text-6xl lg:text-8xl font-bold font-display leading-[0.8] tracking-tighter">
+              Kind <br />
+              <span className="text-stroke-white italic font-light">Words</span><span className="text-primary-500">.</span>
             </h2>
-            <p className="text-xl text-gray-400 leading-relaxed font-light max-w-lg">
-              Partnering with brands to create meaningful impact and lasting impressions.
-            </p>
           </div>
         </div>
 
         <div className="relative stagger-item">
-          {/* Main Card */}
-          <div className="relative bg-white/[0.02] border border-white/5 rounded-[2.5rem] p-10 md:p-20 overflow-hidden">
-            <Quote className="absolute top-12 left-12 h-16 w-16 text-primary-500/10" />
+          {/* Main Cinematic Card */}
+          <div className="relative bg-[#080808] border border-white/5 rounded-[3rem] p-12 md:p-24 overflow-hidden shadow-2xl">
+
+            {/* Massive Background Quote Icon */}
+            <div className="absolute top-10 left-12 text-[15rem] font-serif text-white/[0.03] leading-none select-none pointer-events-none">
+              “
+            </div>
 
             <div className="relative z-10">
-              <div className="flex gap-1 mb-10">
+              {/* Star Rating Section */}
+              <div className="flex gap-2 mb-12">
                 {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className={`h-4 w-4 ${i < (activeTestimonial.rating || 5) ? 'fill-primary-500 text-primary-500' : 'text-white/10'}`}
-                  />
+                  <div key={i} className="h-6 w-6 flex items-center justify-center">
+                    <Star
+                      className={`h-4 w-4 ${i < (activeTestimonial.rating || 5) ? 'fill-white text-white' : 'text-white/10'}`}
+                      strokeWidth={0}
+                      fill="currentColor"
+                    />
+                  </div>
                 ))}
               </div>
 
-              <blockquote className="text-2xl md:text-4xl lg:text-5xl font-medium mb-12 leading-[1.2] tracking-tight">
-                "{activeTestimonial.content}"
+              {/* The Bold Statement */}
+              <blockquote className="text-4xl md:text-6xl lg:text-7xl font-bold mb-20 leading-[1.1] tracking-tighter max-w-5xl">
+                “{activeTestimonial.content}”
               </blockquote>
 
-              <div className="flex flex-col md:flex-row md:items-center gap-8">
-                <div className="flex items-center gap-6">
-                  <div className="relative w-16 h-16 rounded-full overflow-hidden border border-white/10">
+              {/* Author & Control Bar */}
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-12">
+
+                {/* Profile Identity Pillar */}
+                <div className="flex items-center gap-8 group">
+                  <div className="relative h-20 w-20 rounded-full overflow-hidden border-2 border-white/10 group-hover:border-primary-500/50 transition-colors duration-500">
                     <img
                       src={activeTestimonial.image_url}
                       alt={activeTestimonial.name}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     />
                   </div>
-                  <div>
-                    <div className="text-xl font-bold font-display">{activeTestimonial.name}</div>
-                    <div className="text-primary-500/60 font-bold tracking-widest text-[10px] uppercase mt-1">
+                  <div className="space-y-1">
+                    <h4 className="text-2xl font-bold text-white font-display tracking-tight">{activeTestimonial.name}</h4>
+                    <p className="text-[10px] font-bold text-white/30 uppercase tracking-[0.3em] font-sans">
                       {activeTestimonial.role}
-                    </div>
+                    </p>
                   </div>
                 </div>
 
-                <div className="ml-auto flex gap-4">
+                {/* Kinetic Controls */}
+                <div className="flex items-center gap-4">
                   <button
                     onClick={prevTestimonial}
-                    className="w-14 h-14 rounded-full border border-white/10 flex items-center justify-center hover:bg-white hover:text-dark-950 transition-all duration-500 group"
+                    className="w-16 h-16 rounded-full border border-white/10 flex items-center justify-center hover:bg-white hover:text-dark-950 transition-all duration-500 group active:scale-90"
                   >
-                    <ChevronLeft className="h-6 w-6 group-hover:scale-110" />
+                    <ChevronLeft className="h-6 w-6 group-hover:-translate-x-1 transition-transform" />
                   </button>
                   <button
                     onClick={nextTestimonial}
-                    className="w-14 h-14 rounded-full border border-white/10 flex items-center justify-center hover:bg-white hover:text-dark-900 transition-all duration-500 group"
+                    className="w-16 h-16 rounded-full border border-white/10 flex items-center justify-center hover:bg-white hover:text-dark-950 transition-all duration-500 group active:scale-90"
                   >
-                    <ChevronRight className="h-6 w-6 group-hover:scale-110" />
+                    <ChevronRight className="h-6 w-6 group-hover:translate-x-1 transition-transform" />
                   </button>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Counter Overlay */}
-          <div className="absolute -bottom-6 right-12 text-6xl font-black text-white/[0.03] font-display select-none">
-            {String(activeIndex + 1).padStart(2, '0')}
+            {/* Faded Legacy Counter */}
+            <div className="absolute bottom-6 right-16 text-[10vw] font-black text-white/[0.02] font-display select-none pointer-events-none tracking-tighter">
+              {String(activeIndex + 1).padStart(2, '0')}
+            </div>
           </div>
         </div>
       </div>
