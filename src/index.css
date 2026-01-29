@@ -6,7 +6,10 @@
 
 @layer base {
   body {
-    @apply bg-black text-gray-300 antialiased font-sans overflow-x-hidden selection:bg-white/20 selection:text-white cursor-none;
+    @apply antialiased font-sans overflow-x-hidden cursor-none transition-colors duration-300;
+    @apply bg-white text-gray-900 dark:bg-black dark:text-gray-300;
+    @apply selection:bg-black/20 dark:selection:bg-white/20;
+    @apply selection:text-black dark:selection:text-white;
   }
 
   h1,
@@ -15,7 +18,8 @@
   h4,
   h5,
   h6 {
-    @apply font-display text-white tracking-tight;
+    @apply font-display tracking-tight transition-colors duration-300;
+    @apply text-black dark:text-white;
   }
 
   html {
@@ -23,17 +27,18 @@
     font-feature-settings: "cv11", "ss01";
   }
 
-  /* Custom Scrollbar */
+  /* Custom Scrollbar - Light Theme */
   ::-webkit-scrollbar {
     width: 4px;
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-black;
+    @apply bg-gray-100 dark:bg-black;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-white/20 rounded-full hover:bg-white/40 transition-colors;
+    @apply bg-black/20 dark:bg-white/20 rounded-full;
+    @apply hover:bg-black/40 dark:hover:bg-white/40 transition-colors;
   }
 }
 
@@ -58,19 +63,26 @@
 
 @layer utilities {
   .glass-panel {
-    @apply bg-white/[0.03] backdrop-blur-xl border border-white/[0.1] shadow-glass;
+    @apply backdrop-blur-xl border shadow-glass transition-colors duration-300;
+    @apply bg-black/[0.03] border-black/[0.1] dark:bg-white/[0.03] dark:border-white/[0.1];
   }
 
   .text-glow {
+    text-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .dark .text-glow {
     text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
   }
 
   .cursor-dot {
-    @apply fixed top-0 left-0 w-3 h-3 bg-white rounded-full pointer-events-none z-[100] mix-blend-difference transition-transform duration-100 ease-linear;
+    @apply fixed top-0 left-0 w-3 h-3 rounded-full pointer-events-none z-[100] mix-blend-difference transition-transform duration-100 ease-linear;
+    @apply bg-black dark:bg-white;
   }
 
   .cursor-outline {
-    @apply fixed top-0 left-0 w-10 h-10 border border-white/50 rounded-full pointer-events-none z-[100] transition-transform duration-300 ease-out mix-blend-difference;
+    @apply fixed top-0 left-0 w-10 h-10 border rounded-full pointer-events-none z-[100] transition-transform duration-300 ease-out mix-blend-difference;
+    @apply border-black/50 dark:border-white/50;
   }
 
   /* Full Screen Menu Animations */
@@ -167,15 +179,7 @@
     font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
     line-height: 1.5;
     font-weight: 400;
-    color-scheme: dark;
-    background-color: #050505;
     scroll-behavior: smooth;
-  }
-
-  ::selection {
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
-    text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
   }
 
   * {
@@ -208,32 +212,51 @@
   }
 
   .glass-card {
-    background: rgba(255, 255, 255, 0.02);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
+    transition: background-color 0.3s, border-color 0.3s;
+  }
+
+  .glass-card {
+    background: rgba(0, 0, 0, 0.02);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  .dark .glass-card {
+    background: rgba(255, 255, 255, 0.02);
     border: 1px solid rgba(255, 255, 255, 0.05);
   }
 
   .project-number {
-    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.1);
+    -webkit-text-stroke: 1px rgba(0, 0, 0, 0.1);
     color: transparent;
     font-size: 8rem;
     line-height: 1;
     font-weight: 900;
   }
 
+  .dark .project-number {
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.1);
+  }
+
   /* Careers Page Awards Edition */
+  .text-stroke-light {
+    -webkit-text-stroke: 1px rgba(0, 0, 0, 0.5);
+    color: transparent;
+  }
+
   .text-stroke-white {
     -webkit-text-stroke: 1px rgba(255, 255, 255, 0.5);
     color: transparent;
   }
 
   .career-card {
-    @apply relative overflow-hidden bg-white/[0.02] border border-white/10 transition-all duration-700;
+    @apply relative overflow-hidden transition-all duration-700;
+    @apply bg-black/[0.02] border border-black/10 dark:bg-white/[0.02] dark:border-white/10;
   }
 
   .career-card:hover {
-    @apply bg-white/[0.05] border-white/20;
+    @apply bg-black/[0.05] border-black/20 dark:bg-white/[0.05] dark:border-white/20;
     transform: translateY(-5px);
   }
 
@@ -266,12 +289,14 @@
   }
 
   .footer-link {
-    @apply relative text-white/40 transition-all duration-500 hover:text-white flex items-center gap-2;
+    @apply relative transition-all duration-500 flex items-center gap-2;
+    @apply text-black/40 hover:text-black dark:text-white/40 dark:hover:text-white;
   }
 
   .footer-link::after {
     content: '';
-    @apply absolute bottom-0 left-0 w-0 h-[1px] bg-primary-500 transition-all duration-500;
+    @apply absolute bottom-0 left-0 w-0 h-[1px] transition-all duration-500;
+    @apply bg-black dark:bg-primary-500;
   }
 
   .footer-link:hover::after {
@@ -279,6 +304,7 @@
   }
 
   .footer-section-label {
-    @apply text-[10px] font-bold uppercase tracking-[0.4em] text-white/20 mb-8 block;
+    @apply text-[10px] font-bold uppercase tracking-[0.4em] mb-8 block;
+    @apply text-black/20 dark:text-white/20;
   }
 }

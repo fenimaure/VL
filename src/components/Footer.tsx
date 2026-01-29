@@ -29,12 +29,12 @@ export default function Footer() {
   const contactEmail = links.contact_email || 'hello@lovelli.com';
 
   return (
-    <footer className="bg-dark-950 pt-40 pb-20 relative overflow-hidden text-white mt-20">
+    <footer className="bg-gray-50 dark:bg-dark-950 pt-40 pb-20 relative overflow-hidden text-black dark:text-white mt-20 transition-colors duration-500">
       <div className="absolute inset-0 bg-primary-500/5 blur-[120px] rounded-full pointer-events-none -bottom-1/2"></div>
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
         {/* Massive CTA Section */}
-        <div className="mb-40 group cursor-pointer border-b border-white/10 pb-20">
+        <div className="mb-40 group cursor-pointer border-b border-black/10 dark:border-white/10 pb-20">
           <Link to="/contact" className="block">
             <div className="flex items-center gap-4 mb-8">
               <span className="w-12 h-[1px] bg-primary-500"></span>
@@ -43,10 +43,10 @@ export default function Footer() {
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-10">
               <h2 className="text-6xl md:text-8xl lg:text-[10rem] font-bold font-display leading-[0.8] tracking-tighter transition-all duration-700 group-hover:px-4">
                 Let's make it <br />
-                <span className="text-stroke-white italic font-light">Happpen</span><span className="text-primary-500">.</span>
+                <span className="text-stroke-light dark:text-stroke-white italic font-light">Happpen</span><span className="text-primary-500">.</span>
               </h2>
-              <div className="w-32 h-32 md:w-48 md:h-48 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-white group-hover:border-white transition-all duration-700 group-hover:scale-90">
-                <ArrowUpRight className="h-16 w-16 md:h-24 md:w-24 text-white group-hover:text-dark-950 transition-colors" />
+              <div className="w-32 h-32 md:w-48 md:h-48 rounded-full border border-black/20 dark:border-white/20 flex items-center justify-center group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:border-white transition-all duration-700 group-hover:scale-90">
+                <ArrowUpRight className="h-16 w-16 md:h-24 md:w-24 text-black dark:text-white dark:group-hover:text-dark-950 transition-colors" />
               </div>
             </div>
           </Link>
@@ -57,7 +57,7 @@ export default function Footer() {
           <div className="md:col-span-4 space-y-10">
             <div>
               <span className="footer-section-label">Studio</span>
-              <p className="text-xl text-gray-400 font-light leading-relaxed max-w-xs">
+              <p className="text-xl text-black/60 dark:text-gray-400 font-light leading-relaxed max-w-xs transition-colors duration-300">
                 We craft high-end digital experiences for world-class brands from our base on the digital frontier.
               </p>
             </div>
@@ -74,7 +74,7 @@ export default function Footer() {
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-white/40 hover:text-white transition-colors"
+                  className="text-black/40 hover:text-black dark:text-white/40 dark:hover:text-white transition-colors"
                 >
                   <Icon className="h-5 w-5" />
                 </a>
@@ -100,7 +100,7 @@ export default function Footer() {
               <span className="footer-section-label">Expertise</span>
               <ul className="space-y-4">
                 {['Social Media Management', 'Brand Strategy', 'Virtual Assistance', 'Talent Acquisition'].map((item) => (
-                  <li key={item} className="text-white/40 font-light text-lg italic tracking-wider">
+                  <li key={item} className="text-black/40 dark:text-white/40 font-light text-lg italic tracking-wider">
                     {item}
                   </li>
                 ))}
@@ -112,7 +112,7 @@ export default function Footer() {
                 <a href={`mailto:${contactEmail}`} className="block text-xl md:text-2xl font-bold hover:text-primary-500 transition-colors underline underline-offset-8">
                   {contactEmail}
                 </a>
-                <p className="text-white/40 font-light max-w-[15ch]">
+                <p className="text-black/40 dark:text-white/40 font-light max-w-[15ch]">
                   Global Reach. <br />
                   Local Attention.
                 </p>
@@ -122,17 +122,17 @@ export default function Footer() {
         </div>
 
         {/* Massive Branding Anchor */}
-        <div className="relative pt-20 border-t border-white/5 overflow-hidden">
-          <div className="text-huge opacity-[0.03] select-none pointer-events-none font-display text-center">
+        <div className="relative pt-20 border-t border-black/5 dark:border-white/5 overflow-hidden transition-colors duration-500">
+          <div className="text-huge opacity-[0.03] select-none pointer-events-none font-display text-center text-black dark:text-white">
             LOVELLI.
           </div>
 
-          <div className="mt-10 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] font-bold tracking-[0.4em] uppercase text-white/20">
+          <div className="mt-10 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] font-bold tracking-[0.4em] uppercase text-black/20 dark:text-white/20">
             <div>© 2024 lovelli digital boutique</div>
             <div className="flex gap-10">
-              <a href="#" className="hover:text-white transition-colors">Privacy</a>
-              <a href="#" className="hover:text-white transition-colors">Terms</a>
-              <a href="#" className="hover:text-white transition-colors">Legal</a>
+              <a href="#" className="hover:text-black dark:hover:text-white transition-colors">Privacy</a>
+              <a href="#" className="hover:text-black dark:hover:text-white transition-colors">Terms</a>
+              <a href="#" className="hover:text-black dark:hover:text-white transition-colors">Legal</a>
             </div>
             <div>Crafted with precision.</div>
           </div>

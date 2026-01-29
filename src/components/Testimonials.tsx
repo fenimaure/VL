@@ -60,7 +60,7 @@ export default function Testimonials() {
   const activeTestimonial = testimonials[activeIndex];
 
   return (
-    <section id="testimonials" className="py-40 bg-dark-950 relative overflow-hidden text-white">
+    <section id="testimonials" className="py-40 relative overflow-hidden transition-colors duration-300 bg-gray-50 dark:bg-dark-950 text-black dark:text-white">
       {/* Immersive Background Blur */}
       <div className="absolute top-[20%] right-[-10%] w-[600px] h-[600px] bg-primary-500/10 blur-[180px] rounded-full pointer-events-none opacity-30"></div>
 
@@ -73,18 +73,18 @@ export default function Testimonials() {
             </div>
             <h2 className="text-6xl lg:text-8xl font-bold font-display leading-[0.8] tracking-tighter">
               Kind <br />
-              <span className="text-stroke-white italic font-light">Words</span><span className="text-primary-500">.</span>
+              <span className="text-stroke-light dark:text-stroke-white italic font-light">Words</span><span className="text-primary-500">.</span>
             </h2>
           </div>
         </div>
 
         <div className="relative stagger-item">
           {/* Main Cinematic Card */}
-          <div className="relative bg-[#080808] border border-white/5 rounded-[3rem] p-12 md:p-24 overflow-hidden shadow-2xl">
+          <div className="relative border rounded-[3rem] p-12 md:p-24 overflow-hidden shadow-2xl transition-colors duration-300 bg-white dark:bg-[#080808] border-black/5 dark:border-white/5">
 
             {/* Massive Background Quote Icon */}
-            <div className="absolute top-10 left-12 text-[15rem] font-serif text-white/[0.03] leading-none select-none pointer-events-none">
-              “
+            <div className="absolute top-10 left-12 text-[15rem] font-serif leading-none select-none pointer-events-none transition-colors duration-300 text-black/[0.03] dark:text-white/[0.03]">
+              "
             </div>
 
             <div className="relative z-10">
@@ -93,7 +93,7 @@ export default function Testimonials() {
                 {[...Array(5)].map((_, i) => (
                   <div key={i} className="h-6 w-6 flex items-center justify-center">
                     <Star
-                      className={`h-4 w-4 ${i < (activeTestimonial.rating || 5) ? 'fill-white text-white' : 'text-white/10'}`}
+                      className={`h-4 w-4 ${i < (activeTestimonial.rating || 5) ? 'fill-black dark:fill-white text-black dark:text-white' : 'text-black/10 dark:text-white/10'}`}
                       strokeWidth={0}
                       fill="currentColor"
                     />
@@ -103,7 +103,7 @@ export default function Testimonials() {
 
               {/* The Bold Statement */}
               <blockquote className="text-4xl md:text-6xl lg:text-7xl font-bold mb-20 leading-[1.1] tracking-tighter max-w-5xl">
-                “{activeTestimonial.content}”
+                "{activeTestimonial.content}"
               </blockquote>
 
               {/* Author & Control Bar */}
@@ -111,7 +111,7 @@ export default function Testimonials() {
 
                 {/* Profile Identity Pillar */}
                 <div className="flex items-center gap-8 group">
-                  <div className="relative h-20 w-20 rounded-full overflow-hidden border-2 border-white/10 group-hover:border-primary-500/50 transition-colors duration-500">
+                  <div className="relative h-20 w-20 rounded-full overflow-hidden border-2 transition-colors duration-500 border-black/10 dark:border-white/10 group-hover:border-primary-500/50">
                     <img
                       src={activeTestimonial.image_url}
                       alt={activeTestimonial.name}
@@ -119,8 +119,8 @@ export default function Testimonials() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <h4 className="text-2xl font-bold text-white font-display tracking-tight">{activeTestimonial.name}</h4>
-                    <p className="text-[10px] font-bold text-white/30 uppercase tracking-[0.3em] font-sans">
+                    <h4 className="text-2xl font-bold font-display tracking-tight text-black dark:text-white">{activeTestimonial.name}</h4>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.3em] font-sans text-black/30 dark:text-white/30">
                       {activeTestimonial.role}
                     </p>
                   </div>
@@ -130,13 +130,13 @@ export default function Testimonials() {
                 <div className="flex items-center gap-4">
                   <button
                     onClick={prevTestimonial}
-                    className="w-16 h-16 rounded-full border border-white/10 flex items-center justify-center hover:bg-white hover:text-dark-950 transition-all duration-500 group active:scale-90"
+                    className="w-16 h-16 rounded-full border flex items-center justify-center transition-all duration-500 group active:scale-90 border-black/10 dark:border-white/10 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-dark-950"
                   >
                     <ChevronLeft className="h-6 w-6 group-hover:-translate-x-1 transition-transform" />
                   </button>
                   <button
                     onClick={nextTestimonial}
-                    className="w-16 h-16 rounded-full border border-white/10 flex items-center justify-center hover:bg-white hover:text-dark-950 transition-all duration-500 group active:scale-90"
+                    className="w-16 h-16 rounded-full border flex items-center justify-center transition-all duration-500 group active:scale-90 border-black/10 dark:border-white/10 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-dark-950"
                   >
                     <ChevronRight className="h-6 w-6 group-hover:translate-x-1 transition-transform" />
                   </button>
@@ -145,7 +145,7 @@ export default function Testimonials() {
             </div>
 
             {/* Faded Legacy Counter */}
-            <div className="absolute bottom-6 right-16 text-[10vw] font-black text-white/[0.02] font-display select-none pointer-events-none tracking-tighter">
+            <div className="absolute bottom-6 right-16 text-[10vw] font-black font-display select-none pointer-events-none tracking-tighter transition-colors duration-300 text-black/[0.02] dark:text-white/[0.02]">
               {String(activeIndex + 1).padStart(2, '0')}
             </div>
           </div>

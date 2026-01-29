@@ -149,7 +149,7 @@ export default function Services() {
 
   if (loading && services.length === 0) {
     return (
-      <section className="py-40 bg-dark-950 flex items-center justify-center">
+      <section className="py-40 bg-white dark:bg-dark-950 flex items-center justify-center transition-colors duration-500">
         <div className="w-12 h-12 border-2 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
       </section>
     );
@@ -159,7 +159,7 @@ export default function Services() {
   const translateX = -(currentIndex * cardWidth);
 
   return (
-    <section id="services" className="py-40 bg-dark-950 relative overflow-hidden">
+    <section id="services" className="py-40 bg-white dark:bg-dark-950 relative overflow-hidden transition-colors duration-500">
       {/* Background Decor */}
       <div className="absolute top-0 right-0 w-full h-full pointer-events-none">
         <div className="absolute top-[10%] left-[5%] w-[400px] h-[400px] bg-primary-500/5 blur-[120px] rounded-full floating-element"></div>
@@ -172,11 +172,11 @@ export default function Services() {
               <span className="w-12 h-[1px] bg-primary-500"></span>
               <span className="text-primary-500 font-bold tracking-[0.3em] text-xs uppercase">Capabilities</span>
             </div>
-            <h2 className="text-5xl lg:text-7xl font-bold font-display mb-8 leading-none">
-              <span className="text-white">Expert </span>
-              <span className="text-white/20 italic">Solutions</span>
+            <h2 className="text-5xl lg:text-7xl font-bold font-display mb-8 leading-none transition-colors duration-300">
+              <span className="text-black dark:text-white">Expert </span>
+              <span className="text-black/20 dark:text-white/20 italic">Solutions</span>
             </h2>
-            <p className="text-xl text-gray-400 leading-relaxed font-light max-w-lg">
+            <p className="text-xl text-black/60 dark:text-gray-400 leading-relaxed font-light max-w-lg transition-colors duration-300">
               Crafting scalable digital ecosystems through architectural excellence and rigorous design.
             </p>
           </div>
@@ -188,7 +188,7 @@ export default function Services() {
           {currentIndex > 0 && (
             <button
               onClick={prevSlide}
-              className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-20 w-12 h-12 items-center justify-center bg-white/10 backdrop-blur-sm border border-white/20 rounded-full text-white hover:bg-white/20 transition-all"
+              className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-20 w-12 h-12 items-center justify-center bg-black/5 dark:bg-white/10 backdrop-blur-sm border border-black/10 dark:border-white/20 rounded-full text-black dark:text-white hover:bg-black/10 dark:hover:bg-white/20 transition-all"
               aria-label="Previous"
             >
               <ChevronLeft className="h-6 w-6" />
@@ -198,7 +198,7 @@ export default function Services() {
           {currentIndex < maxIndex && (
             <button
               onClick={nextSlide}
-              className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-20 w-12 h-12 items-center justify-center bg-white/10 backdrop-blur-sm border border-white/20 rounded-full text-white hover:bg-white/20 transition-all"
+              className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-20 w-12 h-12 items-center justify-center bg-black/5 dark:bg-white/10 backdrop-blur-sm border border-black/10 dark:border-white/20 rounded-full text-black dark:text-white hover:bg-black/10 dark:hover:bg-white/20 transition-all"
               aria-label="Next"
             >
               <ChevronRight className="h-6 w-6" />
@@ -221,7 +221,7 @@ export default function Services() {
                   className="flex-shrink-0 w-[85vw] md:w-auto pr-4 md:px-4"
                   style={{ width: window.innerWidth >= 768 ? `${cardWidth}%` : undefined }}
                 >
-                  <div className="group relative glass-card rounded-[2rem] overflow-hidden md:hover:-translate-y-2 transition-all duration-300 h-full border border-white/5">
+                  <div className="group relative glass-card rounded-[2rem] overflow-hidden md:hover:-translate-y-2 transition-all duration-300 h-full border border-black/5 dark:border-white/5 bg-white/50 dark:bg-white/5">
                     {/* Hover Gradient Overlay */}
                     <div className={`absolute inset-0 bg-gradient-to-br ${service.color_theme || 'from-gray-700 to-gray-600'} opacity-0 md:group-hover:opacity-10 transition-opacity duration-500`}></div>
 
@@ -231,30 +231,30 @@ export default function Services() {
                         <span className="text-primary-500 font-bold font-mono text-xs tracking-widest uppercase">
                           {String(index + 1).padStart(2, '0')}
                         </span>
-                        <span className="w-8 h-[1px] bg-white/20"></span>
+                        <span className="w-8 h-[1px] bg-black/20 dark:bg-white/20"></span>
                       </div>
 
                       {/* Title with Arrow Button */}
                       <div className="flex items-start justify-between gap-4 mb-6">
-                        <h3 className="text-3xl md:text-4xl font-bold text-white md:group-hover:text-primary-400 transition-all font-display leading-tight">
+                        <h3 className="text-3xl md:text-4xl font-bold text-black dark:text-white md:group-hover:text-primary-500 dark:md:group-hover:text-primary-400 transition-all font-display leading-tight">
                           {service.title}
                         </h3>
                         <button
                           onClick={(e) => handleArrowClick(e, service.slug)}
-                          className="flex-shrink-0 w-12 h-12 bg-white/5 border border-white/10 rounded-full flex items-center justify-center text-white/70 hover:text-white hover:bg-white hover:text-dark-950 transition-all group/arrow"
+                          className="flex-shrink-0 w-12 h-12 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-full flex items-center justify-center text-black/70 dark:text-white/70 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-dark-950 transition-all group/arrow"
                           aria-label={`View ${service.title}`}
                         >
                           <ArrowUpRight className="h-5 w-5 transform group-hover/arrow:translate-x-0.5 group-hover/arrow:-translate-y-0.5" />
                         </button>
                       </div>
 
-                      <p className="text-lg text-gray-400 leading-relaxed font-light mb-8 max-w-sm">
+                      <p className="text-lg text-black/60 dark:text-gray-400 leading-relaxed font-light mb-8 max-w-sm transition-colors duration-300">
                         {service.description}
                       </p>
 
                       <Link
                         to={`/services/${service.slug}`}
-                        className="mt-auto inline-flex items-center gap-2 text-white/40 hover:text-white transition-colors text-[10px] font-bold tracking-[0.3em] uppercase"
+                        className="mt-auto inline-flex items-center gap-2 text-black/40 hover:text-black dark:text-white/40 dark:hover:text-white transition-colors text-[10px] font-bold tracking-[0.3em] uppercase"
                       >
                         Learn More <ArrowUpRight className="h-3 w-3" />
                       </Link>
@@ -272,8 +272,8 @@ export default function Services() {
                 key={index}
                 onClick={() => goToSlide(index)}
                 className={`h-2 rounded-full transition-all duration-300 ${index === currentIndex
-                  ? 'w-8 bg-white'
-                  : 'w-2 bg-white/30 hover:bg-white/50'
+                  ? 'w-8 bg-black dark:bg-white'
+                  : 'w-2 bg-black/30 dark:bg-white/30 hover:bg-black/50 dark:hover:bg-white/50'
                   }`}
                 aria-label={`Go to slide ${index + 1}`}
               />

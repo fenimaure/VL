@@ -49,7 +49,7 @@ export default function Careers() {
     }, [loading, careers]);
 
     return (
-        <div className="min-h-screen bg-dark-950 text-gray-300 selection:bg-primary-500/30">
+        <div className="min-h-screen bg-white dark:bg-dark-950 text-gray-900 dark:text-gray-300 selection:bg-primary-500/30 transition-colors duration-500">
             <Navbar />
 
             {/* Hero Section - Boutique Style */}
@@ -65,11 +65,11 @@ export default function Careers() {
                             <span className="w-12 h-[1px] bg-primary-500"></span>
                             <span className="text-primary-500 font-bold tracking-[0.3em] text-xs uppercase">Careers</span>
                         </div>
-                        <h1 className="text-6xl sm:text-8xl lg:text-[10rem] font-bold font-display text-white mb-10 leading-[0.85] tracking-tighter">
+                        <h1 className="text-6xl sm:text-8xl lg:text-[10rem] font-bold font-display text-black dark:text-white mb-10 leading-[0.85] tracking-tighter transition-colors duration-500">
                             Shape the <br />
-                            <span className="text-stroke-white italic font-light">Digital</span> Era<span className="text-primary-500">.</span>
+                            <span className="text-stroke-light dark:text-stroke-white italic font-light">Digital</span> Era<span className="text-primary-500">.</span>
                         </h1>
-                        <p className="text-xl md:text-2xl text-gray-400 max-w-2xl leading-relaxed font-light mb-12">
+                        <p className="text-xl md:text-2xl text-black/60 dark:text-gray-400 max-w-2xl leading-relaxed font-light mb-12 transition-colors duration-500">
                             We're a collective of designers, engineers, and visionaries redefining the boundaries of digital craft. Join us on the frontier.
                         </p>
                     </div>
@@ -116,10 +116,10 @@ export default function Careers() {
                 <div className="max-w-7xl mx-auto px-6 lg:px-8">
                     <div className="flex flex-col md:flex-row md:items-end justify-between mb-24 gap-8 stagger-item">
                         <div>
-                            <h2 className="text-4xl lg:text-6xl font-bold font-display text-white mb-6">Open Roles</h2>
-                            <p className="text-gray-400 font-light tracking-wide italic">Current opportunities to join our studio.</p>
+                            <h2 className="text-4xl lg:text-6xl font-bold font-display text-black dark:text-white mb-6 transition-colors duration-500">Open Roles</h2>
+                            <p className="text-black/60 dark:text-gray-400 font-light tracking-wide italic transition-colors duration-500">Current opportunities to join our studio.</p>
                         </div>
-                        <div className="text-6xl font-black text-white/5 font-display select-none">
+                        <div className="text-6xl font-black text-black/5 dark:text-white/5 font-display select-none transition-colors duration-500">
                             {careers.length.toString().padStart(2, '0')}
                         </div>
                     </div>
@@ -127,27 +127,27 @@ export default function Careers() {
                     {loading ? (
                         null
                     ) : careers.length > 0 ? (
-                        <div className="border-t border-white/10">
+                        <div className="border-t border-black/10 dark:border-white/10 transition-colors duration-500">
                             {careers.map((job) => (
-                                <Link to={`/careers/${job.slug}`} key={job.id} className="group block border-b border-white/10 stagger-item">
+                                <Link to={`/careers/${job.slug}`} key={job.id} className="group block border-b border-black/10 dark:border-white/10 stagger-item transition-colors duration-500">
                                     <div className="py-12 md:py-16 flex flex-col md:flex-row md:items-center justify-between gap-8 transition-all duration-500 group-hover:px-4">
                                         <div className="space-y-4">
                                             <div className="flex items-center gap-4 text-xs font-bold tracking-[0.3em] text-primary-500 uppercase">
                                                 <span>{job.department}</span>
-                                                <span className="w-8 h-[1px] bg-white/20"></span>
+                                                <span className="w-8 h-[1px] bg-black/20 dark:bg-white/20 transition-colors duration-500"></span>
                                                 <span>{job.location}</span>
                                             </div>
-                                            <h3 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white/40 group-hover:text-white transition-all duration-700 font-display">
+                                            <h3 className="text-4xl md:text-5xl lg:text-6xl font-bold text-black/40 hover:text-black dark:text-white/40 dark:hover:text-white group-hover:text-black dark:group-hover:text-white transition-all duration-700 font-display">
                                                 {job.title}
                                             </h3>
                                         </div>
                                         <div className="flex items-center gap-10">
                                             <div className="hidden lg:block text-right">
-                                                <span className="block text-white/20 text-xs font-bold uppercase tracking-widest mb-1">Contract Type</span>
-                                                <span className="text-gray-400 font-light">{job.type}</span>
+                                                <span className="block text-black/20 dark:text-white/20 text-xs font-bold uppercase tracking-widest mb-1 transition-colors duration-500">Contract Type</span>
+                                                <span className="text-black/60 dark:text-gray-400 font-light transition-colors duration-500">{job.type}</span>
                                             </div>
-                                            <div className="w-20 h-20 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:border-white transition-all duration-500">
-                                                <ArrowUpRight className="h-8 w-8 text-white group-hover:text-dark-950 transition-colors" />
+                                            <div className="w-20 h-20 rounded-full border border-black/10 dark:border-white/10 flex items-center justify-center group-hover:bg-black group-hover:border-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:border-white dark:group-hover:text-dark-950 transition-all duration-500">
+                                                <ArrowUpRight className="h-8 w-8 text-black dark:text-white group-hover:text-white dark:group-hover:text-dark-950 transition-colors" />
                                             </div>
                                         </div>
                                     </div>
@@ -155,10 +155,10 @@ export default function Careers() {
                             ))}
                         </div>
                     ) : (
-                        <div className="text-center py-32 rounded-3xl border border-white/5 bg-white/[0.01] stagger-item">
-                            <Briefcase className="h-10 w-10 text-gray-700 mx-auto mb-6" />
-                            <h3 className="text-2xl font-bold text-white mb-2">The studio is currently at full capacity.</h3>
-                            <p className="text-gray-500 font-light">Follow our socials to be the first to know about new openings.</p>
+                        <div className="text-center py-32 rounded-3xl border border-black/10 dark:border-white/5 bg-black/[0.01] dark:bg-white/[0.01] stagger-item transition-all duration-500">
+                            <Briefcase className="h-10 w-10 text-gray-400 dark:text-gray-700 mx-auto mb-6" />
+                            <h3 className="text-2xl font-bold text-black dark:text-white mb-2">The studio is currently at full capacity.</h3>
+                            <p className="text-black/60 dark:text-gray-500 font-light">Follow our socials to be the first to know about new openings.</p>
                         </div>
                     )}
                 </div>

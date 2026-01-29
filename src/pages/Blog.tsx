@@ -49,7 +49,7 @@ export default function Blog() {
     }, [loading, posts]);
 
     return (
-        <div className="min-h-screen bg-dark-950 text-gray-300 selection:bg-primary-500/30">
+        <div className="min-h-screen bg-white dark:bg-dark-950 text-gray-900 dark:text-gray-300 selection:bg-primary-500/30 transition-colors duration-500">
             <Navbar />
 
             {/* Hero Section - Boutique Style */}
@@ -64,11 +64,11 @@ export default function Blog() {
                             <span className="w-12 h-[1px] bg-primary-500"></span>
                             <span className="text-primary-500 font-bold tracking-[0.3em] text-xs uppercase">Newsroom</span>
                         </div>
-                        <h1 className="text-6xl sm:text-8xl lg:text-[10rem] font-bold font-display text-white mb-10 leading-[0.85] tracking-tighter">
+                        <h1 className="text-6xl sm:text-8xl lg:text-[10rem] font-bold font-display text-black dark:text-white mb-10 leading-[0.85] tracking-tighter transition-colors duration-500">
                             Latest <br />
-                            <span className="text-stroke-white italic font-light">Insights</span><span className="text-primary-500">.</span>
+                            <span className="text-stroke-light dark:text-stroke-white italic font-light">Insights</span><span className="text-primary-500">.</span>
                         </h1>
-                        <p className="text-xl md:text-2xl text-gray-400 max-w-2xl leading-relaxed font-light">
+                        <p className="text-xl md:text-2xl text-black/60 dark:text-gray-400 max-w-2xl leading-relaxed font-light transition-colors duration-500">
                             Thought leadership at the intersection of design methodology and engineering precision.
                         </p>
                     </div>
@@ -88,7 +88,7 @@ export default function Blog() {
                                     key={post.id}
                                     className="group flex flex-col stagger-item"
                                 >
-                                    <div className="relative aspect-[16/10] overflow-hidden rounded-[2rem] border border-white/5 mb-8">
+                                    <div className="relative aspect-[16/10] overflow-hidden rounded-[2rem] border border-black/10 dark:border-white/5 mb-8 bg-black/5 dark:bg-white/5 transition-colors duration-500">
                                         <div className="absolute inset-0 bg-primary-500/20 mix-blend-overlay z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
                                         <img
                                             src={post.image_url || 'https://via.placeholder.com/800x400'}
@@ -100,19 +100,19 @@ export default function Blog() {
                                     <div className="flex flex-col flex-1">
                                         <div className="flex items-center gap-4 text-[10px] font-bold tracking-[0.2em] text-primary-500 uppercase mb-4">
                                             <span>{post.author}</span>
-                                            <span className="w-4 h-[1px] bg-white/20"></span>
-                                            <span className="text-white/40">{new Date(post.published_at).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}</span>
+                                            <span className="w-4 h-[1px] bg-black/20 dark:bg-white/20"></span>
+                                            <span className="text-black/40 dark:text-white/40">{new Date(post.published_at).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}</span>
                                         </div>
 
-                                        <h3 className="text-2xl md:text-3xl font-bold text-white group-hover:text-primary-400 transition-colors font-display leading-tight mb-4">
+                                        <h3 className="text-2xl md:text-3xl font-bold text-black dark:text-white group-hover:text-primary-500 dark:group-hover:text-primary-400 transition-colors font-display leading-tight mb-4">
                                             {post.title}
                                         </h3>
 
-                                        <p className="text-gray-400 font-light leading-relaxed mb-8 line-clamp-2">
+                                        <p className="text-black/60 dark:text-gray-400 font-light leading-relaxed mb-8 line-clamp-2 transition-colors duration-500">
                                             {post.excerpt}
                                         </p>
 
-                                        <div className="mt-auto flex items-center gap-3 text-white font-bold tracking-[0.2em] text-[10px] uppercase">
+                                        <div className="mt-auto flex items-center gap-3 text-black dark:text-white font-bold tracking-[0.2em] text-[10px] uppercase transition-colors duration-500">
                                             <span className="relative pb-1 after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-primary-500 after:transform after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:duration-500 after:origin-left">
                                                 Discover
                                             </span>
@@ -123,9 +123,9 @@ export default function Blog() {
                             ))}
                         </div>
                     ) : (
-                        <div className="text-center py-32 rounded-3xl border border-white/5 bg-white/[0.01] stagger-item">
-                            <h3 className="text-2xl font-bold text-white mb-2">No transmissions recorded.</h3>
-                            <p className="text-gray-500 font-light">The journal is currently clear. Check back shortly.</p>
+                        <div className="text-center py-32 rounded-3xl border border-black/10 dark:border-white/5 bg-black/[0.01] dark:bg-white/[0.01] stagger-item transition-colors duration-500">
+                            <h3 className="text-2xl font-bold text-black dark:text-white mb-2">No transmissions recorded.</h3>
+                            <p className="text-black/60 dark:text-gray-500 font-light">The journal is currently clear. Check back shortly.</p>
                         </div>
                     )}
                 </div>

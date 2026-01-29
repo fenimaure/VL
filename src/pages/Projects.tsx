@@ -57,18 +57,18 @@ export default function Projects() {
     }, [selectedCategory, projects]);
 
     return (
-        <div className="min-h-screen bg-dark-950">
+        <div className="min-h-screen bg-white dark:bg-dark-950 transition-colors duration-500">
             <Navbar />
 
             {/* Hero Section */}
-            <section className="pt-32 pb-20 bg-gradient-to-b from-dark-900 to-dark-950">
+            <section className="pt-32 pb-20 bg-gradient-to-b from-gray-50 to-white dark:from-dark-900 dark:to-dark-950 transition-colors duration-500">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center max-w-3xl mx-auto">
                         <h1 className="text-5xl lg:text-6xl font-bold font-display mb-6">
-                            <span className="text-white">Our </span>
+                            <span className="text-black dark:text-white">Our </span>
                             <span className="text-gradient-purple">Projects</span>
                         </h1>
-                        <p className="text-xl text-gray-400 leading-relaxed">
+                        <p className="text-xl text-black/60 dark:text-gray-400 leading-relaxed">
                             Explore our complete portfolio of successful projects and creative solutions delivered to clients worldwide.
                         </p>
                     </div>
@@ -76,10 +76,10 @@ export default function Projects() {
             </section>
 
             {/* Filter Section */}
-            <section className="py-8 bg-dark-950 sticky top-0 z-30 border-b border-white/10 backdrop-blur-lg bg-dark-950/80">
+            <section className="py-8 bg-white dark:bg-dark-950 sticky top-0 z-30 border-b border-black/10 dark:border-white/10 backdrop-blur-lg bg-white/80 dark:bg-dark-950/80 transition-colors duration-500">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex items-center gap-4 overflow-x-auto pb-2 scrollbar-hide">
-                        <div className="flex items-center gap-2 text-gray-400 flex-shrink-0">
+                        <div className="flex items-center gap-2 text-black/60 dark:text-gray-400 flex-shrink-0">
                             <Filter className="h-5 w-5" />
                             <span className="font-medium">Filter:</span>
                         </div>
@@ -89,7 +89,7 @@ export default function Projects() {
                                 onClick={() => setSelectedCategory(category)}
                                 className={`px-4 py-2 rounded-full font-medium transition-all duration-300 whitespace-nowrap ${selectedCategory === category
                                     ? 'bg-primary-500 text-white'
-                                    : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10'
+                                    : 'bg-black/5 text-black/60 hover:bg-black/10 hover:text-black border border-black/10 dark:bg-white/5 dark:text-gray-400 dark:hover:bg-white/10 dark:hover:text-white dark:border-white/10'
                                     }`}
                             >
                                 {category}
@@ -100,7 +100,7 @@ export default function Projects() {
             </section>
 
             {/* Projects Grid */}
-            <section className="py-20 bg-dark-950">
+            <section className="py-20 bg-white dark:bg-dark-950 transition-colors duration-500">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     {loading ? (
                         null
@@ -110,7 +110,7 @@ export default function Projects() {
                         </div>
                     ) : (
                         <>
-                            <div className="mb-8 text-gray-400">
+                            <div className="mb-8 text-black/50 dark:text-gray-400">
                                 Showing {filteredProjects.length} {filteredProjects.length === 1 ? 'project' : 'projects'}
                             </div>
 
@@ -119,7 +119,7 @@ export default function Projects() {
                                     <Link
                                         key={project.id}
                                         to={`/projects/${project.slug}`}
-                                        className="group relative rounded-2xl overflow-hidden bg-dark-900 border border-white/10 hover:border-primary-500/30 transition-all duration-500 block"
+                                        className="group relative rounded-2xl overflow-hidden bg-gray-50 dark:bg-dark-900 border border-black/10 dark:border-white/10 hover:border-primary-500/30 transition-all duration-500 block"
                                     >
                                         {/* Featured Badge */}
                                         {project.is_featured && (
@@ -129,7 +129,7 @@ export default function Projects() {
                                         )}
 
                                         <div className="relative h-64 overflow-hidden">
-                                            <div className="absolute inset-0 bg-gradient-to-t from-dark-950 via-transparent to-transparent z-10 opacity-60 group-hover:opacity-40 transition-opacity"></div>
+                                            <div className="absolute inset-0 bg-gradient-to-t from-gray-50 via-transparent to-transparent dark:from-dark-950 dark:via-transparent dark:to-transparent z-10 opacity-60 group-hover:opacity-40 transition-opacity"></div>
                                             <img
                                                 src={project.image_url}
                                                 alt={project.title}
@@ -153,10 +153,10 @@ export default function Projects() {
                                             <div className="text-primary-400 text-sm font-semibold mb-2 uppercase tracking-wider">
                                                 {project.category}
                                             </div>
-                                            <h3 className="text-2xl font-bold text-white mb-3 font-display group-hover:text-primary-200 transition-colors">
+                                            <h3 className="text-2xl font-bold text-black dark:text-white mb-3 font-display group-hover:text-primary-500 dark:group-hover:text-primary-200 transition-colors">
                                                 {project.title}
                                             </h3>
-                                            <p className="text-gray-400 mb-4 leading-relaxed line-clamp-2">
+                                            <p className="text-black/60 dark:text-gray-400 mb-4 leading-relaxed line-clamp-2">
                                                 {project.description}
                                             </p>
                                             <div className="flex items-center gap-2 text-primary-400 font-medium group-hover:text-primary-300 transition-colors">

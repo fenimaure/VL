@@ -72,32 +72,32 @@ ${formData.message}
     ];
 
     return (
-        <div className="min-h-screen bg-dark-950 text-white selection:bg-primary-500/30 overflow-x-hidden">
+        <div className="min-h-screen bg-white dark:bg-dark-950 text-black dark:text-white selection:bg-primary-500/30 overflow-x-hidden transition-colors duration-500">
             <Navbar />
 
             {/* Immersive Briefing Header */}
             <section className="relative pt-40 pb-20 overflow-hidden">
                 <div className="absolute inset-0 bg-mesh opacity-30 pointer-events-none"></div>
                 <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
-                    <Link to="/" className="inline-flex items-center gap-4 text-[10px] font-bold uppercase tracking-[0.5em] text-white/40 hover:text-primary-500 transition-all group mb-12">
+                    <Link to="/" className="inline-flex items-center gap-4 text-[10px] font-bold uppercase tracking-[0.5em] text-black/40 hover:text-primary-500 dark:text-white/40 dark:hover:text-primary-500 transition-all group mb-12">
                         <ArrowLeft className="h-4 w-4 group-hover:-translate-x-2 transition-transform" />
                         Abandon Entry
                     </Link>
 
-                    <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-12 border-b border-white/5 pb-20">
+                    <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-12 border-b border-black/5 dark:border-white/5 pb-20">
                         <div className="max-w-4xl">
                             <div className="flex items-center gap-4 mb-8">
                                 <span className="w-12 h-[1px] bg-primary-500"></span>
                                 <span className="text-primary-500 font-bold tracking-[0.4em] text-[10px] uppercase">The Briefing</span>
                             </div>
-                            <h1 className="text-6xl md:text-8xl lg:text-[10rem] font-bold font-display leading-[0.8] tracking-tighter">
+                            <h1 className="text-6xl md:text-8xl lg:text-[10rem] font-bold font-display leading-[0.8] tracking-tighter text-black dark:text-white">
                                 Start A <br />
-                                <span className="text-stroke-white italic font-light">Project</span><span className="text-primary-500">.</span>
+                                <span className="text-stroke-light dark:text-stroke-white italic font-light">Project</span><span className="text-primary-500">.</span>
                             </h1>
                         </div>
 
                         <div className="lg:mb-4">
-                            <p className="text-xl text-white/40 font-light max-w-xs leading-relaxed">
+                            <p className="text-xl text-black/40 dark:text-white/40 font-light max-w-xs leading-relaxed">
                                 We are currently accepting select partnerships for Q3 & Q4 2024. Let's sculpt the future of your brand.
                             </p>
                         </div>
@@ -117,20 +117,20 @@ ${formData.message}
                                 <div className="space-y-4">
                                     <div className="flex items-center gap-4 group">
                                         <div className="h-10 w-10 glass-card rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                                            <Globe className="h-4 w-4 text-white/60" />
+                                            <Globe className="h-4 w-4 text-black/60 dark:text-white/60" />
                                         </div>
                                         <div>
-                                            <p className="text-sm font-bold tracking-widest">Global Ops</p>
-                                            <p className="text-xs text-white/40">Remote First • Manila Core</p>
+                                            <p className="text-sm font-bold tracking-widest text-black/80 dark:text-white/80">Global Ops</p>
+                                            <p className="text-xs text-black/40 dark:text-white/40">Remote First • Manila Core</p>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-4 group">
                                         <div className="h-10 w-10 glass-card rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                                            <Clock className="h-4 w-4 text-white/60" />
+                                            <Clock className="h-4 w-4 text-black/60 dark:text-white/60" />
                                         </div>
                                         <div>
-                                            <p className="text-sm font-bold tracking-widest">Response Latency</p>
-                                            <p className="text-xs text-white/40">&lt; 24 Hours</p>
+                                            <p className="text-sm font-bold tracking-widest text-black/80 dark:text-white/80">Response Latency</p>
+                                            <p className="text-xs text-black/40 dark:text-white/40">&lt; 24 Hours</p>
                                         </div>
                                     </div>
                                 </div>
@@ -139,8 +139,8 @@ ${formData.message}
                             <div className="p-10 rounded-[2rem] glass-card border border-primary-500/10 relative overflow-hidden group">
                                 <div className="absolute inset-0 bg-primary-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                                 <Sparkles className="h-8 w-8 text-primary-500 mb-8" />
-                                <h3 className="text-xl font-bold font-display mb-4">Elite Partnership</h3>
-                                <p className="text-sm text-white/40 font-light leading-relaxed">
+                                <h3 className="text-xl font-bold font-display mb-4 text-black dark:text-white">Elite Partnership</h3>
+                                <p className="text-sm text-black/40 dark:text-white/40 font-light leading-relaxed">
                                     Our engagement model is deeply collaborative. We don't just build; we integrate as your high-end design department.
                                 </p>
                             </div>
@@ -160,23 +160,23 @@ ${formData.message}
                             <form onSubmit={handleSubmit} className="space-y-12">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                                     <div className="space-y-4">
-                                        <label className="text-[10px] uppercase font-bold tracking-[0.3em] text-white/40 ml-4">01. Identity</label>
+                                        <label className="text-[10px] uppercase font-bold tracking-[0.3em] text-black/40 dark:text-white/40 ml-4">01. Identity</label>
                                         <input
                                             required
                                             type="text"
                                             placeholder="What is your name?"
-                                            className="w-full bg-transparent border-b border-white/10 py-6 px-4 text-2xl font-light focus:outline-none focus:border-primary-500 transition-colors placeholder:text-white/10"
+                                            className="w-full bg-transparent border-b border-black/10 dark:border-white/10 py-6 px-4 text-2xl font-light text-black dark:text-white focus:outline-none focus:border-primary-500 transition-colors placeholder:text-black/10 dark:placeholder:text-white/10"
                                             value={formData.name}
                                             onChange={e => setFormData({ ...formData, name: e.target.value })}
                                         />
                                     </div>
                                     <div className="space-y-4">
-                                        <label className="text-[10px] uppercase font-bold tracking-[0.3em] text-white/40 ml-4">02. Digital Address</label>
+                                        <label className="text-[10px] uppercase font-bold tracking-[0.3em] text-black/40 dark:text-white/40 ml-4">02. Digital Address</label>
                                         <input
                                             required
                                             type="email"
                                             placeholder="Where can we reach you?"
-                                            className="w-full bg-transparent border-b border-white/10 py-6 px-4 text-2xl font-light focus:outline-none focus:border-primary-500 transition-colors placeholder:text-white/10"
+                                            className="w-full bg-transparent border-b border-black/10 dark:border-white/10 py-6 px-4 text-2xl font-light text-black dark:text-white focus:outline-none focus:border-primary-500 transition-colors placeholder:text-black/10 dark:placeholder:text-white/10"
                                             value={formData.email}
                                             onChange={e => setFormData({ ...formData, email: e.target.value })}
                                         />
@@ -184,14 +184,14 @@ ${formData.message}
                                 </div>
 
                                 <div className="space-y-8">
-                                    <label className="text-[10px] uppercase font-bold tracking-[0.3em] text-white/40 ml-4">03. Project Vector</label>
+                                    <label className="text-[10px] uppercase font-bold tracking-[0.3em] text-black/40 dark:text-white/40 ml-4">03. Project Vector</label>
                                     <div className="flex flex-wrap gap-4">
                                         {services.map(s => (
                                             <button
                                                 key={s}
                                                 type="button"
                                                 onClick={() => setFormData({ ...formData, service: s })}
-                                                className={`px-8 py-4 rounded-full border text-xs font-bold uppercase tracking-widest transition-all duration-500 ${formData.service === s ? 'bg-primary-500 border-primary-500 text-white' : 'border-white/10 text-white/40 hover:border-white/30 hover:text-white'}`}
+                                                className={`px-8 py-4 rounded-full border text-xs font-bold uppercase tracking-widest transition-all duration-500 ${formData.service === s ? 'bg-primary-500 border-primary-500 text-white' : 'border-black/10 text-black/40 hover:border-black/30 hover:text-black dark:border-white/10 dark:text-white/40 dark:hover:border-white/30 dark:hover:text-white'}`}
                                             >
                                                 {s}
                                             </button>
@@ -200,14 +200,14 @@ ${formData.message}
                                 </div>
 
                                 <div className="space-y-8">
-                                    <label className="text-[10px] uppercase font-bold tracking-[0.3em] text-white/40 ml-4">04. Investment Range</label>
+                                    <label className="text-[10px] uppercase font-bold tracking-[0.3em] text-black/40 dark:text-white/40 ml-4">04. Investment Range</label>
                                     <div className="flex flex-wrap gap-4">
                                         {budgets.map(b => (
                                             <button
                                                 key={b}
                                                 type="button"
                                                 onClick={() => setFormData({ ...formData, budget: b })}
-                                                className={`px-8 py-4 rounded-full border text-xs font-bold uppercase tracking-widest transition-all duration-500 ${formData.budget === b ? 'bg-white border-white text-dark-950' : 'border-white/10 text-white/40 hover:border-white/30 hover:text-white'}`}
+                                                className={`px-8 py-4 rounded-full border text-xs font-bold uppercase tracking-widest transition-all duration-500 ${formData.budget === b ? 'bg-black text-white border-black dark:bg-white dark:border-white dark:text-dark-950' : 'border-black/10 text-black/40 hover:border-black/30 hover:text-black dark:border-white/10 dark:text-white/40 dark:hover:border-white/30 dark:hover:text-white'}`}
                                             >
                                                 {b}
                                             </button>
@@ -216,19 +216,19 @@ ${formData.message}
                                 </div>
 
                                 <div className="space-y-4 pt-10">
-                                    <label className="text-[10px] uppercase font-bold tracking-[0.3em] text-white/40 ml-4">05. The Vision</label>
+                                    <label className="text-[10px] uppercase font-bold tracking-[0.3em] text-black/40 dark:text-white/40 ml-4">05. The Vision</label>
                                     <textarea
                                         required
                                         placeholder="Tell us about the impact you wish to create..."
                                         rows={6}
-                                        className="w-full bg-transparent border border-white/10 rounded-[2rem] p-8 text-xl font-light focus:outline-none focus:border-primary-500 transition-colors placeholder:text-white/10"
+                                        className="w-full bg-transparent border border-black/10 dark:border-white/10 rounded-[2rem] p-8 text-xl font-light text-black dark:text-white focus:outline-none focus:border-primary-500 transition-colors placeholder:text-black/10 dark:placeholder:text-white/10"
                                         value={formData.message}
                                         onChange={e => setFormData({ ...formData, message: e.target.value })}
                                     ></textarea>
                                 </div>
 
                                 <div className="pt-10 flex items-center justify-between">
-                                    <p className="text-[10px] text-white/20 font-bold uppercase tracking-[0.2em] max-w-[20ch]">
+                                    <p className="text-[10px] text-black/20 dark:text-white/20 font-bold uppercase tracking-[0.2em] max-w-[20ch]">
                                         By submitting, you agree to our digital boutique standards.
                                     </p>
                                     <button

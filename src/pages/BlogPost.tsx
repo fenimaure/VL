@@ -27,22 +27,22 @@ export default function BlogPost() {
         fetchPost();
     }, [slug]);
 
-    if (loading) return <div className="min-h-screen bg-dark-950 flex items-center justify-center text-white">Loading...</div>;
-    if (!post) return <div className="min-h-screen bg-dark-950 flex items-center justify-center text-white">Article not found.</div>;
+    if (loading) return <div className="min-h-screen bg-white dark:bg-dark-950 flex items-center justify-center text-black dark:text-white transition-colors duration-500">Loading...</div>;
+    if (!post) return <div className="min-h-screen bg-white dark:bg-dark-950 flex items-center justify-center text-black dark:text-white transition-colors duration-500">Article not found.</div>;
 
     return (
-        <div className="min-h-screen bg-dark-950 text-gray-300">
+        <div className="min-h-screen bg-white dark:bg-dark-950 text-gray-900 dark:text-gray-300 transition-colors duration-500">
             <Navbar />
 
             <article className="pt-32 pb-20">
                 <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <Link to="/blog" className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors">
+                    <Link to="/blog" className="inline-flex items-center gap-2 text-black/40 hover:text-black dark:text-gray-400 dark:hover:text-white mb-8 transition-colors">
                         <ArrowLeft className="h-4 w-4" /> Back to Blog
                     </Link>
 
-                    <h1 className="text-4xl md:text-5xl font-bold text-white font-display mb-6 leading-tight">{post.title}</h1>
+                    <h1 className="text-4xl md:text-5xl font-bold text-black dark:text-white font-display mb-6 leading-tight transition-colors duration-500">{post.title}</h1>
 
-                    <div className="flex items-center gap-6 text-sm text-gray-500 mb-8 border-b border-white/10 pb-8">
+                    <div className="flex items-center gap-6 text-sm text-black/60 dark:text-gray-500 mb-8 border-b border-black/10 dark:border-white/10 pb-8 transition-colors duration-500">
                         <span className="flex items-center gap-2"><User className="h-4 w-4" /> {post.author}</span>
                         <span className="flex items-center gap-2"><Calendar className="h-4 w-4" /> {new Date(post.published_at).toLocaleDateString()}</span>
                         <button className="ml-auto text-primary-400 hover:text-primary-300 flex items-center gap-2">
@@ -50,11 +50,11 @@ export default function BlogPost() {
                         </button>
                     </div>
 
-                    <div className="mb-12 rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+                    <div className="mb-12 rounded-2xl overflow-hidden border border-black/10 dark:border-white/10 shadow-2xl transition-all duration-500">
                         <img src={post.image_url || 'https://via.placeholder.com/1200x600'} alt={post.title} className="w-full h-auto" />
                     </div>
 
-                    <div className="prose prose-invert prose-lg max-w-none">
+                    <div className="prose prose-lg max-w-none dark:prose-invert prose-headings:text-black dark:prose-headings:text-white prose-p:text-gray-700 dark:prose-p:text-gray-300 transition-colors duration-500">
                         <div className="whitespace-pre-wrap">{post.content}</div>
                     </div>
                 </div>
