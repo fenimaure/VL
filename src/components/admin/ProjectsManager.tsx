@@ -311,8 +311,8 @@ export default function ProjectsManager() {
                                         <input className="w-full bg-dark-950 border border-white/10 rounded-lg px-4 py-2 text-white" value={formData.client || ''} onChange={e => setFormData({ ...formData, client: e.target.value })} />
                                     </div>
                                     <div>
-                                        <label className="block text-sm text-gray-400 mb-1">Duration</label>
-                                        <input className="w-full bg-dark-950 border border-white/10 rounded-lg px-4 py-2 text-white" value={formData.duration || ''} onChange={e => setFormData({ ...formData, duration: e.target.value })} placeholder="e.g. 3 Months" />
+                                        <label className="block text-sm text-gray-400 mb-1">Year</label>
+                                        <input className="w-full bg-dark-950 border border-white/10 rounded-lg px-4 py-2 text-white" value={formData.duration || ''} onChange={e => setFormData({ ...formData, duration: e.target.value })} placeholder="e.g. 2024" />
                                     </div>
                                     <div>
                                         <label className="block text-sm text-gray-400 mb-1">My Role</label>

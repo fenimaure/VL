@@ -1,7 +1,7 @@
 import { useParams, Link } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
 import { supabase } from '../lib/supabase';
-import { ArrowLeft, ArrowUpRight, Globe, User, Clock, Layers } from 'lucide-react';
+import { ArrowLeft, ArrowUpRight, Globe, User, Calendar, Layers } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
@@ -122,9 +122,9 @@ export default function ProjectDetail() {
                         </div>
                         <div className="stagger-item">
                             <div className="text-[10px] uppercase tracking-[0.3em] text-black/20 dark:text-white/20 font-bold mb-3 flex items-center gap-2 transition-colors duration-500">
-                                <Clock className="h-3 w-3" /> Duration
+                                <Calendar className="h-3 w-3" /> Year
                             </div>
-                            <div className="text-sm font-bold text-black dark:text-white uppercase tracking-wider transition-colors duration-500">{project.duration || '3 Months'}</div>
+                            <div className="text-sm font-bold text-black dark:text-white uppercase tracking-wider transition-colors duration-500">{project.duration || '2024'}</div>
                         </div>
                         <div className="stagger-item flex flex-col justify-center">
                             {project.live_url && (
