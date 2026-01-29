@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Instagram, Linkedin, Twitter } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import ThemeToggle from './ThemeToggle';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -91,6 +92,7 @@ export default function Navbar() {
             >
               Start Project
             </Link>
+            <ThemeToggle className="ml-4 w-10 h-10 border border-black/10 dark:border-white/10 hidden lg:flex" />
           </div>
 
           {/* Modern Menu Button (Mobile/Tablet Only) */}
@@ -141,6 +143,10 @@ export default function Navbar() {
           </div>
 
           <div className="mt-12 lg:mt-0 flex flex-col justify-end space-y-10 mb-20 lg:mb-10 text-center lg:text-left">
+            <div className="lg:hidden flex justify-center pb-6">
+              <ThemeToggle className="relative" />
+            </div>
+
             <div className="space-y-6">
               <span className="text-[11px] uppercase tracking-[0.4em] text-black/20 dark:text-white/20 font-bold block">Follow Us</span>
               <div className="flex justify-center lg:justify-start gap-8">

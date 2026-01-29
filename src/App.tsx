@@ -18,7 +18,6 @@ import CustomCursor from './components/CustomCursor';
 import PageTransition from './components/PageTransition';
 import FloatingContact from './components/FloatingContact';
 import Preloader from './components/Preloader';
-import ThemeToggle from './components/ThemeToggle';
 import { ThemeProvider } from './contexts/ThemeContext';
 
 function AppContent() {
@@ -40,7 +39,6 @@ function AppContent() {
       </AnimatePresence>
       <CustomCursor />
       <FloatingContact />
-      <ThemeToggle />
       <PageTransition>
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<Home />} />
