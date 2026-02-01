@@ -344,7 +344,7 @@ function StatsSection() {
     ];
 
     return (
-        <section className="py-20 border-y border-black/10 dark:border-white/10 bg-black dark:bg-white transition-colors duration-500">
+        <section className="py-20 border-y border-black/10 dark:border-white/10 bg-white dark:bg-dark-950 transition-colors duration-500">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
                     {stats.map((stat, idx) => (
@@ -390,11 +390,11 @@ function StatCounter({ stat, index }: { stat: any; index: number }) {
             transition={{ duration: 0.5, delay: index * 0.1 }}
             className="text-center group"
         >
-            <stat.icon className="h-8 w-8 mx-auto mb-4 text-white dark:text-dark-950 group-hover:scale-125 transition-transform" />
-            <div className="text-5xl md:text-6xl font-bold text-white dark:text-dark-950 mb-2">
+            <stat.icon className="h-8 w-8 mx-auto mb-4 text-black dark:text-white group-hover:scale-125 transition-transform" />
+            <div className="text-5xl md:text-6xl font-bold text-black dark:text-white mb-2">
                 {count}{stat.suffix}
             </div>
-            <div className="text-sm uppercase tracking-wider text-white/60 dark:text-dark-950/60 font-medium">
+            <div className="text-sm uppercase tracking-wider text-black/60 dark:text-white/60 font-medium">
                 {stat.label}
             </div>
         </motion.div>

@@ -18,16 +18,20 @@ export default function Preloader() {
             </div>
 
             <div className="relative z-10 flex flex-col items-center gap-12 text-center px-6">
-                {/* Main Logo Text Animation */}
+                {/* Main Logo Image Animation */}
                 <div className="overflow-hidden">
-                    <motion.h1
-                        initial={{ y: '100%' }}
-                        animate={{ y: 0 }}
+                    <motion.div
+                        initial={{ y: '100%', opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
                         transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
-                        className="text-4xl md:text-6xl font-bold font-display tracking-tighter text-white uppercase"
+                        className="flex items-center justify-center"
                     >
-                        Lovelli <span className="text-primary-500">.</span>
-                    </motion.h1>
+                        <img
+                            src="/logo.png"
+                            alt="Lovelli"
+                            className="h-16 md:h-24 w-auto invert"
+                        />
+                    </motion.div>
                 </div>
 
                 {/* Progress Container */}

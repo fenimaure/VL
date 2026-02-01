@@ -59,8 +59,12 @@ export default function Navbar() {
     <>
       <nav className={`fixed w-full z-[60] transition-all duration-500 ${scrolled ? 'py-4 bg-white/80 dark:bg-dark-950/80 backdrop-blur-xl border-b border-black/5 dark:border-white/5' : 'py-8'}`}>
         <div className="max-w-7xl mx-auto px-6 sm:px-8 flex justify-between items-center">
-          <Link to="/" className="text-3xl font-bold font-display tracking-tighter text-black dark:text-white z-[70] transition-colors duration-300">
-            lovelli<span className="text-primary-500">.</span>
+          <Link to="/" className="z-[70] transition-all duration-300 hover:opacity-80">
+            <img
+              src="/logo.png"
+              alt="Lovelli"
+              className="h-8 md:h-10 w-auto dark:invert transition-all duration-300"
+            />
           </Link>
 
           {/* Desktop Navigation */}
