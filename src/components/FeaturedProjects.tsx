@@ -78,9 +78,9 @@ export default function FeaturedProjects() {
             </div>
             <h2 className="text-5xl lg:text-7xl font-bold font-display mb-8 leading-none transition-colors duration-300">
               <span className="text-black dark:text-white">Selected </span>
-              <span className="text-black/20 dark:text-white/20 italic">Works</span>
+              <span className="text-black/40 dark:text-white/20 italic">Works</span>
             </h2>
-            <p className="text-xl text-black/60 dark:text-gray-400 leading-relaxed font-light max-w-lg transition-colors duration-300">
+            <p className="text-xl text-black/70 dark:text-gray-400 leading-relaxed font-light max-w-lg transition-colors duration-300">
               A curated collection of digital transformations where strategy meets art.
             </p>
           </div>
@@ -101,7 +101,7 @@ export default function FeaturedProjects() {
               className={`flex flex-col ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} gap-12 md:gap-20 items-center relative transition-all duration-1000`}
             >
               {/* Background Project Number */}
-              <div className={`absolute -top-20 ${index % 2 === 0 ? 'left-0' : 'right-0'} project-number opacity-5 select-none z-0 hidden lg:block stagger-item text-black dark:text-white transition-colors duration-500`}>
+              <div className={`absolute top-0 ${index % 2 === 0 ? 'left-0' : 'right-0'} project-number opacity-20 select-none z-0 hidden lg:block stagger-item text-black dark:text-white transition-colors duration-500`}>
                 {String(index + 1).padStart(2, '0')}
               </div>
 
@@ -125,7 +125,7 @@ export default function FeaturedProjects() {
                 <div className="space-y-6">
                   <div className="flex items-center gap-4 text-primary-500 font-bold text-xs uppercase tracking-[0.2em]">
                     <span>{project.category}</span>
-                    <span className="w-8 h-[1px] bg-black/20 dark:bg-white/20 transition-colors duration-300"></span>
+                    <span className="w-8 h-[1px] bg-black/30 dark:bg-white/20 transition-colors duration-300"></span>
                     <span>{String(index + 1).padStart(2, '0')}</span>
                   </div>
 
@@ -135,13 +135,13 @@ export default function FeaturedProjects() {
                     </Link>
                   </h3>
 
-                  <p className="text-lg text-black/60 dark:text-gray-400 leading-relaxed font-light transition-colors duration-300">
+                  <p className="text-lg text-black/70 dark:text-gray-400 leading-relaxed font-light transition-colors duration-300">
                     {project.description}
                   </p>
 
                   <div className="flex flex-wrap gap-3 pt-4">
                     {project.tags?.map((tag, i) => (
-                      <span key={i} className="px-4 py-1.5 text-[10px] font-bold tracking-widest uppercase text-black/40 dark:text-white/40 border border-black/10 dark:border-white/10 rounded-full transition-colors duration-300">
+                      <span key={i} className="px-4 py-1.5 text-[10px] font-bold tracking-widest uppercase text-black/60 dark:text-white/40 border border-black/10 dark:border-white/10 rounded-full transition-colors duration-300">
                         {tag}
                       </span>
                     ))}

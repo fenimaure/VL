@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { Plus, Trash2, Edit2, X, Save } from 'lucide-react';
+import MarkdownEditor from './MarkdownEditor';
 
 interface BlogPost {
     id: string;
@@ -132,10 +133,10 @@ export default function BlogsManager() {
 
                             <div>
                                 <label className="block text-sm text-gray-400 mb-1">Content (Markdown)</label>
-                                <textarea
-                                    className="w-full bg-dark-950 border border-white/10 rounded-lg px-4 py-2 text-white h-48 font-mono text-sm"
+                                <MarkdownEditor
                                     value={formData.content || ''}
-                                    onChange={e => setFormData({ ...formData, content: e.target.value })}
+                                    onChange={val => setFormData({ ...formData, content: val })}
+                                    height={500}
                                 />
                             </div>
 

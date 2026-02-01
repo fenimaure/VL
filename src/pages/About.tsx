@@ -8,6 +8,7 @@ import {
     TrendingUp, Globe, Sparkles, ArrowRight, Star,
     Lightbulb, Shield, Rocket
 } from 'lucide-react';
+import MarkdownRenderer from '../components/MarkdownRenderer';
 
 interface AboutSection {
     content: string;
@@ -166,11 +167,10 @@ export default function About() {
                             </h2>
                         </div>
 
-                        <div className="prose prose-lg prose-gray dark:prose-invert max-w-none">
-                            <p className="text-xl leading-relaxed text-black/70 dark:text-gray-300 text-center">
-                                {data.story?.content || 'Every great journey begins with a vision. Ours started with a simple belief: that digital experiences should be more than functional—they should be unforgettable.'}
-                            </p>
-                        </div>
+                        <MarkdownRenderer
+                            content={data.story?.content || 'Every great journey begins with a vision. Ours started with a simple belief: that digital experiences should be more than functional—they should be unforgettable.'}
+                            className="text-xl leading-relaxed text-black/70 dark:text-gray-300 text-center"
+                        />
                     </AnimatedSection>
                 </div>
             </section>
@@ -229,9 +229,10 @@ export default function About() {
                                 <h2 className="text-5xl md:text-6xl font-bold text-black dark:text-white mb-6 font-display leading-tight">
                                     {data.why_us?.title || 'Excellence in Every Detail'}
                                 </h2>
-                                <p className="text-xl text-black/60 dark:text-gray-300 mb-12 leading-relaxed">
-                                    {data.why_us?.content || 'We don\'t just deliver projects; we create partnerships that drive transformative growth.'}
-                                </p>
+                                <MarkdownRenderer
+                                    content={data.why_us?.content || 'We don\'t just deliver projects; we create partnerships that drive transformative growth.'}
+                                    className="text-xl text-black/60 dark:text-gray-300 mb-12 leading-relaxed"
+                                />
 
                                 <div className="space-y-6">
                                     {(data.why_us?.items || [

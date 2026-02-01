@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { Save, Loader2, Plus, Trash2 } from 'lucide-react';
+import MarkdownEditor from './MarkdownEditor';
 
 interface AboutSection {
     id: string;
@@ -153,9 +154,10 @@ export default function AboutManager() {
                     </div>
                     <div>
                         <label className="block text-sm text-gray-400 mb-1">Story Content (Markdown)</label>
-                        <textarea className="w-full bg-dark-950 border border-white/10 rounded-lg px-4 py-2 text-white h-32"
+                        <MarkdownEditor
                             value={sections.story?.content || ''}
-                            onChange={e => updateSection('story', 'content', e.target.value)}
+                            onChange={(val) => updateSection('story', 'content', val)}
+                            height={500}
                         />
                     </div>
                 </div>
@@ -220,9 +222,11 @@ export default function AboutManager() {
             <div className="bg-white/5 p-6 rounded-xl border border-white/10">
                 {renderSectionHeader('why_us', '6. Why Choose Us')}
                 <div className="mb-4">
-                    <textarea className="w-full bg-dark-950 border border-white/10 rounded-lg px-4 py-2 text-white h-20 mb-4"
+                    <label className="block text-sm text-gray-400 mb-1">Intro Content</label>
+                    <MarkdownEditor
                         value={sections.why_us?.content || ''}
-                        onChange={e => updateSection('why_us', 'content', e.target.value)}
+                        onChange={(val) => updateSection('why_us', 'content', val)}
+                        height={300}
                         placeholder="Intro text..."
                     />
                 </div>

@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { Plus, Trash2, Edit2, X, Save, Image as ImageIcon, Link, List } from 'lucide-react';
+import MarkdownEditor from './MarkdownEditor';
 import * as Icons from 'lucide-react';
 
 interface Service {
@@ -218,10 +219,10 @@ export default function ServicesManager() {
 
                                 <div>
                                     <label className="block text-sm text-gray-400 mb-1">Detailed Content (Markdown)</label>
-                                    <textarea
+                                    <MarkdownEditor
                                         value={formData.content || ''}
-                                        onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                                        className="w-full bg-dark-950 border border-white/10 rounded-lg px-4 py-2 text-white h-64 font-mono text-sm"
+                                        onChange={(val) => setFormData({ ...formData, content: val })}
+                                        height={500}
                                         placeholder="# Detailed Service Information..."
                                     />
                                 </div>

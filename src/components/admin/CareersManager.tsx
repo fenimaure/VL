@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { Plus, Trash2, Edit2, X, Save, Briefcase, DollarSign, Link, RefreshCw } from 'lucide-react';
+import MarkdownEditor from './MarkdownEditor';
 
 interface Career {
     id: string;
@@ -181,7 +182,12 @@ export default function CareersManager() {
 
                                 <div>
                                     <label className="block text-sm text-gray-400 mb-1">Full Content (Markdown)</label>
-                                    <textarea className="w-full bg-dark-950 border border-white/10 rounded-lg px-4 py-2 text-white h-64 font-mono text-sm" value={formData.content || ''} onChange={e => setFormData({ ...formData, content: e.target.value })} placeholder="# Job Description..." />
+                                    <MarkdownEditor
+                                        value={formData.content || ''}
+                                        onChange={(val) => setFormData({ ...formData, content: val })}
+                                        height={500}
+                                        placeholder="# Job Description..."
+                                    />
                                 </div>
                             </div>
 

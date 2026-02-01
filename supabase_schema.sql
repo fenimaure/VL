@@ -11,6 +11,13 @@ create table if not exists projects (
   slug text unique not null,
   category text not null,
   description text,
+  challenge text, -- New field for specific challenge text
+  content text,   -- Core narrative / full content
+  client text,
+  role text,
+  duration text,
+  live_url text,
+  contact_email text,
   image_url text,
   tags text[] default '{}',
   is_featured boolean default false,

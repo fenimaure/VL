@@ -2,9 +2,12 @@
 import { useParams, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { ArrowLeft, Calendar, User, Share2 } from 'lucide-react';
+import { ArrowLeft, Calendar, User } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import SEO from '../components/SEO';
+import SocialShare from '../components/SocialShare';
+import MarkdownRenderer from '../components/MarkdownRenderer';
 
 export default function BlogPost() {
     const { slug } = useParams();
@@ -32,6 +35,15 @@ export default function BlogPost() {
 
     return (
         <div className="min-h-screen bg-white dark:bg-dark-950 text-gray-900 dark:text-gray-300 transition-colors duration-500">
+            <SEO
+                title={post.title}
+                description={post.excerpt || post.content?.substring(0, 160) || ''}
+                image={post.image_url}
+                url={`/blog/${post.slug}`}
+                type="article"
+                author={post.author}
+                publishedTime={post.published_at}
+            />
             <Navbar />
 
             <article className="pt-32 pb-20">
@@ -45,9 +57,12 @@ export default function BlogPost() {
                     <div className="flex items-center gap-6 text-sm text-black/60 dark:text-gray-500 mb-8 border-b border-black/10 dark:border-white/10 pb-8 transition-colors duration-500">
                         <span className="flex items-center gap-2"><User className="h-4 w-4" /> {post.author}</span>
                         <span className="flex items-center gap-2"><Calendar className="h-4 w-4" /> {new Date(post.published_at).toLocaleDateString()}</span>
-                        <button className="ml-auto text-primary-400 hover:text-primary-300 flex items-center gap-2">
-                            <Share2 className="h-4 w-4" /> Share
-                        </button>
+                        <SocialShare
+                            title={post.title}
+                            description={post.excerpt || post.content?.substring(0, 160) || ''}
+                            hashtags={post.category ? [post.category] : []}
+                            className="ml-auto"
+                        />
                     </div>
 
                     <div className="mb-12 rounded-2xl overflow-hidden border border-black/10 dark:border-white/10 shadow-2xl transition-all duration-500">
@@ -55,7 +70,7 @@ export default function BlogPost() {
                     </div>
 
                     <div className="prose prose-lg max-w-none dark:prose-invert prose-headings:text-black dark:prose-headings:text-white prose-p:text-gray-700 dark:prose-p:text-gray-300 transition-colors duration-500">
-                        <div className="whitespace-pre-wrap">{post.content}</div>
+                        <MarkdownRenderer content={post.content || ''} />
                     </div>
                 </div>
             </article>

@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabase';
 import { ArrowLeft, ArrowUpRight, Sparkles, Zap, Shield, Target } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import MarkdownRenderer from '../components/MarkdownRenderer';
 
 export default function ServiceDetail() {
     const { slug } = useParams();
@@ -116,10 +117,8 @@ export default function ServiceDetail() {
                             </p>
                         </div>
                         <div className="lg:col-span-7 lg:offset-1 stagger-item">
-                            <div className="prose prose-lg max-w-none dark:prose-invert prose-p:text-black/60 dark:prose-p:text-gray-400 transition-colors duration-500">
-                                <div className="whitespace-pre-wrap font-light leading-[1.8]">
-                                    {service.content || 'Our architectural approach ensures that every pixel and line of code serves a higher brand purpose...'}
-                                </div>
+                            <div className="lg:col-span-7 lg:offset-1 stagger-item">
+                                <MarkdownRenderer content={service.content || 'Our architectural approach ensures...'} className="font-light leading-[1.8]" />
                             </div>
                         </div>
                     </div>

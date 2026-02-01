@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { Plus, Trash2, Edit2, X, Save, Image as ImageIcon, Link, RefreshCw, Upload, Loader2 } from 'lucide-react';
+import MarkdownEditor from './MarkdownEditor';
 
 interface Project {
     id: string;
@@ -16,6 +17,8 @@ interface Project {
     duration: string;
     role: string;
     live_url: string;
+    contact_email: string;
+    challenge: string;
     is_featured?: boolean;
 }
 
@@ -91,8 +94,8 @@ export default function ProjectsManager() {
 
     function handleAddNew() {
         const defaultCategory = services.length > 0 ? services[0].title : 'General';
-        setEditing({ id: '', title: '', category: '', description: '', image_url: '', tags: [], slug: '', content: '', client: '', duration: '', role: '', live_url: '', is_featured: false });
-        setFormData({ title: '', category: defaultCategory, description: '', image_url: '', tags: [], slug: '', content: '', client: '', duration: '', role: '', live_url: '', is_featured: false });
+        setEditing({ id: '', title: '', category: '', description: '', image_url: '', tags: [], slug: '', content: '', client: '', duration: '', role: '', live_url: '', contact_email: '', challenge: '', is_featured: false });
+        setFormData({ title: '', category: defaultCategory, description: '', image_url: '', tags: [], slug: '', content: '', client: '', duration: '', role: '', live_url: '', contact_email: '', challenge: '', is_featured: false });
         setIsNew(true);
     }
 
@@ -305,6 +308,16 @@ export default function ProjectsManager() {
                                     />
                                 </div>
 
+                                <div>
+                                    <label className="block text-sm text-gray-400 mb-1">Challenge Statement (The "The Challenge" section)</label>
+                                    <textarea
+                                        value={formData.challenge || ''}
+                                        onChange={(e) => setFormData({ ...formData, challenge: e.target.value })}
+                                        className="w-full bg-dark-950 border border-white/10 rounded-lg px-4 py-2 text-white focus:border-primary-500 outline-none h-32"
+                                        placeholder="Describe the main challenge or problem solved..."
+                                    />
+                                </div>
+
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
                                         <label className="block text-sm text-gray-400 mb-1">Client Name</label>
@@ -322,15 +335,19 @@ export default function ProjectsManager() {
                                         <label className="block text-sm text-gray-400 mb-1">Live URL</label>
                                         <input className="w-full bg-dark-950 border border-white/10 rounded-lg px-4 py-2 text-white" value={formData.live_url || ''} onChange={e => setFormData({ ...formData, live_url: e.target.value })} />
                                     </div>
+                                    <div>
+                                        <label className="block text-sm text-gray-400 mb-1">Contact Email</label>
+                                        <input className="w-full bg-dark-950 border border-white/10 rounded-lg px-4 py-2 text-white" value={formData.contact_email || ''} onChange={e => setFormData({ ...formData, contact_email: e.target.value })} placeholder="hello@lovelli.com" />
+                                    </div>
                                 </div>
 
                                 <div>
                                     <label className="block text-sm text-gray-400 mb-1">Case Study Content (Markdown)</label>
-                                    <textarea
+                                    <MarkdownEditor
                                         value={formData.content || ''}
-                                        onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                                        className="w-full bg-dark-950 border border-white/10 rounded-lg px-4 py-2 text-white h-64 font-mono text-sm"
-                                        placeholder="# Project Overview..."
+                                        onChange={(val) => setFormData({ ...formData, content: val })}
+                                        height={500}
+                                        placeholder="# Project Overview\n\nTell the story of this project..."
                                     />
                                 </div>
                             </div>

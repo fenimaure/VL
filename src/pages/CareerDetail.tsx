@@ -5,6 +5,9 @@ import { supabase } from '../lib/supabase';
 import { ArrowLeft, Briefcase, MapPin, Clock, DollarSign, Check, Mail } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import SEO from '../components/SEO';
+import SocialShare from '../components/SocialShare';
+import MarkdownRenderer from '../components/MarkdownRenderer';
 
 export default function CareerDetail() {
     const { slug } = useParams();
@@ -32,6 +35,12 @@ export default function CareerDetail() {
 
     return (
         <div className="min-h-screen bg-white dark:bg-dark-950 text-gray-900 dark:text-gray-300 transition-colors duration-500">
+            <SEO
+                title={`${job.title} - ${job.department}`}
+                description={`Join Lovelli as a ${job.title} in ${job.location}. ${job.description || ''}`}
+                url={`/careers/${job.slug}`}
+                type="article"
+            />
             <Navbar />
 
             <section className="pt-32 pb-20">
@@ -63,9 +72,7 @@ export default function CareerDetail() {
                         <div className="md:col-span-2 space-y-12">
                             <div>
                                 <h2 className="text-2xl font-bold text-black dark:text-white mb-4 transition-colors duration-500">About the Role</h2>
-                                <div className="prose prose-lg max-w-none dark:prose-invert prose-headings:text-black dark:prose-headings:text-white prose-p:text-gray-700 dark:prose-p:text-gray-300 transition-colors duration-500">
-                                    <div className="whitespace-pre-wrap">{job.content || job.description}</div>
-                                </div>
+                                <MarkdownRenderer content={job.content || job.description} />
                             </div>
 
                             <div>
@@ -95,13 +102,25 @@ export default function CareerDetail() {
                         </div>
 
                         <div className="md:col-span-1">
-                            <div className="bg-white dark:bg-dark-900 border border-black/10 dark:border-white/10 rounded-2xl p-6 sticky top-24 transition-colors duration-500 shadow-lg dark:shadow-none">
-                                <h3 className="text-xl font-bold text-black dark:text-white mb-2 transition-colors duration-500">Apply Now</h3>
-                                <p className="text-black/60 dark:text-gray-400 text-sm mb-6 transition-colors duration-500">Interested in this role? Send your resume and portfolio to our team.</p>
+                            <div className="bg-white dark:bg-dark-900 border border-black/10 dark:border-white/10 rounded-2xl p-6 sticky top-24 transition-colors duration-500 shadow-lg dark:shadow-none space-y-6">
+                                <div>
+                                    <h3 className="text-xl font-bold text-black dark:text-white mb-2 transition-colors duration-500">Apply Now</h3>
+                                    <p className="text-black/60 dark:text-gray-400 text-sm mb-6 transition-colors duration-500">Interested in this role? Send your resume and portfolio to our team.</p>
 
-                                <a href={`mailto:${job.application_email || 'careers@company.com'}?subject=Application for ${job.title}`} className="block w-full bg-black text-white dark:bg-white dark:text-black font-bold text-center py-3 rounded-xl hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors flex items-center justify-center gap-2">
-                                    <Mail className="h-4 w-4" /> Apply via Email
-                                </a>
+                                    <a href={`mailto:${job.application_email || 'careers@company.com'}?subject=Application for ${job.title}`} className="block w-full bg-black text-white dark:bg-white dark:text-black font-bold text-center py-3 rounded-xl hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors flex items-center justify-center gap-2">
+                                        <Mail className="h-4 w-4" /> Apply via Email
+                                    </a>
+                                </div>
+
+                                <div className="border-t border-black/10 dark:border-white/10 pt-6">
+                                    <p className="text-xs text-black/40 dark:text-gray-500 mb-3 font-bold uppercase tracking-wider">Share this opportunity</p>
+                                    <SocialShare
+                                        title={`${job.title} at Lovelli`}
+                                        description={`Join our team as a ${job.title} in ${job.location}`}
+                                        hashtags={['Careers', job.department, 'Hiring']}
+                                        className="w-full"
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>

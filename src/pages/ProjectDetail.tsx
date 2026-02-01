@@ -4,6 +4,9 @@ import { supabase } from '../lib/supabase';
 import { ArrowLeft, ArrowUpRight, Globe, User, Calendar, Layers } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import SEO from '../components/SEO';
+import SocialShare from '../components/SocialShare';
+import MarkdownRenderer from '../components/MarkdownRenderer';
 
 export default function ProjectDetail() {
     const { slug } = useParams();
@@ -59,6 +62,13 @@ export default function ProjectDetail() {
 
     return (
         <div className="min-h-screen bg-white dark:bg-dark-950 text-gray-900 dark:text-gray-300 selection:bg-primary-500/30 overflow-x-hidden transition-colors duration-500" ref={mainRef}>
+            <SEO
+                title={project.title}
+                description={project.description}
+                image={project.image_url}
+                url={`/projects/${project.slug}`}
+                type="article"
+            />
             <Navbar />
 
             {/* Cinematic Exhibition Hero */}
@@ -127,16 +137,23 @@ export default function ProjectDetail() {
                             <div className="text-sm font-bold text-black dark:text-white uppercase tracking-wider transition-colors duration-500">{project.duration || '2024'}</div>
                         </div>
                         <div className="stagger-item flex flex-col justify-center">
-                            {project.live_url && (
-                                <a
-                                    href={project.live_url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="group inline-flex items-center gap-3 text-[10px] font-bold text-primary-500 uppercase tracking-[0.3em] hover:text-black dark:hover:text-white transition-colors"
-                                >
-                                    <Globe className="h-3 w-3" /> View Deployment <ArrowUpRight className="h-3 w-3 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                                </a>
-                            )}
+                            <div className="flex items-center gap-4">
+                                {project.live_url && (
+                                    <a
+                                        href={project.live_url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="group inline-flex items-center gap-3 text-[10px] font-bold text-primary-500 uppercase tracking-[0.3em] hover:text-black dark:hover:text-white transition-colors"
+                                    >
+                                        <Globe className="h-3 w-3" /> View Deployment <ArrowUpRight className="h-3 w-3 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                                    </a>
+                                )}
+                                <SocialShare
+                                    title={project.title}
+                                    description={project.description}
+                                    hashtags={project.tags ? project.tags.slice(0, 3) : []}
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -154,7 +171,7 @@ export default function ProjectDetail() {
                         <div className="lg:col-span-4 stagger-item">
                             <h2 className="text-xs uppercase tracking-[0.5em] text-primary-500 font-bold mb-10">The Challenge</h2>
                             <p className="text-3xl md:text-4xl text-black dark:text-white font-light leading-snug font-display transition-colors duration-500">
-                                {project.description}
+                                {project.challenge || project.description}
                             </p>
 
                             <div className="flex flex-wrap gap-3 mt-16">
@@ -166,68 +183,18 @@ export default function ProjectDetail() {
                             </div>
                         </div>
                         <div className="lg:col-span-7 lg:offset-1 stagger-item">
-                            <div className="prose prose-lg max-w-none dark:prose-invert prose-p:text-black/60 dark:prose-p:text-gray-400 transition-colors duration-500">
-                                <div className="whitespace-pre-wrap font-light leading-[1.8] text-xl md:text-2xl">
-                                    {project.content || 'Our architectural approach ensures that every pixel and line of code serves a higher brand purpose...'}
-                                </div>
-                            </div>
+                            <MarkdownRenderer
+                                content={project.content || 'Our architectural approach ensures that every pixel and line of code serves a higher brand purpose...'}
+                                className="font-light leading-[1.8] text-lg md:text-xl text-black/80 dark:text-gray-300 transition-colors duration-500"
+                            />
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* Exhibition Gallery Preview */}
-            <section className="px-6 lg:px-8 mb-40">
-                <div className="max-w-7xl mx-auto stagger-item">
-                    <div className="relative group overflow-hidden rounded-[3rem] border border-black/10 dark:border-white/10 shadow-2xl transition-colors duration-500">
-                        <div className="absolute inset-0 bg-primary-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
-                        <img
-                            src={project.image_url}
-                            alt={`${project.title} detailed shot`}
-                            className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-[3s] ease-out"
-                        />
 
-                        {/* Interactive Tooltip */}
-                        <div className="absolute bottom-10 left-10 p-6 bg-white/80 dark:bg-dark-950/80 backdrop-blur-xl border border-black/10 dark:border-white/10 rounded-2xl opacity-0 translate-y-10 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-700">
-                            <span className="text-[10px] uppercase tracking-widest text-primary-500 font-bold block mb-2 underline underline-offset-4">Interactive Component</span>
-                            <p className="text-sm text-black/70 dark:text-white/70 max-w-xs font-light">Custom kinetic interface designed for seamless user engagement across all viewports.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
 
-            {/* Next Project / CTA Anchor */}
-            <section className="py-60 relative overflow-hidden bg-black/[0.01] dark:bg-white/[0.01] transition-colors duration-500">
-                <div className="max-w-4xl mx-auto px-6 text-center stagger-item">
-                    <h2 className="text-5xl md:text-8xl font-bold font-display text-black dark:text-white mb-16 tracking-tighter leading-none transition-colors duration-500">
-                        Witnessed the <span className="text-stroke-light dark:text-stroke-white italic font-light">Evo</span>lution?
-                    </h2>
 
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-12">
-                        <Link
-                            to="/projects"
-                            className="group relative px-12 py-6 bg-black text-white dark:bg-white dark:text-dark-950 rounded-full font-bold text-xl hover:scale-105 transition-all duration-500 flex items-center gap-4"
-                        >
-                            Back To Exhibition
-                            <ArrowLeft className="h-6 w-6 group-hover:-translate-x-1 transition-transform" />
-                        </Link>
-
-                        <a
-                            href={`mailto:${project.contact_email || 'hello@lovelli.com'}`}
-                            className="inline-flex items-center gap-4 text-xs font-bold uppercase tracking-[0.4em] text-black/40 hover:text-black dark:text-white/40 dark:hover:text-white transition-all underline underline-offset-8"
-                        >
-                            Discuss Your Project
-                        </a>
-                    </div>
-                </div>
-
-                {/* Aesthetic Background Branding */}
-                <div className="absolute bottom-0 left-0 right-0 py-20 border-t border-black/5 dark:border-white/5 opacity-40 transition-colors duration-500">
-                    <div className="text-huge opacity-[0.03] select-none pointer-events-none font-display text-center">
-                        LOVELLI.
-                    </div>
-                </div>
-            </section>
 
             <Footer />
         </div>
