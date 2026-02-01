@@ -1,9 +1,13 @@
-
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
+import { motion, useInView, useScroll, useTransform } from 'framer-motion';
 import { supabase } from '../lib/supabase';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { CheckCircle, Users } from 'lucide-react';
+import {
+    CheckCircle, Users, Target, Zap, Heart, Award,
+    TrendingUp, Globe, Sparkles, ArrowRight, Star,
+    Lightbulb, Shield, Rocket
+} from 'lucide-react';
 
 interface AboutSection {
     content: string;
@@ -15,7 +19,14 @@ interface AboutSection {
 
 export default function About() {
     const [data, setData] = useState<Record<string, AboutSection>>({});
-    const [loading, setLoading] = useState(true);
+    const heroRef = useRef(null);
+    const { scrollYProgress } = useScroll({
+        target: heroRef,
+        offset: ["start start", "end start"]
+    });
+
+    const y = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
+    const opacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
 
     useEffect(() => {
         async function fetchContent() {
@@ -25,135 +36,439 @@ export default function About() {
                 const map: any = {};
                 data?.forEach((item: any) => map[item.section_key] = item);
                 setData(map);
-            } catch (e) { console.error(e); } finally { setLoading(false); }
+            } catch (e) {
+                console.error('Error fetching about content:', e);
+            }
         }
         fetchContent();
     }, []);
-
-    if (loading) return <div className="min-h-screen bg-white dark:bg-dark-950 flex items-center justify-center text-black dark:text-white transition-colors duration-500">Loading...</div>;
 
     return (
         <div className="min-h-screen bg-white dark:bg-dark-950 text-gray-900 dark:text-gray-300 transition-colors duration-500">
             <Navbar />
 
-            {/* 1. Hero (Above the Fold) */}
-            <section className="relative min-h-[90vh] flex items-center pt-20 overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-b from-white via-transparent to-white dark:from-dark-950 dark:via-transparent dark:to-dark-950 z-10 transition-colors duration-500"></div>
-                <div className="absolute inset-0 z-0">
-                    {data.hero?.image_url && <img src={data.hero.image_url} className="w-full h-full object-cover opacity-30" alt="About Hero" />}
-                </div>
+            {/* CINEMATIC HERO with Parallax */}
+            <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
+                {/* Parallax Background */}
+                <motion.div
+                    style={{ y }}
+                    className="absolute inset-0 z-0"
+                >
+                    {data.hero?.image_url ? (
+                        <img
+                            src={data.hero.image_url}
+                            className="w-full h-full object-cover scale-110"
+                            alt="About Hero"
+                        />
+                    ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-primary-500/20 via-purple-500/20 to-pink-500/20"></div>
+                    )}
+                </motion.div>
 
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 text-center">
-                    <h1 className="text-6xl md:text-8xl font-bold font-display text-black dark:text-white mb-6 tracking-tight leading-none transition-colors duration-500">
-                        {data.hero?.title || 'Our Vision'}
-                    </h1>
-                    <p className="text-xl md:text-2xl text-primary-400 font-medium max-w-3xl mx-auto">
-                        {data.hero?.subtitle || 'Clear One-Line Positioning'}
-                    </p>
-                    <p className="mt-8 text-black/60 dark:text-gray-400 max-w-2xl mx-auto text-lg leading-relaxed transition-colors duration-500">
-                        {data.hero?.content}
-                    </p>
-                </div>
-            </section>
+                {/* Gradient Overlays */}
+                <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-white/70 to-white dark:from-dark-950/90 dark:via-dark-950/70 dark:to-dark-950 z-10 transition-colors duration-500"></div>
 
-            {/* 2. Our Story */}
-            <section className="py-32 bg-gray-50/50 dark:bg-dark-900/30 transition-colors duration-500">
-                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <h2 className="text-4xl font-bold text-black dark:text-white mb-8 font-display transition-colors duration-500">{data.story?.title || 'Our Story'}</h2>
-                    <div className="prose prose-lg mx-auto text-black/70 dark:text-gray-300">
-                        <div className="whitespace-pre-wrap">{data.story?.content}</div>
+                {/* Animated Mesh Pattern */}
+                <div className="absolute inset-0 bg-mesh opacity-10 animate-pulse-glow z-10"></div>
+
+                <motion.div
+                    style={{ opacity }}
+                    className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
+                >
+                    {/* Floating Badge */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6 }}
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-black/5 dark:bg-white/5 backdrop-blur-xl rounded-full mb-8 border border-black/10 dark:border-white/10"
+                    >
+                        <Sparkles className="h-4 w-4 text-primary-500 animate-pulse" />
+                        <span className="text-sm font-bold tracking-wider uppercase text-primary-500">About Us</span>
+                    </motion.div>
+
+                    {/* Main Headline */}
+                    <motion.h1
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.2 }}
+                        className="text-6xl md:text-8xl lg:text-9xl font-bold font-display text-black dark:text-white mb-8 tracking-tighter leading-[0.9]"
+                    >
+                        {data.hero?.title || 'Crafting Digital Excellence'}
+                    </motion.h1>
+
+                    {/* Subtitle */}
+                    <motion.p
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.4 }}
+                        className="text-2xl md:text-3xl text-primary-500 font-medium max-w-4xl mx-auto mb-6"
+                    >
+                        {data.hero?.subtitle || 'Where Innovation Meets Artistry'}
+                    </motion.p>
+
+                    {/* Description */}
+                    <motion.p
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.6 }}
+                        className="text-lg md:text-xl text-black/60 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed mb-12"
+                    >
+                        {data.hero?.content || 'We are a collective of digital artisans, strategists, and innovators dedicated to transforming visions into unforgettable digital experiences.'}
+                    </motion.p>
+
+                    {/* CTA Buttons */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.8 }}
+                        className="flex flex-col sm:flex-row gap-4 justify-center"
+                    >
+                        <a
+                            href="#team"
+                            className="group px-8 py-4 bg-black dark:bg-white text-white dark:text-dark-950 rounded-full font-bold hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2"
+                        >
+                            Meet the Team
+                            <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                        </a>
+                        <a
+                            href="#story"
+                            className="group px-8 py-4 bg-white/10 dark:bg-black/10 backdrop-blur-sm text-black dark:text-white rounded-full font-bold border border-black/10 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-300"
+                        >
+                            Our Story
+                        </a>
+                    </motion.div>
+                </motion.div>
+
+                {/* Scroll Indicator */}
+                <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 animate-bounce">
+                    <div className="flex flex-col items-center gap-2">
+                        <span className="text-xs uppercase tracking-widest text-black/40 dark:text-white/40">Scroll</span>
+                        <div className="w-[2px] h-12 bg-gradient-to-b from-black/20 to-transparent dark:from-white/20"></div>
                     </div>
                 </div>
             </section>
 
-            {/* 3. What We Believe */}
-            <section className="py-32 relative">
+            {/* ANIMATED STATS SECTION */}
+            <StatsSection />
+
+            {/* OUR STORY with Rich Animation */}
+            <section id="story" className="py-32 bg-gray-50/50 dark:bg-dark-900/30 relative overflow-hidden transition-colors duration-500">
+                {/* Background Decorations */}
+                <div className="absolute top-20 right-20 w-96 h-96 bg-primary-500/5 rounded-full blur-3xl"></div>
+                <div className="absolute bottom-20 left-20 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl"></div>
+
+                <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <AnimatedSection>
+                        <div className="text-center mb-16">
+                            <span className="text-sm font-bold uppercase tracking-widest text-primary-500 mb-4 block">Our Journey</span>
+                            <h2 className="text-5xl md:text-7xl font-bold text-black dark:text-white font-display tracking-tight">
+                                {data.story?.title || 'Our Story'}
+                            </h2>
+                        </div>
+
+                        <div className="prose prose-lg prose-gray dark:prose-invert max-w-none">
+                            <p className="text-xl leading-relaxed text-black/70 dark:text-gray-300 text-center">
+                                {data.story?.content || 'Every great journey begins with a vision. Ours started with a simple belief: that digital experiences should be more than functional—they should be unforgettable.'}
+                            </p>
+                        </div>
+                    </AnimatedSection>
+                </div>
+            </section>
+
+            {/* VALUES / BELIEFS - Premium Grid */}
+            <section className="py-32 relative overflow-hidden">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="text-center mb-16">
-                        <h2 className="text-4xl font-bold text-black dark:text-white mb-4 font-display transition-colors duration-500">{data.beliefs?.title || 'What We Believe'}</h2>
-                    </div>
+                    <AnimatedSection>
+                        <div className="text-center mb-20">
+                            <span className="text-sm font-bold uppercase tracking-widest text-primary-500 mb-4 block">Core Principles</span>
+                            <h2 className="text-5xl md:text-7xl font-bold text-black dark:text-white font-display tracking-tight mb-6">
+                                {data.beliefs?.title || 'What We Stand For'}
+                            </h2>
+                        </div>
+                    </AnimatedSection>
+
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {data.beliefs?.items?.map((item: any, idx: number) => (
-                            <div key={idx} className="bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 p-8 rounded-2xl hover:bg-black/10 dark:hover:bg-white/10 transition-colors duration-300">
-                                <h3 className="text-xl font-bold text-black dark:text-white mb-3 transition-colors duration-300">{item.title}</h3>
-                                <p className="text-black/60 dark:text-gray-400 transition-colors duration-300">{item.desc}</p>
-                            </div>
+                        {(data.beliefs?.items || [
+                            { title: 'Innovation First', desc: 'Pushing boundaries and exploring new possibilities' },
+                            { title: 'Client Partnership', desc: 'Your success is our success' },
+                            { title: 'Attention to Detail', desc: 'Perfection in every pixel' }
+                        ]).map((item: any, idx: number) => (
+                            <ValueCard key={idx} item={item} index={idx} />
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* 4. Who We Work With */}
-            <section className="py-20 border-y border-black/5 dark:border-white/5 bg-black/5 dark:bg-black/20 transition-colors duration-500">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <h2 className="text-2xl font-bold text-black/40 dark:text-gray-500 mb-12 uppercase tracking-widest transition-colors duration-500">{data.who_we_work_with?.title || 'Trusted By'}</h2>
-                    <div className="flex flex-wrap justify-center gap-12 opacity-70">
-                        {data.who_we_work_with?.items?.map((item: any, idx: number) => (
-                            <div key={idx} className="flex items-center gap-3">
-                                {item.logo ? <img src={item.logo} alt={item.name} className="h-8 grayscale hover:grayscale-0 transition-all" /> : <span className="text-xl font-bold text-black dark:text-white">{item.name}</span>}
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* 5. The Team */}
-            <section className="py-32">
+            {/* TEAM SECTION - Premium 3D Cards */}
+            <section id="team" className="py-32 bg-gray-50 dark:bg-dark-900 relative overflow-hidden transition-colors duration-500">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <h2 className="text-4xl font-bold text-black dark:text-white mb-16 font-display text-center transition-colors duration-500">{data.team?.title || 'Meet the Team'}</h2>
+                    <AnimatedSection>
+                        <div className="text-center mb-20">
+                            <span className="text-sm font-bold uppercase tracking-widest text-primary-500 mb-4 block">The Dream Team</span>
+                            <h2 className="text-5xl md:text-7xl font-bold text-black dark:text-white font-display tracking-tight">
+                                {data.team?.title || 'Meet Our Team'}
+                            </h2>
+                        </div>
+                    </AnimatedSection>
+
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                        {data.team?.items?.map((member: any, idx: number) => (
-                            <div key={idx} className="text-center group">
-                                <div className="w-48 h-48 mx-auto mb-6 rounded-full overflow-hidden border-2 border-black/10 dark:border-white/10 group-hover:border-primary-500 transition-colors">
-                                    <img src={member.image || 'https://via.placeholder.com/400'} alt={member.name} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
-                                </div>
-                                <h3 className="text-xl font-bold text-black dark:text-white transition-colors duration-500">{member.name}</h3>
-                                <p className="text-primary-400 text-sm">{member.role}</p>
-                            </div>
+                        {(data.team?.items || []).map((member: any, idx: number) => (
+                            <TeamMemberCard key={idx} member={member} index={idx} />
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* 6. Why Choose Us */}
-            <section className="py-32 bg-primary-500/5 dark:bg-primary-900/10 transition-colors duration-500">
+            {/* WHY CHOOSE US - Split Layout */}
+            <section className="py-32 relative overflow-hidden">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                        <div>
-                            <h2 className="text-4xl font-bold text-black dark:text-white mb-6 font-display transition-colors duration-500">{data.why_us?.title || 'Why Choose Us'}</h2>
-                            <p className="text-lg text-black/60 dark:text-gray-300 mb-8 transition-colors duration-500">{data.why_us?.content}</p>
-                            <ul className="space-y-6">
-                                {data.why_us?.items?.map((item: any, idx: number) => (
-                                    <li key={idx} className="flex gap-4">
-                                        <div className="mt-1 flex-shrink-0 w-6 h-6 rounded-full bg-primary-500 flex items-center justify-center text-white">
-                                            <CheckCircle className="h-4 w-4" />
-                                        </div>
-                                        <div>
-                                            <h4 className="font-bold text-black dark:text-white transition-colors duration-500">{item.title}</h4>
-                                            <p className="text-black/60 dark:text-gray-400 text-sm transition-colors duration-500">{item.desc}</p>
-                                        </div>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                        <div className="relative">
-                            <div className="absolute inset-0 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-3xl rotate-3 opacity-20 blur-xl"></div>
-                            <div className="relative bg-white dark:bg-dark-900 border border-black/10 dark:border-white/10 p-8 rounded-3xl transition-colors duration-500">
-                                <Users className="h-12 w-12 text-primary-400 mb-6" />
-                                <h3 className="text-2xl font-bold text-black dark:text-white mb-4 transition-colors duration-500">Partner with Excellence</h3>
-                                <p className="text-black/60 dark:text-gray-400 mb-6 transition-colors duration-500">
-                                    We don't just build software; we build lasting partnerships that drive growth.
+                        <AnimatedSection>
+                            <div>
+                                <span className="text-sm font-bold uppercase tracking-widest text-primary-500 mb-4 block">Why Partner With Us</span>
+                                <h2 className="text-5xl md:text-6xl font-bold text-black dark:text-white mb-6 font-display leading-tight">
+                                    {data.why_us?.title || 'Excellence in Every Detail'}
+                                </h2>
+                                <p className="text-xl text-black/60 dark:text-gray-300 mb-12 leading-relaxed">
+                                    {data.why_us?.content || 'We don\'t just deliver projects; we create partnerships that drive transformative growth.'}
                                 </p>
-                                <button className="w-full py-4 bg-black text-white dark:bg-white dark:text-dark-950 font-bold rounded-xl hover:bg-black/90 dark:hover:bg-gray-100 transition-colors duration-300">
-                                    Start a Project
-                                </button>
+
+                                <div className="space-y-6">
+                                    {(data.why_us?.items || [
+                                        { title: 'Proven Track Record', desc: '100+ successful projects delivered' },
+                                        { title: 'Expert Team', desc: 'Industry veterans with decades of combined experience' },
+                                        { title: 'Agile Approach', desc: 'Flexible, responsive, and adaptive to your needs' }
+                                    ]).map((item: any, idx: number) => (
+                                        <motion.div
+                                            key={idx}
+                                            initial={{ opacity: 0, x: -20 }}
+                                            whileInView={{ opacity: 1, x: 0 }}
+                                            transition={{ delay: idx * 0.1 }}
+                                            viewport={{ once: true }}
+                                            className="flex gap-4 group"
+                                        >
+                                            <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-primary-500 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                                <CheckCircle className="h-6 w-6 text-white" />
+                                            </div>
+                                            <div>
+                                                <h4 className="font-bold text-lg text-black dark:text-white mb-1">{item.title}</h4>
+                                                <p className="text-black/60 dark:text-gray-400">{item.desc}</p>
+                                            </div>
+                                        </motion.div>
+                                    ))}
+                                </div>
                             </div>
-                        </div>
+                        </AnimatedSection>
+
+                        <AnimatedSection>
+                            <div className="relative">
+                                {/* Floating gradient orbs */}
+                                <div className="absolute -top-10 -right-10 w-72 h-72 bg-gradient-to-r from-primary-500/20 to-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
+                                <div className="absolute -bottom-10 -left-10 w-72 h-72 bg-gradient-to-r from-pink-500/20 to-primary-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+
+                                {/* Premium CTA Card */}
+                                <div className="relative bg-white dark:bg-dark-900 border-2 border-black/10 dark:border-white/10 p-10 rounded-3xl shadow-2xl backdrop-blur-sm transition-all duration-500 hover:scale-105">
+                                    <div className="absolute inset-0 bg-gradient-to-br from-primary-500/5 to-purple-500/5 rounded-3xl"></div>
+
+                                    <div className="relative">
+                                        <div className="mb-6">
+                                            <Rocket className="h-16 w-16 text-primary-500 mb-4" />
+                                            <h3 className="text-3xl font-bold text-black dark:text-white mb-4">
+                                                Ready to Begin?
+                                            </h3>
+                                            <p className="text-black/60 dark:text-gray-400 text-lg">
+                                                Let's create something extraordinary together.
+                                            </p>
+                                        </div>
+
+                                        <a
+                                            href="/contact"
+                                            className="group w-full py-5 bg-black text-white dark:bg-white dark:text-dark-950 font-bold rounded-xl hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg"
+                                        >
+                                            Start Your Project
+                                            <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                                        </a>
+
+                                        {/* Trust indicators */}
+                                        <div className="mt-8 pt-8 border-t border-black/10 dark:border-white/10 flex justify-around text-center">
+                                            <div>
+                                                <div className="text-3xl font-bold text-primary-500">100+</div>
+                                                <div className="text-xs text-black/40 dark:text-gray-500 uppercase">Projects</div>
+                                            </div>
+                                            <div>
+                                                <div className="text-3xl font-bold text-primary-500">5★</div>
+                                                <div className="text-xs text-black/40 dark:text-gray-500 uppercase">Rating</div>
+                                            </div>
+                                            <div>
+                                                <div className="text-3xl font-bold text-primary-500">24/7</div>
+                                                <div className="text-xs text-black/40 dark:text-gray-500 uppercase">Support</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </AnimatedSection>
                     </div>
                 </div>
             </section>
 
             <Footer />
         </div>
+    );
+}
+
+// REUSABLE COMPONENTS
+
+function AnimatedSection({ children }: { children: React.ReactNode }) {
+    const ref = useRef(null);
+    const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+    return (
+        <motion.div
+            ref={ref}
+            initial={{ opacity: 0, y: 50 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+            transition={{ duration: 0.8 }}
+        >
+            {children}
+        </motion.div>
+    );
+}
+
+function StatsSection() {
+    const stats = [
+        { number: 150, suffix: '+', label: 'Projects Delivered', icon: Target },
+        { number: 98, suffix: '%', label: 'Client Satisfaction', icon: Heart },
+        { number: 50, suffix: '+', label: 'Team Members', icon: Users },
+        { number: 10, suffix: '+', label: 'Years Experience', icon: Award }
+    ];
+
+    return (
+        <section className="py-20 border-y border-black/10 dark:border-white/10 bg-black dark:bg-white transition-colors duration-500">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+                    {stats.map((stat, idx) => (
+                        <StatCounter key={idx} stat={stat} index={idx} />
+                    ))}
+                </div>
+            </div>
+        </section>
+    );
+}
+
+function StatCounter({ stat, index }: { stat: any; index: number }) {
+    const [count, setCount] = useState(0);
+    const ref = useRef(null);
+    const isInView = useInView(ref, { once: true });
+
+    useEffect(() => {
+        if (isInView) {
+            let start = 0;
+            const end = stat.number;
+            const duration = 2000;
+            const increment = end / (duration / 16);
+
+            const timer = setInterval(() => {
+                start += increment;
+                if (start >= end) {
+                    setCount(end);
+                    clearInterval(timer);
+                } else {
+                    setCount(Math.floor(start));
+                }
+            }, 16);
+
+            return () => clearInterval(timer);
+        }
+    }, [isInView, stat.number]);
+
+    return (
+        <motion.div
+            ref={ref}
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.5 }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+            className="text-center group"
+        >
+            <stat.icon className="h-8 w-8 mx-auto mb-4 text-white dark:text-dark-950 group-hover:scale-125 transition-transform" />
+            <div className="text-5xl md:text-6xl font-bold text-white dark:text-dark-950 mb-2">
+                {count}{stat.suffix}
+            </div>
+            <div className="text-sm uppercase tracking-wider text-white/60 dark:text-dark-950/60 font-medium">
+                {stat.label}
+            </div>
+        </motion.div>
+    );
+}
+
+function ValueCard({ item, index }: { item: any; index: number }) {
+    const icons = [Lightbulb, Shield, Zap, Heart, Globe, Star];
+    const Icon = icons[index % icons.length];
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1 }}
+            viewport={{ once: true }}
+            className="group relative bg-white dark:bg-dark-900 border border-black/10 dark:border-white/10 p-8 rounded-2xl hover:border-primary-500 dark:hover:border-primary-500 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
+        >
+            {/* Gradient glow on hover */}
+            <div className="absolute inset-0 bg-gradient-to-br from-primary-500/0 via-primary-500/0 to-primary-500/0 group-hover:from-primary-500/10 group-hover:via-purple-500/10 group-hover:to-pink-500/10 rounded-2xl transition-all duration-500"></div>
+
+            <div className="relative">
+                <div className="w-14 h-14 rounded-xl bg-primary-500/10 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                    <Icon className="h-7 w-7 text-primary-500" />
+                </div>
+                <h3 className="text-2xl font-bold text-black dark:text-white mb-3">
+                    {item.title}
+                </h3>
+                <p className="text-black/60 dark:text-gray-400 leading-relaxed">
+                    {item.desc}
+                </p>
+            </div>
+        </motion.div>
+    );
+}
+
+function TeamMemberCard({ member, index }: { member: any; index: number }) {
+    return (
+        <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ delay: index * 0.1 }}
+            viewport={{ once: true }}
+            className="group text-center"
+        >
+            {/* Image Container with 3D Effect */}
+            <div className="relative mb-6 perspective-container">
+                <div className="relative w-64 h-64 mx-auto rounded-2xl overflow-hidden border-2 border-black/10 dark:border-white/10 group-hover:border-primary-500 transition-all duration-500 group-hover:scale-105 group-hover:rotate-2">
+                    {/* Gradient overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"></div>
+
+                    {/* Image */}
+                    <img
+                        src={member.image || 'https://via.placeholder.com/400'}
+                        alt={member.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    />
+
+                    {/* Hover overlay with social links (optional) */}
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20">
+                        <div className="flex gap-3">
+                            {/* Add social icons here if needed */}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Info */}
+            <h3 className="text-xl font-bold text-black dark:text-white mb-2 group-hover:text-primary-500 transition-colors">
+                {member.name}
+            </h3>
+            <p className="text-primary-500 font-medium text-sm uppercase tracking-wider">
+                {member.role}
+            </p>
+        </motion.div>
     );
 }

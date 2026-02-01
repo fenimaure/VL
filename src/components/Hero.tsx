@@ -82,24 +82,74 @@ export default function Hero() {
           {heroData?.content || 'We craft immersive digital experiences that blur the line between utility and art.'}
         </p>
 
-        {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row gap-6 justify-center items-center animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
+        {/* Premium CTA Buttons */}
+        <div className="flex flex-col sm:flex-row gap-6 justify-center items-center animate-fade-in-up z-20" style={{ animationDelay: '0.6s' }}>
+          {/* Primary CTA - Start Project */}
           <a
             href="#contact"
-            className="group relative px-10 py-5 bg-black text-white dark:bg-white dark:text-dark-950 rounded-full font-bold text-lg hover:scale-105 transition-all duration-500 flex items-center gap-3 overflow-hidden shadow-lg"
+            className="group relative px-12 py-6 bg-gradient-to-r from-black via-gray-900 to-black dark:from-white dark:via-gray-100 dark:to-white text-white dark:text-dark-950 rounded-full font-bold text-lg transition-all duration-700 flex items-center gap-3 overflow-hidden shadow-2xl hover:shadow-black/50 dark:hover:shadow-white/50 hover:scale-110 hover:-rotate-1"
+            onMouseEnter={(e) => {
+              const btn = e.currentTarget;
+              const ripple = document.createElement('div');
+              ripple.className = 'absolute inset-0 bg-gradient-to-r from-primary-500/30 to-purple-500/30 rounded-full animate-ping';
+              btn.appendChild(ripple);
+              setTimeout(() => ripple.remove(), 600);
+            }}
           >
-            <span className="relative z-10 flex items-center">
+            {/* Animated gradient border */}
+            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary-500 via-purple-500 to-pink-500 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-700 animate-pulse"></div>
+
+            {/* Moving gradient background */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent dark:via-black/10 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000 ease-in-out"></div>
+
+            {/* Spotlight effect */}
+            <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.1),transparent_50%)] dark:bg-[radial-gradient(circle_at_50%_0%,rgba(0,0,0,0.1),transparent_50%)] transition-opacity duration-500"></div>
+
+            <span className="relative z-10 flex items-center font-extrabold tracking-wide">
               Start Project
-              <ArrowRight className="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="h-5 w-5 ml-2 group-hover:translate-x-2 group-hover:scale-125 transition-all duration-300" />
             </span>
-            <div className="absolute inset-0 bg-gradient-to-r from-gray-800 to-black dark:from-gray-100 dark:to-gray-300 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></div>
+
+            {/* Particle effect */}
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+              {[...Array(8)].map((_, i) => (
+                <div
+                  key={i}
+                  className="absolute w-1 h-1 bg-white dark:bg-black rounded-full animate-ping"
+                  style={{
+                    top: `${20 + Math.random() * 60}%`,
+                    left: `${10 + Math.random() * 80}%`,
+                    animationDelay: `${i * 0.1}s`,
+                    animationDuration: `${0.8 + Math.random() * 0.4}s`
+                  }}
+                ></div>
+              ))}
+            </div>
           </a>
+
+          {/* Secondary CTA - Explore Work */}
           <a
             href="#projects"
-            className="group px-10 py-5 rounded-full font-bold text-lg text-black dark:text-white border border-black/10 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-300 backdrop-blur-sm flex items-center gap-3"
+            className="group relative px-12 py-6 rounded-full font-bold text-lg text-black dark:text-white border-2 border-black/20 dark:border-white/20 transition-all duration-700 backdrop-blur-sm flex items-center gap-3 overflow-hidden hover:scale-105 hover:border-primary-500 dark:hover:border-primary-500 hover:rotate-1"
           >
-            Explore Work
-            <div className="w-2 h-2 rounded-full bg-black dark:bg-white group-hover:animate-ping"></div>
+            {/* Gradient fill on hover */}
+            <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 via-purple-500/10 to-pink-500/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out"></div>
+
+            {/* Animated border gradient */}
+            <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary-500 via-purple-500 to-pink-500 animate-spin-slow" style={{ padding: '2px', mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)', WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)', maskComposite: 'exclude', WebkitMaskComposite: 'xor' }}></div>
+            </div>
+
+            {/* Shimmer effect */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 dark:via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out"></div>
+
+            <span className="relative z-10 font-extrabold tracking-wide">Explore Work</span>
+
+            {/* Animated dot */}
+            <div className="relative z-10 flex items-center justify-center">
+              <div className="absolute w-3 h-3 rounded-full bg-primary-500 group-hover:animate-ping"></div>
+              <div className="w-2 h-2 rounded-full bg-black dark:bg-white group-hover:bg-primary-500 transition-colors duration-300"></div>
+            </div>
           </a>
         </div>
       </div>
