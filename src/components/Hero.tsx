@@ -1,6 +1,7 @@
 
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 
 export default function Hero() {
@@ -85,8 +86,8 @@ export default function Hero() {
         {/* Premium CTA Buttons */}
         <div className="flex flex-col sm:flex-row gap-6 justify-center items-center animate-fade-in-up z-20" style={{ animationDelay: '0.6s' }}>
           {/* Primary CTA - Start Project */}
-          <a
-            href="#contact"
+          <Link
+            to="/contact"
             className="group relative px-12 py-6 bg-gradient-to-r from-black via-gray-900 to-black dark:from-white dark:via-gray-100 dark:to-white text-white dark:text-dark-950 rounded-full font-bold text-lg transition-all duration-700 flex items-center gap-3 overflow-hidden shadow-2xl hover:shadow-black/50 dark:hover:shadow-white/50 hover:scale-110 hover:-rotate-1"
             onMouseEnter={(e) => {
               const btn = e.currentTarget;
@@ -125,7 +126,7 @@ export default function Hero() {
                 ></div>
               ))}
             </div>
-          </a>
+          </Link>
 
           {/* Secondary CTA - Explore Work */}
           <a

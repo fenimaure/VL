@@ -1,8 +1,8 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { supabase } from '../lib/supabase';
-import { ArrowUpRight, ChevronLeft, ChevronRight } from 'lucide-react';
-import { useNavigate, Link } from 'react-router-dom';
+import { ArrowUpRight, ChevronLeft, ChevronRight, Zap } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface Service {
   id: string;
@@ -53,12 +53,11 @@ export default function Services() {
   }, [loading, services]);
 
   // Get cards per view based on screen size
-  // Get cards per view based on screen size
   const getCardsPerView = () => {
     if (typeof window === 'undefined') return 1;
     if (window.innerWidth >= 1024) return 3; // lg
     if (window.innerWidth >= 768) return 2; // md
-    return 1; // mobile - we'll handle peek with custom width
+    return 1; // mobile
   };
 
   const [cardsPerView, setCardsPerView] = useState(getCardsPerView());
@@ -73,15 +72,6 @@ export default function Services() {
 
   const maxIndex = Math.max(0, services.length - cardsPerView);
 
-
-
-
-
-
-
-
-
-
   const nextSlide = () => {
     setCurrentIndex((prev) => Math.min(prev + 1, maxIndex));
   };
@@ -90,14 +80,9 @@ export default function Services() {
     setCurrentIndex((prev) => Math.max(prev - 1, 0));
   };
 
-  // Auto-play carousel - DISABLED
-  // Carousel only moves on manual interaction
+  /* Removed unused goToSlide */
 
-  const goToSlide = (index: number) => {
-    setCurrentIndex(Math.min(index, maxIndex));
-  };
-
-  // Touch handlers for swipe with direction detection
+  // Touch handlers for swipe
   const handleTouchStart = (e: React.TouchEvent) => {
     setTouchStart(e.targetTouches[0].clientX);
     setTouchEnd(e.targetTouches[0].clientX);
@@ -105,12 +90,8 @@ export default function Services() {
 
   const handleTouchMove = (e: React.TouchEvent) => {
     setTouchEnd(e.targetTouches[0].clientX);
-
-    // Calculate swipe direction
     const touchDiff = touchStart - e.targetTouches[0].clientX;
     const isHorizontalSwipe = Math.abs(touchDiff) > 10;
-
-    // Prevent vertical scroll if user is swiping horizontally
     if (isHorizontalSwipe && touchStart !== 0) {
       e.preventDefault();
     }
@@ -122,12 +103,8 @@ export default function Services() {
     const isLeftSwipe = distance > 50;
     const isRightSwipe = distance < -50;
 
-    if (isLeftSwipe && currentIndex < maxIndex) {
-      nextSlide();
-    }
-    if (isRightSwipe && currentIndex > 0) {
-      prevSlide();
-    }
+    if (isLeftSwipe && currentIndex < maxIndex) nextSlide();
+    if (isRightSwipe && currentIndex > 0) prevSlide();
     setTouchStart(0);
     setTouchEnd(0);
   };
@@ -142,15 +119,15 @@ export default function Services() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [currentIndex, maxIndex]);
 
-  const handleArrowClick = (e: React.MouseEvent, slug: string) => {
-    e.stopPropagation();
-    navigate(`/services/${slug}`);
-  };
+  /* Removed unused handleArrowClick */
 
   if (loading && services.length === 0) {
     return (
-      <section className="py-40 bg-white dark:bg-dark-950 flex items-center justify-center transition-colors duration-500">
-        <div className="w-12 h-12 border-2 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
+      <section className="py-40 bg-white dark:bg-dark-950 flex items-center justify-center transition-colors duration-500 min-h-screen">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-16 h-16 border-2 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
+          <p className="animate-pulse text-sm tracking-widest uppercase text-black/50 dark:text-white/50">Loading Excellence...</p>
+        </div>
       </section>
     );
   }
@@ -160,124 +137,127 @@ export default function Services() {
 
   return (
     <section id="services" className="py-40 bg-white dark:bg-dark-950 relative overflow-hidden transition-colors duration-500">
-      {/* Background Decor */}
-      <div className="absolute top-0 right-0 w-full h-full pointer-events-none">
-        <div className="absolute top-[10%] left-[5%] w-[400px] h-[400px] bg-primary-500/5 blur-[120px] rounded-full floating-element"></div>
+
+      {/* Dynamic Background Elements */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-primary-500/5 blur-[150px] rounded-full animate-pulse-slow"></div>
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-purple-500/5 blur-[150px] rounded-full animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-mesh opacity-[0.03] z-0"></div>
       </div>
 
       <div className="relative max-w-7xl mx-auto md:px-4 md:sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-24 gap-8">
-          <div className="max-w-2xl stagger-item">
-            <div className="flex items-center gap-3 mb-6">
-              <span className="w-12 h-[1px] bg-primary-500"></span>
-              <span className="text-primary-500 font-bold tracking-[0.3em] text-xs uppercase">Capabilities</span>
+        {/* Header Section */}
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-24 gap-12 px-6 lg:px-0">
+          <div className="max-w-3xl stagger-item">
+            <div className="flex items-center gap-3 mb-8">
+              <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary-500/10 text-primary-500">
+                <Zap className="w-4 h-4 fill-current" />
+              </span>
+              <span className="text-primary-500 font-bold tracking-[0.3em] text-xs uppercase bg-clip-text text-transparent bg-gradient-to-r from-primary-500 to-purple-600">
+                Our Capabilities
+              </span>
             </div>
-            <h2 className="text-5xl lg:text-7xl font-bold font-display mb-8 leading-none transition-colors duration-300">
-              <span className="text-black dark:text-white">Expert </span>
-              <span className="text-black/20 dark:text-white/20 italic">Solutions</span>
+
+            <h2 className="text-6xl md:text-7xl lg:text-8xl font-bold font-display mb-8 leading-[0.9] tracking-tighter transition-colors duration-300">
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-black via-black to-black/50 dark:from-white dark:via-white dark:to-white/50 animate-gradient-x">
+                Expert
+              </span>
+              <span className="block text-black/20 dark:text-white/10 italic font-light font-serif transform translate-x-4 mix-blend-difference">
+                Solutions
+              </span>
             </h2>
-            <p className="text-xl text-black/60 dark:text-gray-400 leading-relaxed font-light max-w-lg transition-colors duration-300">
-              Crafting scalable digital ecosystems through architectural excellence and rigorous design.
+
+            <p className="text-xl md:text-2xl text-black/60 dark:text-gray-400 leading-relaxed font-light max-w-xl transition-colors duration-300 border-l-2 border-primary-500/30 pl-6">
+              We architect digital ecosystems that blend <span className="text-black dark:text-white font-medium">high-performance utility</span> with <span className="text-black dark:text-white font-medium">breathtaking aesthetics</span>.
             </p>
+          </div>
+
+          <div className="stagger-item hidden lg:flex flex-col gap-4">
+            <div className="flex gap-2">
+              <button
+                onClick={prevSlide}
+                disabled={currentIndex === 0}
+                className="w-16 h-16 flex items-center justify-center rounded-full border border-black/10 dark:border-white/10 bg-white/50 dark:bg-white/5 backdrop-blur-md text-black dark:text-white disabled:opacity-30 disabled:cursor-not-allowed hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all duration-300 group"
+              >
+                <ChevronLeft className="h-6 w-6 group-hover:-translate-x-1 transition-transform" />
+              </button>
+              <button
+                onClick={nextSlide}
+                disabled={currentIndex === maxIndex}
+                className="w-16 h-16 flex items-center justify-center rounded-full border border-black/10 dark:border-white/10 bg-white/50 dark:bg-white/5 backdrop-blur-md text-black dark:text-white disabled:opacity-30 disabled:cursor-not-allowed hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all duration-300 group"
+              >
+                <ChevronRight className="h-6 w-6 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </div>
+            <div className="flex gap-1 justify-center">
+              {Array.from({ length: maxIndex + 1 }).map((_, i) => (
+                <div
+                  key={i}
+                  className={`h-1 rounded-full transition-all duration-300 ${i === currentIndex ? 'w-8 bg-primary-500' : 'w-2 bg-black/10 dark:bg-white/10'}`}
+                />
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Carousel Container */}
-        <div className="relative">
-          {/* Navigation Arrows - Desktop Only */}
-          {currentIndex > 0 && (
-            <button
-              onClick={prevSlide}
-              className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-20 w-12 h-12 items-center justify-center bg-black/5 dark:bg-white/10 backdrop-blur-sm border border-black/10 dark:border-white/20 rounded-full text-black dark:text-white hover:bg-black/10 dark:hover:bg-white/20 transition-all"
-              aria-label="Previous"
-            >
-              <ChevronLeft className="h-6 w-6" />
-            </button>
-          )}
-
-          {currentIndex < maxIndex && (
-            <button
-              onClick={nextSlide}
-              className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-20 w-12 h-12 items-center justify-center bg-black/5 dark:bg-white/10 backdrop-blur-sm border border-black/10 dark:border-white/20 rounded-full text-black dark:text-white hover:bg-black/10 dark:hover:bg-white/20 transition-all"
-              aria-label="Next"
-            >
-              <ChevronRight className="h-6 w-6" />
-            </button>
-          )}
-
-          {/* Carousel Viewport */}
-          <div className="overflow-hidden stagger-item">
+        {/* Carousel Viewport */}
+        <div className="relative z-10">
+          <div className="overflow-visible stagger-item">
             <div
               ref={carouselRef}
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
-              className="flex transition-transform duration-500 ease-out touch-pan-y md:touch-auto pl-4 md:pl-0"
+              className="flex transition-transform duration-700 cubic-bezier(0.2, 0.8, 0.2, 1) touch-pan-y md:touch-auto pl-6 md:pl-0"
               style={{ transform: `translateX(${translateX}%)` }}
             >
               {services.map((service, index) => (
                 <div
                   key={service.id}
-                  className="flex-shrink-0 w-[85vw] md:w-auto pr-4 md:px-4"
+                  className="flex-shrink-0 w-[85vw] md:w-auto pr-6 md:px-4"
                   style={{ width: window.innerWidth >= 768 ? `${cardWidth}%` : undefined }}
                 >
-                  <div className="group relative glass-card rounded-[2rem] overflow-hidden md:hover:-translate-y-2 transition-all duration-300 h-full border border-black/5 dark:border-white/5 bg-white/50 dark:bg-white/5">
-                    {/* Hover Gradient Overlay */}
-                    <div className={`absolute inset-0 bg-gradient-to-br ${service.color_theme || 'from-gray-700 to-gray-600'} opacity-0 md:group-hover:opacity-10 transition-opacity duration-500`}></div>
+                  <div
+                    onClick={() => navigate(`/services/${service.slug}`)}
+                    className="group relative h-full min-h-[500px] flex flex-col justify-between p-10 md:p-12 rounded-[2.5rem] bg-white dark:bg-white/5 border border-black/5 dark:border-white/10 overflow-hidden cursor-pointer transition-all duration-500 hover:shadow-2xl hover:shadow-primary-500/10 hover:-translate-y-2 dark:hover:shadow-black/50"
+                  >
+                    {/* Animated Background Gradients on Hover */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary-500/0 via-transparent to-transparent group-hover:from-primary-500/5 group-hover:to-purple-500/5 transition-all duration-700 opacity-0 group-hover:opacity-100"></div>
+                    <div className="absolute -right-20 -top-20 w-64 h-64 bg-primary-500/10 rounded-full blur-3xl group-hover:bg-primary-500/20 transition-all duration-700 group-hover:scale-150"></div>
 
-                    {/* Card Content */}
-                    <div className="relative z-10 h-full flex flex-col p-10 md:p-12">
-                      <div className="flex items-center gap-4 mb-6">
-                        <span className="text-primary-500 font-bold font-mono text-xs tracking-widest uppercase">
+                    {/* Card Top */}
+                    <div className="relative z-10">
+                      <div className="flex justify-between items-start mb-10">
+                        <span className="text-6xl font-display font-bold text-black/5 dark:text-white/5 group-hover:text-black/10 dark:group-hover:text-white/10 transition-colors">
                           {String(index + 1).padStart(2, '0')}
                         </span>
-                        <span className="w-8 h-[1px] bg-black/20 dark:bg-white/20"></span>
+                        <div className="w-12 h-12 rounded-full bg-black/5 dark:bg-white/10 flex items-center justify-center group-hover:bg-primary-500 group-hover:text-white transition-all duration-500 group-hover:rotate-45 shadow-inner">
+                          <ArrowUpRight className="w-5 h-5" />
+                        </div>
                       </div>
 
-                      {/* Title with Arrow Button */}
-                      <div className="flex items-start justify-between gap-4 mb-6">
-                        <h3 className="text-3xl md:text-4xl font-bold text-black dark:text-white md:group-hover:text-primary-500 dark:md:group-hover:text-primary-400 transition-all font-display leading-tight">
-                          {service.title}
-                        </h3>
-                        <button
-                          onClick={(e) => handleArrowClick(e, service.slug)}
-                          className="flex-shrink-0 w-12 h-12 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-full flex items-center justify-center text-black/70 dark:text-white/70 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-dark-950 transition-all group/arrow"
-                          aria-label={`View ${service.title}`}
-                        >
-                          <ArrowUpRight className="h-5 w-5 transform group-hover/arrow:translate-x-0.5 group-hover/arrow:-translate-y-0.5" />
-                        </button>
-                      </div>
+                      <h3 className="text-4xl font-bold font-display leading-[1.1] mb-6 text-black dark:text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-primary-500 group-hover:to-purple-600 transition-all duration-300">
+                        {service.title}
+                      </h3>
 
-                      <p className="text-lg text-black/60 dark:text-gray-400 leading-relaxed font-light mb-8 max-w-sm transition-colors duration-300">
+                      <div className="w-12 h-1 bg-black/10 dark:bg-white/10 rounded-full group-hover:w-24 group-hover:bg-primary-500 transition-all duration-500 mb-8"></div>
+
+                      <p className="text-lg text-black/60 dark:text-gray-400 font-light leading-relaxed mb-8 line-clamp-3 group-hover:text-black/80 dark:group-hover:text-gray-200 transition-colors">
                         {service.description}
                       </p>
+                    </div>
 
-                      <Link
-                        to={`/services/${service.slug}`}
-                        className="mt-auto inline-flex items-center gap-2 text-black/40 hover:text-black dark:text-white/40 dark:hover:text-white transition-colors text-[10px] font-bold tracking-[0.3em] uppercase"
-                      >
-                        Learn More <ArrowUpRight className="h-3 w-3" />
-                      </Link>
+                    {/* Card Bottom / Footer */}
+                    <div className="relative z-10 pt-8 mt-auto border-t border-black/5 dark:border-white/5 group-hover:border-primary-500/20 transition-colors duration-500">
+                      <span className="inline-flex items-center gap-2 text-xs font-bold tracking-[0.2em] uppercase text-black/40 dark:text-white/40 group-hover:text-primary-500 transition-colors">
+                        View details
+                        <ArrowUpRight className="w-3 h-3 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                      </span>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
-          </div>
-
-          {/* Navigation Dots */}
-          <div className="flex justify-center gap-2 mt-8">
-            {Array.from({ length: maxIndex + 1 }).map((_, index) => (
-              <button
-                key={index}
-                onClick={() => goToSlide(index)}
-                className={`h-2 rounded-full transition-all duration-300 ${index === currentIndex
-                  ? 'w-8 bg-black dark:bg-white'
-                  : 'w-2 bg-black/30 dark:bg-white/30 hover:bg-black/50 dark:hover:bg-white/50'
-                  }`}
-                aria-label={`Go to slide ${index + 1}`}
-              />
-            ))}
           </div>
         </div>
       </div>
