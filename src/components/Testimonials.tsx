@@ -59,6 +59,8 @@ export default function Testimonials() {
 
   const activeTestimonial = testimonials[activeIndex];
 
+  if (!activeTestimonial) return null;
+
   return (
     <section id="testimonials" className="py-40 relative overflow-hidden transition-colors duration-300 bg-gray-50 dark:bg-dark-950 text-black dark:text-white">
       {/* Immersive Background Blur */}

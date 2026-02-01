@@ -97,16 +97,7 @@ export default function FloatingContact() {
                             <FaFacebookMessenger className="h-8 w-8 text-[#00B2FF] group-hover:scale-110 transition-transform" />
                         </motion.a>
 
-                        {/* Status Indicator */}
-                        <motion.div
-                            variants={itemVariants}
-                            className="bg-primary-500/10 border border-primary-500/20 px-4 py-2 rounded-full backdrop-blur-md mb-2"
-                        >
-                            <div className="flex items-center gap-2">
-                                <div className="h-1.5 w-1.5 bg-primary-500 rounded-full animate-pulse" />
-                                <span className="text-[8px] font-bold uppercase tracking-[0.2em] text-primary-500">Live</span>
-                            </div>
-                        </motion.div>
+                        {/* Status Indicator REMOVED as per request */}
                     </motion.div>
                 )}
             </AnimatePresence>
@@ -116,13 +107,13 @@ export default function FloatingContact() {
                 onClick={() => setIsOpen(!isOpen)}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
-                className="relative h-20 w-20 rounded-full shadow-2xl shadow-primary-500/20 group"
+                className="relative h-[3.6rem] w-[3.6rem] md:h-20 md:w-20 rounded-full shadow-2xl shadow-primary-500/20 group z-[110]"
             >
                 {/* Particle Glow Effect */}
                 <div className="absolute inset-0 bg-primary-500 rounded-full blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-700" />
 
                 {/* Glass Container */}
-                <div className="absolute inset-0 bg-dark-900/80 backdrop-blur-xl border border-white/10 rounded-full flex items-center justify-center overflow-hidden">
+                <div className="absolute inset-0 bg-dark-900/80 backdrop-blur-xl border border-white/10 rounded-full flex items-center justify-center overflow-hidden z-[120]">
                     <AnimatePresence mode="wait">
                         {!isOpen ? (
                             <motion.div
@@ -130,19 +121,19 @@ export default function FloatingContact() {
                                 initial={{ rotate: -90, opacity: 0 }}
                                 animate={{ rotate: 0, opacity: 1 }}
                                 exit={{ rotate: 90, opacity: 0 }}
-                                className="relative h-full w-full flex items-center justify-center"
+                                className="relative h-full w-full flex items-center justify-center p-1"
                             >
                                 {customIcon ? (
-                                    <img
-                                        src={customIcon}
-                                        alt="Contact"
-                                        className="h-full w-full object-cover transition-transform duration-[2s] group-hover:scale-110"
-                                    />
+                                    <div className="w-full h-full rounded-full overflow-hidden relative z-[130]">
+                                        <img
+                                            src={customIcon}
+                                            alt="Contact"
+                                            className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-110"
+                                        />
+                                    </div>
                                 ) : (
-                                    <Send className="h-8 w-8 text-primary-500 group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform" />
+                                    <Send className="h-6 w-6 md:h-8 md:w-8 text-primary-500 group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform relative z-[130]" />
                                 )}
-                                {/* Visual Accent */}
-                                <div className="absolute top-4 right-4 h-3 w-3 bg-primary-500 rounded-full border-2 border-dark-900 shadow-sm" />
                             </motion.div>
                         ) : (
                             <motion.div
@@ -150,8 +141,9 @@ export default function FloatingContact() {
                                 initial={{ rotate: 90, opacity: 0 }}
                                 animate={{ rotate: 0, opacity: 1 }}
                                 exit={{ rotate: -90, opacity: 0 }}
+                                className="relative z-[130]"
                             >
-                                <X className="h-8 w-8 text-white" />
+                                <X className="h-6 w-6 md:h-8 md:w-8 text-white" />
                             </motion.div>
                         )}
                     </AnimatePresence>

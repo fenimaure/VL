@@ -101,12 +101,12 @@ export default function FeaturedProjects() {
               className={`flex flex-col ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} gap-12 md:gap-20 items-center relative transition-all duration-1000`}
             >
               {/* Background Project Number */}
-              <div className={`absolute top-0 ${index % 2 === 0 ? 'left-0' : 'right-0'} project-number opacity-20 select-none z-0 hidden lg:block stagger-item text-black dark:text-white transition-colors duration-500`}>
+              <div className={`absolute -top-20 ${index % 2 === 0 ? 'right-0' : 'left-0'} project-number opacity-[0.03] dark:opacity-[0.05] select-none z-0 hidden lg:block stagger-item text-black dark:text-white transition-colors duration-500 text-[12rem] font-black leading-none`}>
                 {String(index + 1).padStart(2, '0')}
               </div>
 
               {/* Image Container */}
-              <div className="w-full md:w-7/12 aspect-[4/5] md:aspect-[16/10] stagger-item">
+              <div className="w-full md:w-7/12 aspect-[4/5] md:aspect-[16/10] stagger-item relative z-10">
                 <Link
                   to={`/projects/${project.slug}`}
                   className="group block relative w-full h-full overflow-hidden rounded-3xl project-card-premium shadow-2xl shadow-black/5 dark:shadow-none"
@@ -121,7 +121,7 @@ export default function FeaturedProjects() {
               </div>
 
               {/* Content Container */}
-              <div className="w-full md:w-5/12 stagger-item">
+              <div className="w-full md:w-5/12 stagger-item relative z-10">
                 <div className="space-y-6">
                   <div className="flex items-center gap-4 text-primary-500 font-bold text-xs uppercase tracking-[0.2em]">
                     <span>{project.category}</span>
