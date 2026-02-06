@@ -4,9 +4,8 @@ import { supabase } from '../lib/supabase';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import {
-    CheckCircle, Users, Target, Zap, Heart, Award,
-    TrendingUp, Globe, Sparkles, ArrowRight, Star,
-    Lightbulb, Shield, Rocket
+    Users, Target, Heart, Award,
+    ArrowRight, Sparkles
 } from 'lucide-react';
 import MarkdownRenderer from '../components/MarkdownRenderer';
 
@@ -149,6 +148,28 @@ export default function About() {
                 </div>
             </section>
 
+            {/* FEATURED FULL SCREEN IMAGE */}
+            {data.fullscreen_image?.image_url && (
+                <section className="relative w-full h-[80vh] md:h-screen overflow-hidden">
+                    <div className="absolute inset-0">
+                        <motion.div
+                            initial={{ scale: 1.1 }}
+                            whileInView={{ scale: 1 }}
+                            transition={{ duration: 1.5, ease: "easeOut" }}
+                            className="w-full h-full"
+                        >
+                            <img
+                                src={data.fullscreen_image.image_url}
+                                alt="Featured"
+                                className="w-full h-full object-cover"
+                            />
+                        </motion.div>
+                        {/* Subtle overlay */}
+                        <div className="absolute inset-0 bg-black/20 dark:bg-black/40"></div>
+                    </div>
+                </section>
+            )}
+
             {/* ANIMATED STATS SECTION */}
             <StatsSection />
 
@@ -175,29 +196,7 @@ export default function About() {
                 </div>
             </section>
 
-            {/* VALUES / BELIEFS - Premium Grid */}
-            <section className="py-32 relative overflow-hidden">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <AnimatedSection>
-                        <div className="text-center mb-20">
-                            <span className="text-sm font-bold uppercase tracking-widest text-primary-500 mb-4 block">Core Principles</span>
-                            <h2 className="text-5xl md:text-7xl font-bold text-black dark:text-white font-display tracking-tight mb-6">
-                                {data.beliefs?.title || 'What We Stand For'}
-                            </h2>
-                        </div>
-                    </AnimatedSection>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {(data.beliefs?.items || [
-                            { title: 'Innovation First', desc: 'Pushing boundaries and exploring new possibilities' },
-                            { title: 'Client Partnership', desc: 'Your success is our success' },
-                            { title: 'Attention to Detail', desc: 'Perfection in every pixel' }
-                        ]).map((item: any, idx: number) => (
-                            <ValueCard key={idx} item={item} index={idx} />
-                        ))}
-                    </div>
-                </div>
-            </section>
 
             {/* TEAM SECTION - Premium 3D Cards */}
             <section id="team" className="py-32 bg-gray-50 dark:bg-dark-900 relative overflow-hidden transition-colors duration-500">
@@ -215,100 +214,6 @@ export default function About() {
                         {(data.team?.items || []).map((member: any, idx: number) => (
                             <TeamMemberCard key={idx} member={member} index={idx} />
                         ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* WHY CHOOSE US - Split Layout */}
-            <section className="py-32 relative overflow-hidden">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                        <AnimatedSection>
-                            <div>
-                                <span className="text-sm font-bold uppercase tracking-widest text-primary-500 mb-4 block">Why Partner With Us</span>
-                                <h2 className="text-5xl md:text-6xl font-bold text-black dark:text-white mb-6 font-display leading-tight">
-                                    {data.why_us?.title || 'Excellence in Every Detail'}
-                                </h2>
-                                <MarkdownRenderer
-                                    content={data.why_us?.content || 'We don\'t just deliver projects; we create partnerships that drive transformative growth.'}
-                                    className="text-xl text-black/60 dark:text-gray-300 mb-12 leading-relaxed"
-                                />
-
-                                <div className="space-y-6">
-                                    {(data.why_us?.items || [
-                                        { title: 'Proven Track Record', desc: '100+ successful projects delivered' },
-                                        { title: 'Expert Team', desc: 'Industry veterans with decades of combined experience' },
-                                        { title: 'Agile Approach', desc: 'Flexible, responsive, and adaptive to your needs' }
-                                    ]).map((item: any, idx: number) => (
-                                        <motion.div
-                                            key={idx}
-                                            initial={{ opacity: 0, x: -20 }}
-                                            whileInView={{ opacity: 1, x: 0 }}
-                                            transition={{ delay: idx * 0.1 }}
-                                            viewport={{ once: true }}
-                                            className="flex gap-4 group"
-                                        >
-                                            <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-primary-500 flex items-center justify-center group-hover:scale-110 transition-transform">
-                                                <CheckCircle className="h-6 w-6 text-white" />
-                                            </div>
-                                            <div>
-                                                <h4 className="font-bold text-lg text-black dark:text-white mb-1">{item.title}</h4>
-                                                <p className="text-black/60 dark:text-gray-400">{item.desc}</p>
-                                            </div>
-                                        </motion.div>
-                                    ))}
-                                </div>
-                            </div>
-                        </AnimatedSection>
-
-                        <AnimatedSection>
-                            <div className="relative">
-                                {/* Floating gradient orbs */}
-                                <div className="absolute -top-10 -right-10 w-72 h-72 bg-primary-500/20 rounded-full blur-3xl animate-pulse"></div>
-                                <div className="absolute -bottom-10 -left-10 w-72 h-72 bg-primary-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-
-                                {/* Premium CTA Card */}
-                                <div className="relative bg-white dark:bg-dark-900 border-2 border-black/10 dark:border-white/10 p-10 rounded-3xl shadow-2xl backdrop-blur-sm transition-all duration-500 hover:scale-105">
-                                    <div className="absolute inset-0 bg-primary-500/5 rounded-3xl"></div>
-
-                                    <div className="relative">
-                                        <div className="mb-6">
-                                            <Rocket className="h-16 w-16 text-primary-500 mb-4" />
-                                            <h3 className="text-3xl font-bold text-black dark:text-white mb-4">
-                                                Ready to Begin?
-                                            </h3>
-                                            <p className="text-black/60 dark:text-gray-400 text-lg">
-                                                Let's create something extraordinary together.
-                                            </p>
-                                        </div>
-
-                                        <a
-                                            href="/contact"
-                                            className="group w-full py-5 bg-black text-white dark:bg-white dark:text-dark-950 font-bold rounded-xl hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg"
-                                        >
-                                            Start Your Project
-                                            <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                                        </a>
-
-                                        {/* Trust indicators */}
-                                        <div className="mt-8 pt-8 border-t border-black/10 dark:border-white/10 flex justify-around text-center">
-                                            <div>
-                                                <div className="text-3xl font-bold text-primary-500">100+</div>
-                                                <div className="text-xs text-black/40 dark:text-gray-500 uppercase">Projects</div>
-                                            </div>
-                                            <div>
-                                                <div className="text-3xl font-bold text-primary-500">5★</div>
-                                                <div className="text-xs text-black/40 dark:text-gray-500 uppercase">Rating</div>
-                                            </div>
-                                            <div>
-                                                <div className="text-3xl font-bold text-primary-500">24/7</div>
-                                                <div className="text-xs text-black/40 dark:text-gray-500 uppercase">Support</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </AnimatedSection>
                     </div>
                 </div>
             </section>
@@ -402,35 +307,7 @@ function StatCounter({ stat, index }: { stat: any; index: number }) {
     );
 }
 
-function ValueCard({ item, index }: { item: any; index: number }) {
-    const icons = [Lightbulb, Shield, Zap, Heart, Globe, Star];
-    const Icon = icons[index % icons.length];
 
-    return (
-        <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-            viewport={{ once: true }}
-            className="group relative bg-white dark:bg-dark-900 border border-black/10 dark:border-white/10 p-8 rounded-2xl hover:border-primary-500 dark:hover:border-primary-500 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
-        >
-            {/* Gradient glow on hover */}
-            <div className="absolute inset-0 bg-primary-500/0 group-hover:bg-primary-500/10 rounded-2xl transition-all duration-500"></div>
-
-            <div className="relative">
-                <div className="w-14 h-14 rounded-xl bg-primary-500/10 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                    <Icon className="h-7 w-7 text-primary-500" />
-                </div>
-                <h3 className="text-2xl font-bold text-black dark:text-white mb-3">
-                    {item.title}
-                </h3>
-                <p className="text-black/60 dark:text-gray-400 leading-relaxed">
-                    {item.desc}
-                </p>
-            </div>
-        </motion.div>
-    );
-}
 
 function TeamMemberCard({ member, index }: { member: any; index: number }) {
     return (

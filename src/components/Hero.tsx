@@ -1,12 +1,26 @@
-
-import { ArrowRight, Sparkles } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { ArrowRight } from 'lucide-react';
+import { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import { motion, useSpring } from 'framer-motion';
 
 export default function Hero() {
   const [heroData, setHeroData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Mouse move effect for parallax
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const { clientX, clientY } = e;
+    const { innerWidth, innerHeight } = window;
+    const x = (clientX / innerWidth) - 0.5;
+    const y = (clientY / innerHeight) - 0.5;
+    setMousePosition({ x, y });
+  };
+
+
 
   useEffect(() => {
     async function fetchHero() {
@@ -31,9 +45,19 @@ export default function Hero() {
   }
 
   return (
-    <section id="home" className="relative min-h-screen flex items-center justify-center bg-white dark:bg-dark-950 text-black dark:text-white overflow-hidden selection:bg-primary-500/30 transition-colors duration-500">
+    <section
+      id="home"
+      ref={containerRef}
+      onMouseMove={handleMouseMove}
+      className="relative min-h-screen flex items-center justify-center bg-white dark:bg-dark-950 text-black dark:text-white overflow-hidden selection:bg-primary-500/30 transition-colors duration-500"
+    >
+      {/* Aurora Background Effect */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-[-50%] left-[-50%] w-[200%] h-[200%] bg-gradient-to-tr from-transparent via-primary-500/10 to-transparent animate-spin-slow opacity-30 blur-[100px]"></div>
+        <div className="absolute bottom-[-50%] right-[-50%] w-[200%] h-[200%] bg-gradient-to-bl from-transparent via-indigo-500/10 to-transparent animate-spin-slow opacity-30 blur-[100px]" style={{ animationDirection: 'reverse' }}></div>
+      </div>
 
-      {/* Dynamic Background Media */}
+      {/* Cinematic Background Layer */}
       <div className="absolute inset-0 z-0">
         {heroData?.media_type === 'video' ? (
           <video
@@ -41,125 +65,128 @@ export default function Hero() {
             loop
             muted
             playsInline
-            className="w-full h-full object-cover opacity-40"
+            className="w-full h-full object-cover scale-105"
+            style={{ filter: 'grayscale(100%) contrast(1.2) brightness(0.8)' }}
           >
             <source src={heroData.image_url} type="video/mp4" />
-            Your browser does not support the video tag.
           </video>
-        ) : (
+        ) : heroData?.image_url ? (
           <div
-            className="absolute inset-0 bg-cover bg-center opacity-30"
-            style={{ backgroundImage: `url(${heroData?.image_url || 'https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=1200'})` }}
-          ></div>
-        )}
-        {/* Overlay Gradient for readability - adapted for light/dark */}
-        <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-white/50 to-white dark:from-dark-950/80 dark:via-dark-950/50 dark:to-dark-950 transition-colors duration-500"></div>
-      </div>
-
-      {/* Background Ambience */}
-      <div className="absolute inset-0 bg-mesh opacity-20 animate-pulse-glow z-0"></div>
-
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 text-center z-10 flex flex-col items-center">
-
-        {/* Floating Badge */}
-        <div className="inline-flex items-center gap-2 px-6 py-2 bg-black/5 dark:bg-white/5 backdrop-blur-xl rounded-full mb-12 border border-black/10 dark:border-white/10 shadow-glass animate-fade-in-up transition-colors duration-500">
-          <Sparkles className="h-4 w-4 text-primary-500 animate-pulse" />
-          <span className="text-sm font-medium tracking-wide text-black/80 dark:text-gray-200">{heroData?.subtitle || 'Agency of the Future'}</span>
-        </div>
-
-        {/* Hero Headline */}
-        <h1 className="text-6xl sm:text-8xl lg:text-9xl font-bold font-display mb-12 leading-[0.9] tracking-tighter mix-blend-normal dark:mix-blend-color-dodge text-black dark:text-white transition-colors duration-500">
-          <span className="block animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-            {heroData?.title ? heroData.title.split(' ')[0] : 'Digital'}
-          </span>
-          {((heroData?.title && heroData.title.split(' ').length > 1) || !heroData?.title) && (
-            <span className="block animate-fade-in-up text-black dark:text-white" style={{ animationDelay: '0.2s' }}>
-              {heroData?.title ? heroData.title.split(' ').slice(1).join(' ') : 'Perfection'}
-            </span>
-          )}
-        </h1>
-
-        <p className="text-xl sm:text-2xl text-black/70 dark:text-gray-300 mb-12 max-w-2xl mx-auto leading-relaxed animate-fade-in-up font-light transition-colors duration-500" style={{ animationDelay: '0.4s' }}>
-          {heroData?.content || 'We craft immersive digital experiences that blur the line between utility and art.'}
-        </p>
-
-        {/* Premium CTA Buttons */}
-        <div className="flex flex-col sm:flex-row gap-6 justify-center items-center animate-fade-in-up z-20" style={{ animationDelay: '0.6s' }}>
-          {/* Primary CTA - Start Project */}
-          <Link
-            to="/contact"
-            className="group relative px-12 py-6 bg-gradient-to-r from-black via-gray-900 to-black dark:from-white dark:via-gray-100 dark:to-white text-white dark:text-dark-950 rounded-full font-bold text-lg transition-all duration-700 flex items-center gap-3 overflow-hidden shadow-2xl hover:shadow-black/50 dark:hover:shadow-white/50 hover:scale-110 hover:-rotate-1"
-            onMouseEnter={(e) => {
-              const btn = e.currentTarget;
-              const ripple = document.createElement('div');
-              ripple.className = 'absolute inset-0 bg-primary-500/30 rounded-full animate-ping';
-              btn.appendChild(ripple);
-              setTimeout(() => ripple.remove(), 600);
+            className="absolute inset-0 bg-cover bg-center"
+            style={{
+              backgroundImage: `url(${heroData.image_url})`,
+              filter: 'grayscale(100%) contrast(1.1) brightness(0.7)'
             }}
+          ></div>
+        ) : null}
+
+        {/* Premium Overlays */}
+        <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-white/40 to-white dark:from-dark-950/90 dark:via-dark-950/40 dark:to-dark-950 mix-blend-overlay"></div>
+        <div className="absolute inset-0 bg-white/60 dark:bg-dark-950/60"></div>
+
+        {/* Noise Grain Texture - Essential for Premium Feel */}
+        <div className="absolute inset-0 opacity-10 dark:opacity-20 pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}></div>
+      </div>
+
+
+
+      <div className="relative max-w-[90rem] mx-auto px-6 lg:px-8 py-32 z-10 w-full">
+
+        {/* Main Content Grid */}
+        <div className="flex flex-col items-center text-center">
+
+          {/* Main Headline - Massive & Editorial */}
+          <div className="relative mb-16 flex flex-col items-center leading-[0.9]">
+            <h1 className="flex flex-col items-center">
+              <span className="sr-only">{heroData?.title || 'Digital Excellence'}</span>
+
+              {/* First Word */}
+              <div className="flex overflow-hidden">
+                {(heroData?.title ? heroData.title.split(' ')[0] : 'Digital').split('').map((char: string, i: number) => (
+                  <motion.span
+                    key={i}
+                    initial={{ y: 200 }}
+                    animate={{ y: 0 }}
+                    transition={{ duration: 1, delay: i * 0.05, ease: [0.2, 0.65, 0.3, 0.9] }}
+                    className="text-[13vw] font-black tracking-tighter text-black dark:text-white hover:text-primary-500 dark:hover:text-primary-400 transition-colors duration-300 cursor-default select-none"
+                    whileHover={{ scale: 1.1, y: -20 }}
+                  >
+                    {char}
+                  </motion.span>
+                ))}
+              </div>
+
+              {/* Second Word */}
+              <div className="flex overflow-hidden mt-2 md:mt-4">
+                {(heroData?.title ? heroData.title.split(' ').slice(1).join(' ') : 'Excellence').split('').map((char: string, i: number) => (
+                  <motion.span
+                    key={i}
+                    initial={{ y: 200 }}
+                    animate={{ y: 0 }}
+                    transition={{ duration: 1, delay: 0.2 + (i * 0.05), ease: [0.2, 0.65, 0.3, 0.9] }}
+                    className="text-[13vw] font-serif italic font-light tracking-tighter text-black/80 dark:text-white/80 hover:text-primary-500 dark:hover:text-primary-400 transition-colors duration-300 cursor-default select-none"
+                    whileHover={{ scale: 1.1, rotate: 5 }}
+                  >
+                    {char}
+                  </motion.span>
+                ))}
+              </div>
+            </h1>
+          </div>
+
+          {/* Minimal Description */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.6 }}
+            className="text-xl md:text-2xl text-black/60 dark:text-gray-400 max-w-2xl mx-auto font-light leading-relaxed mb-16 tracking-wide"
           >
-            {/* Animated gradient border */}
-            <div className="absolute inset-0 rounded-full bg-primary-500/50 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-700 animate-pulse"></div>
+            {heroData?.content || 'We craft immersive digital experiences that blur the line between utility and art.'}
+          </motion.p>
 
-            {/* Moving gradient background */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent dark:via-black/10 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000 ease-in-out"></div>
-
-            {/* Spotlight effect */}
-            <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.1),transparent_50%)] dark:bg-[radial-gradient(circle_at_50%_0%,rgba(0,0,0,0.1),transparent_50%)] transition-opacity duration-500"></div>
-
-            <span className="relative z-10 flex items-center font-extrabold tracking-wide">
-              Start Project
-              <ArrowRight className="h-5 w-5 ml-2 group-hover:translate-x-2 group-hover:scale-125 transition-all duration-300" />
-            </span>
-
-            {/* Particle effect */}
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              {[...Array(8)].map((_, i) => (
-                <div
-                  key={i}
-                  className="absolute w-1 h-1 bg-white dark:bg-black rounded-full animate-ping"
-                  style={{
-                    top: `${20 + Math.random() * 60}%`,
-                    left: `${10 + Math.random() * 80}%`,
-                    animationDelay: `${i * 0.1}s`,
-                    animationDuration: `${0.8 + Math.random() * 0.4}s`
-                  }}
-                ></div>
-              ))}
-            </div>
-          </Link>
-
-          {/* Secondary CTA - Explore Work */}
-          <a
-            href="#projects"
-            className="group relative px-12 py-6 rounded-full font-bold text-lg text-black dark:text-white border-2 border-black/20 dark:border-white/20 transition-all duration-700 backdrop-blur-sm flex items-center gap-3 overflow-hidden hover:scale-105 hover:border-primary-500 dark:hover:border-primary-500 hover:rotate-1"
+          {/* Magnetic CTA Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.8 }}
+            className="flex flex-col sm:flex-row gap-8 items-center"
           >
-            {/* Gradient fill on hover */}
-            <div className="absolute inset-0 bg-primary-500/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out"></div>
+            <Link
+              to="/contact"
+              className="group relative px-10 py-5 bg-black dark:bg-white text-white dark:text-black rounded-none skew-x-[-12deg] hover:skew-x-0 transition-transform duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]"
+            >
+              <div className="skew-x-[12deg] group-hover:skew-x-0 transition-transform duration-500">
+                <span className="font-bold text-lg tracking-wider uppercase flex items-center gap-2">
+                  Start Project <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+                </span>
+              </div>
+            </Link>
 
-            {/* Animated border gradient */}
-            <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <div className="absolute inset-0 rounded-full bg-primary-500 animate-spin-slow" style={{ padding: '2px', mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)', WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)', maskComposite: 'exclude', WebkitMaskComposite: 'xor' }}></div>
-            </div>
+            <a
+              href="#projects"
+              className="group flex items-center gap-3 text-lg font-bold uppercase tracking-widest text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white transition-colors duration-500"
+            >
+              <span className="w-12 h-[1px] bg-current transition-all duration-500 group-hover:w-20"></span>
+              View Work
+            </a>
+          </motion.div>
 
-            {/* Shimmer effect */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 dark:via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out"></div>
-
-            <span className="relative z-10 font-extrabold tracking-wide">Explore Work</span>
-
-            {/* Animated dot */}
-            <div className="relative z-10 flex items-center justify-center">
-              <div className="absolute w-3 h-3 rounded-full bg-primary-500 group-hover:animate-ping"></div>
-              <div className="w-2 h-2 rounded-full bg-black dark:bg-white group-hover:bg-primary-500 transition-colors duration-300"></div>
-            </div>
-          </a>
         </div>
       </div>
 
-      {/* Scroll Indicator */}
-      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-2 opacity-50 animate-bounce z-10">
-        <span className="text-[10px] uppercase tracking-[0.2em] text-black/50 dark:text-white/50">Scroll</span>
-        <div className="w-[1px] h-12 bg-gradient-to-b from-black to-transparent dark:from-white dark:to-transparent"></div>
-      </div>
+      {/* Scroll Indicator - Minimal Line */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.5, duration: 1 }}
+        className="absolute bottom-12 left-10 hidden md:flex items-center gap-4 rotate-90 origin-left"
+      >
+        <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-black/30 dark:text-white/30">Scroll</span>
+        <div className="w-20 h-[1px] bg-black/10 dark:bg-white/10 overflow-hidden">
+          <div className="w-full h-full bg-primary-500/50 -translate-x-full animate-[shimmer_2s_infinite]"></div>
+        </div>
+      </motion.div>
+
     </section>
   );
 }

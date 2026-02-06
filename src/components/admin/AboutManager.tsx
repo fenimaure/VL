@@ -59,7 +59,11 @@ export default function AboutManager() {
     const updateSection = (key: string, field: keyof AboutSection, value: any) => {
         setSections(prev => ({
             ...prev,
-            [key]: { ...prev[key], [field]: value }
+            [key]: {
+                ...(prev[key] || {}),
+                section_key: key,
+                [field]: value
+            }
         }));
     };
 
@@ -141,6 +145,21 @@ export default function AboutManager() {
                 </div>
             </div>
 
+            {/* Featured Image Section */}
+            <div className="bg-white/5 p-6 rounded-xl border border-white/10">
+                {renderSectionHeader('fullscreen_image', '2. Featured Full Screen Image')}
+                <div className="space-y-4">
+                    <div>
+                        <label className="block text-sm text-gray-400 mb-1">Image URL</label>
+                        <input className="w-full bg-dark-950 border border-white/10 rounded-lg px-4 py-2 text-white"
+                            value={sections.fullscreen_image?.image_url || ''}
+                            onChange={e => updateSection('fullscreen_image', 'image_url', e.target.value)}
+                            placeholder="https://example.com/featured-image.jpg"
+                        />
+                    </div>
+                </div>
+            </div>
+
             {/* Our Story */}
             <div className="bg-white/5 p-6 rounded-xl border border-white/10">
                 {renderSectionHeader('story', '2. Our Story')}
@@ -163,42 +182,9 @@ export default function AboutManager() {
                 </div>
             </div>
 
-            {/* Beliefs */}
-            <div className="bg-white/5 p-6 rounded-xl border border-white/10">
-                {renderSectionHeader('beliefs', '3. What We Believe')}
-                <div className="space-y-4 mb-4">
-                    <input className="w-full bg-dark-950 border border-white/10 rounded-lg px-4 py-2 text-white mb-2"
-                        value={sections.beliefs?.title || ''}
-                        onChange={e => updateSection('beliefs', 'title', e.target.value)}
-                        placeholder="Section Title"
-                    />
-                </div>
-                <div className="space-y-2">
-                    {sections.beliefs?.items?.map((item, idx) => (
-                        <div key={idx} className="flex gap-2">
-                            <input className="flex-1 bg-dark-950 border border-white/10 rounded-lg px-3 py-2 text-white" placeholder="Value Title" value={item.title} onChange={e => updateItem('beliefs', idx, 'title', e.target.value)} />
-                            <input className="flex-[2] bg-dark-950 border border-white/10 rounded-lg px-3 py-2 text-white" placeholder="Description" value={item.desc} onChange={e => updateItem('beliefs', idx, 'desc', e.target.value)} />
-                            <button onClick={() => deleteItem('beliefs', idx)} className="p-2 text-red-500 hover:bg-red-500/10 rounded"><Trash2 className="h-4 w-4" /></button>
-                        </div>
-                    ))}
-                    <button onClick={() => addItem('beliefs', { title: '', desc: '' })} className="text-sm text-primary-400 flex items-center gap-1 hover:text-white mt-2"><Plus className="h-4 w-4" /> Add Belief</button>
-                </div>
-            </div>
 
-            {/* Who We Work With */}
-            <div className="bg-white/5 p-6 rounded-xl border border-white/10">
-                {renderSectionHeader('who_we_work_with', '4. Who We Work With')}
-                <div className="space-y-2">
-                    {sections.who_we_work_with?.items?.map((item, idx) => (
-                        <div key={idx} className="flex gap-2 items-center">
-                            <input className="flex-1 bg-dark-950 border border-white/10 rounded-lg px-3 py-2 text-white" placeholder="Company Name" value={item.name} onChange={e => updateItem('who_we_work_with', idx, 'name', e.target.value)} />
-                            <input className="flex-1 bg-dark-950 border border-white/10 rounded-lg px-3 py-2 text-white" placeholder="Logo URL (optional)" value={item.logo} onChange={e => updateItem('who_we_work_with', idx, 'logo', e.target.value)} />
-                            <button onClick={() => deleteItem('who_we_work_with', idx)} className="p-2 text-red-500 hover:bg-red-500/10 rounded"><Trash2 className="h-4 w-4" /></button>
-                        </div>
-                    ))}
-                    <button onClick={() => addItem('who_we_work_with', { name: '', logo: '' })} className="text-sm text-primary-400 flex items-center gap-1 hover:text-white mt-2"><Plus className="h-4 w-4" /> Add Partner</button>
-                </div>
-            </div>
+
+
 
             {/* The Team */}
             <div className="bg-white/5 p-6 rounded-xl border border-white/10">
@@ -218,29 +204,7 @@ export default function AboutManager() {
                 </div>
             </div>
 
-            {/* Why Choose Us */}
-            <div className="bg-white/5 p-6 rounded-xl border border-white/10">
-                {renderSectionHeader('why_us', '6. Why Choose Us')}
-                <div className="mb-4">
-                    <label className="block text-sm text-gray-400 mb-1">Intro Content</label>
-                    <MarkdownEditor
-                        value={sections.why_us?.content || ''}
-                        onChange={(val) => updateSection('why_us', 'content', val)}
-                        height={300}
-                        placeholder="Intro text..."
-                    />
-                </div>
-                <div className="space-y-2">
-                    {sections.why_us?.items?.map((item, idx) => (
-                        <div key={idx} className="flex gap-2">
-                            <input className="flex-1 bg-dark-950 border border-white/10 rounded-lg px-3 py-2 text-white" placeholder="Reason Title" value={item.title} onChange={e => updateItem('why_us', idx, 'title', e.target.value)} />
-                            <input className="flex-[2] bg-dark-950 border border-white/10 rounded-lg px-3 py-2 text-white" placeholder="Description" value={item.desc} onChange={e => updateItem('why_us', idx, 'desc', e.target.value)} />
-                            <button onClick={() => deleteItem('why_us', idx)} className="p-2 text-red-500 hover:bg-red-500/10 rounded"><Trash2 className="h-4 w-4" /></button>
-                        </div>
-                    ))}
-                    <button onClick={() => addItem('why_us', { title: '', desc: '' })} className="text-sm text-primary-400 flex items-center gap-1 hover:text-white mt-2"><Plus className="h-4 w-4" /> Add Reason</button>
-                </div>
-            </div>
+
 
         </div>
     );

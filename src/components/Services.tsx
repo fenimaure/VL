@@ -1,7 +1,11 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { supabase } from '../lib/supabase';
-import { ArrowUpRight, ChevronLeft, ChevronRight, Zap } from 'lucide-react';
+import {
+  ArrowUpRight, ChevronLeft, ChevronRight, Zap,
+  Code, Palette, Smartphone, BarChart3,
+  Megaphone, Terminal, Layers, Search
+} from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 interface Service {
@@ -214,47 +218,14 @@ export default function Services() {
               {services.map((service, index) => (
                 <div
                   key={service.id}
-                  className="flex-shrink-0 w-[85vw] md:w-auto pr-6 md:px-4"
+                  className="flex-shrink-0 w-[85vw] md:w-auto pr-2 md:px-2"
                   style={{ width: window.innerWidth >= 768 ? `${cardWidth}%` : undefined }}
                 >
-                  <div
+                  <ServiceCard
+                    service={service}
+                    index={index}
                     onClick={() => navigate(`/services/${service.slug}`)}
-                    className="group relative h-full min-h-[500px] flex flex-col justify-between p-10 md:p-12 rounded-[2.5rem] bg-white dark:bg-white/5 border border-black/5 dark:border-white/10 overflow-hidden cursor-pointer transition-all duration-500 hover:shadow-2xl hover:shadow-primary-500/10 hover:-translate-y-2 dark:hover:shadow-black/50"
-                  >
-                    {/* Animated Background Gradients on Hover */}
-                    <div className="absolute inset-0 bg-primary-500/0 group-hover:bg-primary-500/5 transition-all duration-700 opacity-0 group-hover:opacity-100"></div>
-                    <div className="absolute -right-20 -top-20 w-64 h-64 bg-primary-500/10 rounded-full blur-3xl group-hover:bg-primary-500/20 transition-all duration-700 group-hover:scale-150"></div>
-
-                    {/* Card Top */}
-                    <div className="relative z-10">
-                      <div className="flex justify-between items-start mb-10">
-                        <span className="text-6xl font-display font-bold text-black/20 dark:text-white/20 group-hover:text-black/40 dark:group-hover:text-white/40 transition-colors">
-                          {String(index + 1).padStart(2, '0')}
-                        </span>
-                        <div className="w-12 h-12 rounded-full bg-black/5 dark:bg-white/10 flex items-center justify-center group-hover:bg-primary-500 group-hover:text-white transition-all duration-500 group-hover:rotate-45 shadow-inner">
-                          <ArrowUpRight className="w-5 h-5" />
-                        </div>
-                      </div>
-
-                      <h3 className="text-4xl font-bold font-display leading-[1.1] mb-6 text-black dark:text-white group-hover:text-primary-500 transition-all duration-300">
-                        {service.title}
-                      </h3>
-
-                      <div className="w-12 h-1 bg-black/10 dark:bg-white/10 rounded-full group-hover:w-24 group-hover:bg-primary-500 transition-all duration-500 mb-8"></div>
-
-                      <p className="text-lg text-black/60 dark:text-gray-400 font-light leading-relaxed mb-8 line-clamp-3 group-hover:text-black/80 dark:group-hover:text-gray-200 transition-colors">
-                        {service.description}
-                      </p>
-                    </div>
-
-                    {/* Card Bottom / Footer */}
-                    <div className="relative z-10 pt-8 mt-auto border-t border-black/5 dark:border-white/5 group-hover:border-primary-500/20 transition-colors duration-500">
-                      <span className="inline-flex items-center gap-2 text-xs font-bold tracking-[0.2em] uppercase text-black/40 dark:text-white/40 group-hover:text-primary-500 transition-colors">
-                        View details
-                        <ArrowUpRight className="w-3 h-3 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                      </span>
-                    </div>
-                  </div>
+                  />
                 </div>
               ))}
             </div>
@@ -264,3 +235,111 @@ export default function Services() {
     </section>
   );
 }
+
+// Helper to get icon based on name
+const getIcon = (name: string) => {
+  const n = name?.toLowerCase() || '';
+  if (n.includes('web') || n.includes('dev')) return Code;
+  if (n.includes('design') || n.includes('ui')) return Palette;
+  if (n.includes('mobile') || n.includes('app')) return Smartphone;
+  if (n.includes('seo') || n.includes('search')) return Search;
+  if (n.includes('marketing') || n.includes('social')) return Megaphone;
+  if (n.includes('data') || n.includes('analytics')) return BarChart3;
+  if (n.includes('system') || n.includes('tech')) return Terminal;
+  return Layers; // Default
+};
+
+// Premium 3D Card Component
+function ServiceCard({ service, index, onClick }: { service: Service; index: number; onClick: () => void }) {
+  const cardRef = useRef<HTMLDivElement>(null);
+
+
+  const Icon = getIcon(service.icon_name || service.title);
+
+  // 3D Tilt Effect
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const card = cardRef.current;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = (y - centerY) / 25;
+    const rotateY = (centerX - x) / 25;
+    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+  };
+
+  const handleMouseLeave = () => {
+    if (!cardRef.current) return;
+    cardRef.current.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+  };
+
+  return (
+    <div
+      className="p-4 h-full"
+      style={{ perspective: '1000px' }}
+    >
+      <div
+        ref={cardRef}
+        onClick={onClick}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        className="group relative h-[550px] flex flex-col justify-between p-8 rounded-[2rem] bg-white dark:bg-zinc-900/50 border border-black/5 dark:border-white/5 overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-2xl hover:shadow-primary-500/20 dark:hover:shadow-primary-500/10"
+        style={{ transition: 'transform 0.1s ease-out' }}
+      >
+        {/* Animated Gradient Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-zinc-900/80 dark:via-zinc-900 dark:to-zinc-950/80 opacity-100 transition-colors duration-500" />
+
+        {/* Hover Highlight Blob */}
+        <div className="absolute -top-20 -right-20 w-80 h-80 bg-primary-500/10 rounded-full blur-[80px] group-hover:bg-primary-500/20 transition-all duration-700 group-hover:scale-125" />
+        <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-primary-500/5 rounded-full blur-[60px] group-hover:bg-primary-500/15 transition-all duration-700 group-hover:scale-125" />
+
+        {/* Content Container */}
+        <div className="relative z-10 flex flex-col h-full">
+          {/* Header */}
+          <div className="flex justify-between items-start mb-auto">
+            <div className="relative">
+              <div className="w-16 h-16 rounded-2xl bg-primary-500/5 dark:bg-white/5 border border-primary-500/10 dark:border-white/10 flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 group-hover:bg-primary-500 group-hover:border-primary-500 shadow-sm">
+                <Icon className="w-8 h-8 text-primary-600 dark:text-white group-hover:text-white transition-colors duration-300" />
+              </div>
+              {/* Icon Ping Effect */}
+              <div className="absolute inset-0 bg-primary-500 rounded-2xl animate-ping opacity-0 group-hover:opacity-20" />
+            </div>
+
+            <span className="font-mono text-xs font-bold tracking-widest text-black/20 dark:text-white/20 group-hover:text-primary-500 transition-colors duration-300">
+              {String(index + 1).padStart(2, '0')}
+            </span>
+          </div>
+
+          {/* Body */}
+          <div className="mt-8">
+            <h3 className="text-3xl font-bold font-display leading-tight mb-4 text-black dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-300">
+              {service.title}
+            </h3>
+            <div className="w-12 h-1 bg-black/10 dark:bg-white/10 rounded-full mb-6 group-hover:w-full group-hover:bg-primary-500 transition-all duration-700" />
+            <p className="text-black/60 dark:text-zinc-400 leading-relaxed font-light line-clamp-3 group-hover:text-black/80 dark:group-hover:text-zinc-300 transition-colors duration-300">
+              {service.description}
+            </p>
+          </div>
+
+          {/* Footer - "Learn More" Button */}
+          <div className="mt-8 pt-6 border-t border-black/5 dark:border-white/5 flex items-center justify-between group-hover:border-primary-500/20 transition-colors duration-500">
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-black/40 dark:text-white/40 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-300">
+              Explore Service
+            </span>
+            <div className="w-10 h-10 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center group-hover:bg-primary-600 dark:group-hover:bg-primary-500 transition-all duration-300 group-hover:scale-110">
+              <ArrowUpRight className="w-4 h-4 text-black/60 dark:text-white/60 group-hover:text-white transition-colors duration-300" />
+            </div>
+          </div>
+        </div>
+
+        {/* Shine Overlay */}
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-700">
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 dark:via-white/5 to-transparent -skew-x-12 translate-x-[-100%] group-hover:animate-shine" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
