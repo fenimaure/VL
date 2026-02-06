@@ -92,13 +92,13 @@ export default function Hero() {
             onMouseEnter={(e) => {
               const btn = e.currentTarget;
               const ripple = document.createElement('div');
-              ripple.className = 'absolute inset-0 bg-gradient-to-r from-primary-500/30 to-purple-500/30 rounded-full animate-ping';
+              ripple.className = 'absolute inset-0 bg-primary-500/30 rounded-full animate-ping';
               btn.appendChild(ripple);
               setTimeout(() => ripple.remove(), 600);
             }}
           >
             {/* Animated gradient border */}
-            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary-500 via-purple-500 to-pink-500 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-700 animate-pulse"></div>
+            <div className="absolute inset-0 rounded-full bg-primary-500/50 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-700 animate-pulse"></div>
 
             {/* Moving gradient background */}
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent dark:via-black/10 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000 ease-in-out"></div>
@@ -134,11 +134,11 @@ export default function Hero() {
             className="group relative px-12 py-6 rounded-full font-bold text-lg text-black dark:text-white border-2 border-black/20 dark:border-white/20 transition-all duration-700 backdrop-blur-sm flex items-center gap-3 overflow-hidden hover:scale-105 hover:border-primary-500 dark:hover:border-primary-500 hover:rotate-1"
           >
             {/* Gradient fill on hover */}
-            <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 via-purple-500/10 to-pink-500/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out"></div>
+            <div className="absolute inset-0 bg-primary-500/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out"></div>
 
             {/* Animated border gradient */}
             <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary-500 via-purple-500 to-pink-500 animate-spin-slow" style={{ padding: '2px', mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)', WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)', maskComposite: 'exclude', WebkitMaskComposite: 'xor' }}></div>
+              <div className="absolute inset-0 rounded-full bg-primary-500 animate-spin-slow" style={{ padding: '2px', mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)', WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)', maskComposite: 'exclude', WebkitMaskComposite: 'xor' }}></div>
             </div>
 
             {/* Shimmer effect */}

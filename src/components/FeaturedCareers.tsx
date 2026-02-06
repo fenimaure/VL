@@ -63,7 +63,7 @@ export default function FeaturedCareers() {
             {/* Dynamic Background Elements */}
             <div className="absolute inset-0 pointer-events-none">
                 <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-primary-500/5 blur-[120px] rounded-full animate-pulse-slow"></div>
-                <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-500/5 blur-[120px] rounded-full animate-pulse-slow" style={{ animationDelay: '3s' }}></div>
+                <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-primary-500/5 blur-[120px] rounded-full animate-pulse-slow" style={{ animationDelay: '3s' }}></div>
             </div>
 
             <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
@@ -74,12 +74,12 @@ export default function FeaturedCareers() {
                             <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary-500/10 text-primary-500">
                                 <Sparkles className="w-4 h-4 fill-current" />
                             </span>
-                            <span className="text-primary-500 font-bold tracking-[0.3em] text-[10px] uppercase bg-clip-text text-transparent bg-gradient-to-r from-primary-500 to-purple-500">
+                            <span className="text-primary-500 font-bold tracking-[0.3em] text-[10px] uppercase">
                                 Join Our Vision
                             </span>
                         </div>
                         <h2 className="text-5xl md:text-6xl font-bold font-display text-black dark:text-white transition-colors duration-500 leading-tight">
-                            Build the <span className="italic font-light text-black/50 dark:text-white/40">Future</span> With Us.
+                            Build the <span className="italic font-light text-black/70 dark:text-white/50">Future</span> With Us.
                         </h2>
                     </div>
 
@@ -91,7 +91,7 @@ export default function FeaturedCareers() {
                             View All Openings
                             <ArrowUpRight className="h-4 w-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                         </span>
-                        <div className="absolute inset-0 bg-gradient-to-r from-primary-500 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0"></div>
+                        <div className="absolute inset-0 bg-primary-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0"></div>
                     </Link>
                 </div>
 

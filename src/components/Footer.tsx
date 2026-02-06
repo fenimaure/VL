@@ -36,11 +36,11 @@ export default function Footer() {
         {/* Epic Magnetic CTA Section */}
         <div className="mb-40 group relative border-b border-black/10 dark:border-white/10 pb-20 overflow-hidden">
           {/* Animated background gradient */}
-          <div className="absolute inset-0 bg-gradient-to-r from-primary-500/0 via-primary-500/5 to-purple-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
+          <div className="absolute inset-0 bg-primary-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
 
           {/* Floating orbs */}
           <div className="absolute top-0 left-1/4 w-64 h-64 bg-primary-500/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000 animate-pulse"></div>
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000 animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-primary-500/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000 animate-pulse" style={{ animationDelay: '0.5s' }}></div>
 
           <Link to="/contact" className="block relative z-10">
             <div className="flex items-center gap-4 mb-8 overflow-hidden">
@@ -85,11 +85,11 @@ export default function Footer() {
               {/* Magnetic button with enhanced effects */}
               <div className="relative w-32 h-32 md:w-48 md:h-48">
                 {/* Rotating gradient ring */}
-                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary-500 via-purple-500 to-pink-500 opacity-0 group-hover:opacity-100 blur-md animate-spin-slow transition-opacity duration-700"></div>
+                <div className="absolute inset-0 rounded-full bg-primary-500 opacity-0 group-hover:opacity-100 blur-md animate-spin-slow transition-opacity duration-700"></div>
 
                 {/* Pulsing rings */}
                 <div className="absolute inset-0 rounded-full border-2 border-primary-500/30 animate-ping opacity-0 group-hover:opacity-100"></div>
-                <div className="absolute inset-0 rounded-full border-2 border-purple-500/30 animate-ping opacity-0 group-hover:opacity-100" style={{ animationDelay: '0.3s' }}></div>
+                <div className="absolute inset-0 rounded-full border-2 border-primary-500/30 animate-ping opacity-0 group-hover:opacity-100" style={{ animationDelay: '0.3s' }}></div>
 
                 {/* Main button */}
                 <div className="relative w-full h-full rounded-full border border-black/20 dark:border-white/20 flex items-center justify-center bg-white/50 dark:bg-dark-950/50 backdrop-blur-sm group-hover:bg-black group-hover:border-black dark:group-hover:bg-white dark:group-hover:border-white transition-all duration-700 group-hover:scale-90 group-hover:rotate-90 overflow-hidden">

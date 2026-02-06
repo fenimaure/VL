@@ -62,7 +62,7 @@ export default function About() {
                             alt="About Hero"
                         />
                     ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-primary-500/20 via-purple-500/20 to-pink-500/20"></div>
+                        <div className="w-full h-full bg-primary-500/20"></div>
                     )}
                 </motion.div>
 
@@ -156,7 +156,7 @@ export default function About() {
             <section id="story" className="py-32 bg-gray-50/50 dark:bg-dark-900/30 relative overflow-hidden transition-colors duration-500">
                 {/* Background Decorations */}
                 <div className="absolute top-20 right-20 w-96 h-96 bg-primary-500/5 rounded-full blur-3xl"></div>
-                <div className="absolute bottom-20 left-20 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl"></div>
+                <div className="absolute bottom-20 left-20 w-96 h-96 bg-primary-500/5 rounded-full blur-3xl"></div>
 
                 <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <AnimatedSection>
@@ -264,12 +264,12 @@ export default function About() {
                         <AnimatedSection>
                             <div className="relative">
                                 {/* Floating gradient orbs */}
-                                <div className="absolute -top-10 -right-10 w-72 h-72 bg-gradient-to-r from-primary-500/20 to-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
-                                <div className="absolute -bottom-10 -left-10 w-72 h-72 bg-gradient-to-r from-pink-500/20 to-primary-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+                                <div className="absolute -top-10 -right-10 w-72 h-72 bg-primary-500/20 rounded-full blur-3xl animate-pulse"></div>
+                                <div className="absolute -bottom-10 -left-10 w-72 h-72 bg-primary-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
 
                                 {/* Premium CTA Card */}
                                 <div className="relative bg-white dark:bg-dark-900 border-2 border-black/10 dark:border-white/10 p-10 rounded-3xl shadow-2xl backdrop-blur-sm transition-all duration-500 hover:scale-105">
-                                    <div className="absolute inset-0 bg-gradient-to-br from-primary-500/5 to-purple-500/5 rounded-3xl"></div>
+                                    <div className="absolute inset-0 bg-primary-500/5 rounded-3xl"></div>
 
                                     <div className="relative">
                                         <div className="mb-6">
@@ -415,7 +415,7 @@ function ValueCard({ item, index }: { item: any; index: number }) {
             className="group relative bg-white dark:bg-dark-900 border border-black/10 dark:border-white/10 p-8 rounded-2xl hover:border-primary-500 dark:hover:border-primary-500 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
         >
             {/* Gradient glow on hover */}
-            <div className="absolute inset-0 bg-gradient-to-br from-primary-500/0 via-primary-500/0 to-primary-500/0 group-hover:from-primary-500/10 group-hover:via-purple-500/10 group-hover:to-pink-500/10 rounded-2xl transition-all duration-500"></div>
+            <div className="absolute inset-0 bg-primary-500/0 group-hover:bg-primary-500/10 rounded-2xl transition-all duration-500"></div>
 
             <div className="relative">
                 <div className="w-14 h-14 rounded-xl bg-primary-500/10 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">

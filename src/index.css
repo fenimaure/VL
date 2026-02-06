@@ -241,12 +241,12 @@
 
   /* Careers Page Awards Edition */
   .text-stroke-light {
-    -webkit-text-stroke: 1px rgba(0, 0, 0, 0.5);
+    -webkit-text-stroke: 1.5px rgba(0, 0, 0, 0.7);
     color: transparent;
   }
 
   .text-stroke-white {
-    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.5);
+    -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.5);
     color: transparent;
   }
 
@@ -392,7 +392,7 @@
 
   /* Gradient text utilities */
   .text-gradient-purple {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-500 via-purple-500 to-pink-500;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-500 to-primary-600;
   }
 
   .footer-section-label {

@@ -56,7 +56,7 @@ export default function Careers() {
             <section className="relative pt-48 pb-32 overflow-hidden">
                 <div className="absolute top-0 right-0 w-full h-full pointer-events-none">
                     <div className="absolute top-[10%] right-[10%] w-[400px] h-[400px] bg-primary-500/10 blur-[120px] rounded-full floating-element"></div>
-                    <div className="absolute bottom-[10%] left-[5%] w-[300px] h-[300px] bg-purple-500/10 blur-[100px] rounded-full floating-element" style={{ animationDelay: '2s' }}></div>
+                    <div className="absolute bottom-[10%] left-[5%] w-[300px] h-[300px] bg-primary-500/10 blur-[100px] rounded-full floating-element" style={{ animationDelay: '2s' }}></div>
                 </div>
 
                 <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">

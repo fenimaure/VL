@@ -259,7 +259,7 @@ export default function Dashboard() {
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                                 {[
                                     { label: 'Total Projects', value: stats.projects, icon: FileText, color: 'text-blue-400', bg: 'bg-blue-400/10' },
-                                    { label: 'Published Posts', value: stats.blogs, icon: BookOpen, color: 'text-pink-400', bg: 'bg-pink-400/10' },
+                                    { label: 'Published Posts', value: stats.blogs, icon: BookOpen, color: 'text-indigo-400', bg: 'bg-indigo-400/10' },
                                     { label: 'Active Jobs', value: stats.careers, icon: Briefcase, color: 'text-teal-400', bg: 'bg-teal-400/10' },
                                     { label: 'Services', value: stats.services, icon: LayoutGrid, color: 'text-orange-400', bg: 'bg-orange-400/10' },
                                 ].map((stat, i) => (

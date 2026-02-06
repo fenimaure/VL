@@ -141,7 +141,7 @@ export default function Services() {
       {/* Dynamic Background Elements */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-primary-500/5 blur-[150px] rounded-full animate-pulse-slow"></div>
-        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-purple-500/5 blur-[150px] rounded-full animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-primary-500/5 blur-[150px] rounded-full animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-mesh opacity-[0.03] z-0"></div>
       </div>
 
@@ -153,7 +153,7 @@ export default function Services() {
               <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary-500/10 text-primary-500">
                 <Zap className="w-4 h-4 fill-current" />
               </span>
-              <span className="text-primary-500 font-bold tracking-[0.3em] text-xs uppercase bg-clip-text text-transparent bg-gradient-to-r from-primary-500 to-purple-600">
+              <span className="text-primary-500 font-bold tracking-[0.3em] text-xs uppercase">
                 Our Capabilities
               </span>
             </div>
@@ -162,7 +162,7 @@ export default function Services() {
               <span className="block text-transparent bg-clip-text bg-gradient-to-r from-black via-black to-black/50 dark:from-white dark:via-white dark:to-white/50 animate-gradient-x">
                 Expert
               </span>
-              <span className="block text-black/20 dark:text-white/10 italic font-light font-serif transform translate-x-4 mix-blend-difference">
+              <span className="block text-black/50 dark:text-white/30 italic font-light font-serif transform translate-x-4">
                 Solutions
               </span>
             </h2>
@@ -222,13 +222,13 @@ export default function Services() {
                     className="group relative h-full min-h-[500px] flex flex-col justify-between p-10 md:p-12 rounded-[2.5rem] bg-white dark:bg-white/5 border border-black/5 dark:border-white/10 overflow-hidden cursor-pointer transition-all duration-500 hover:shadow-2xl hover:shadow-primary-500/10 hover:-translate-y-2 dark:hover:shadow-black/50"
                   >
                     {/* Animated Background Gradients on Hover */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary-500/0 via-transparent to-transparent group-hover:from-primary-500/5 group-hover:to-purple-500/5 transition-all duration-700 opacity-0 group-hover:opacity-100"></div>
+                    <div className="absolute inset-0 bg-primary-500/0 group-hover:bg-primary-500/5 transition-all duration-700 opacity-0 group-hover:opacity-100"></div>
                     <div className="absolute -right-20 -top-20 w-64 h-64 bg-primary-500/10 rounded-full blur-3xl group-hover:bg-primary-500/20 transition-all duration-700 group-hover:scale-150"></div>
 
                     {/* Card Top */}
                     <div className="relative z-10">
                       <div className="flex justify-between items-start mb-10">
-                        <span className="text-6xl font-display font-bold text-black/5 dark:text-white/5 group-hover:text-black/10 dark:group-hover:text-white/10 transition-colors">
+                        <span className="text-6xl font-display font-bold text-black/20 dark:text-white/20 group-hover:text-black/40 dark:group-hover:text-white/40 transition-colors">
                           {String(index + 1).padStart(2, '0')}
                         </span>
                         <div className="w-12 h-12 rounded-full bg-black/5 dark:bg-white/10 flex items-center justify-center group-hover:bg-primary-500 group-hover:text-white transition-all duration-500 group-hover:rotate-45 shadow-inner">
@@ -236,7 +236,7 @@ export default function Services() {
                         </div>
                       </div>
 
-                      <h3 className="text-4xl font-bold font-display leading-[1.1] mb-6 text-black dark:text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-primary-500 group-hover:to-purple-600 transition-all duration-300">
+                      <h3 className="text-4xl font-bold font-display leading-[1.1] mb-6 text-black dark:text-white group-hover:text-primary-500 transition-all duration-300">
                         {service.title}
                       </h3>
 

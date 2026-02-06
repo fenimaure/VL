@@ -46,13 +46,13 @@ export default function ProjectDetail() {
     }, [loading, project]);
 
     if (loading) return (
-        <div className="min-h-screen bg-dark-950 flex items-center justify-center">
+        <div className="min-h-screen bg-white dark:bg-dark-950 flex items-center justify-center transition-colors duration-500">
             <div className="w-12 h-12 border-2 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
         </div>
     );
 
     if (!project) return (
-        <div className="min-h-screen bg-dark-950 flex items-center justify-center text-white">
+        <div className="min-h-screen bg-white dark:bg-dark-950 flex items-center justify-center text-black dark:text-white transition-colors duration-500">
             <div className="text-center px-6">
                 <h1 className="text-4xl font-bold mb-4 font-display">Exhibition Not Found</h1>
                 <Link to="/projects" className="text-primary-500 hover:tracking-widest transition-all duration-300 uppercase text-xs font-bold font-mono">Return to Portfolio</Link>
@@ -119,19 +119,19 @@ export default function ProjectDetail() {
                 <div className="max-w-7xl mx-auto px-6 lg:px-8">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-12 py-10">
                         <div className="stagger-item">
-                            <div className="text-[10px] uppercase tracking-[0.3em] text-black/20 dark:text-white/20 font-bold mb-3 flex items-center gap-2 transition-colors duration-500">
+                            <div className="text-[10px] uppercase tracking-[0.3em] text-black/40 dark:text-white/40 font-bold mb-3 flex items-center gap-2 transition-colors duration-500">
                                 <User className="h-3 w-3" /> Client
                             </div>
                             <div className="text-sm font-bold text-black dark:text-white uppercase tracking-wider transition-colors duration-500">{project.client || 'Confidential'}</div>
                         </div>
                         <div className="stagger-item">
-                            <div className="text-[10px] uppercase tracking-[0.3em] text-black/20 dark:text-white/20 font-bold mb-3 flex items-center gap-2 transition-colors duration-500">
+                            <div className="text-[10px] uppercase tracking-[0.3em] text-black/40 dark:text-white/40 font-bold mb-3 flex items-center gap-2 transition-colors duration-500">
                                 <Layers className="h-3 w-3" /> Role
                             </div>
                             <div className="text-sm font-bold text-black dark:text-white uppercase tracking-wider transition-colors duration-500">{project.role || 'Digital Production'}</div>
                         </div>
                         <div className="stagger-item">
-                            <div className="text-[10px] uppercase tracking-[0.3em] text-black/20 dark:text-white/20 font-bold mb-3 flex items-center gap-2 transition-colors duration-500">
+                            <div className="text-[10px] uppercase tracking-[0.3em] text-black/40 dark:text-white/40 font-bold mb-3 flex items-center gap-2 transition-colors duration-500">
                                 <Calendar className="h-3 w-3" /> Year
                             </div>
                             <div className="text-sm font-bold text-black dark:text-white uppercase tracking-wider transition-colors duration-500">{project.duration || '2024'}</div>
@@ -176,7 +176,7 @@ export default function ProjectDetail() {
 
                             <div className="flex flex-wrap gap-3 mt-16">
                                 {project.tags?.map((tag: string, i: number) => (
-                                    <span key={i} className="px-4 py-2 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-full text-[10px] font-bold uppercase tracking-widest text-black/40 dark:text-white/40 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-dark-950 transition-all duration-500">
+                                    <span key={i} className="px-4 py-2 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-full text-[10px] font-bold uppercase tracking-widest text-black/60 dark:text-white/60 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-dark-950 transition-all duration-500">
                                         {tag}
                                     </span>
                                 ))}

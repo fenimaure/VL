@@ -8,11 +8,11 @@ export default function Preloader() {
                 y: '-100%',
                 transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1], delay: 0.2 }
             }}
-            className="fixed inset-0 z-[9999] bg-dark-950 flex flex-col items-center justify-center overflow-hidden"
+            className="fixed inset-0 z-[9999] bg-white flex flex-col items-center justify-center overflow-hidden"
         >
             {/* Background Kinetic Text */}
             <div className="absolute inset-0 flex items-center justify-center opacity-[0.02] select-none pointer-events-none">
-                <h2 className="text-[20vw] font-black font-display rotate-12 leading-none whitespace-nowrap">
+                <h2 className="text-[20vw] font-black font-display rotate-12 leading-none whitespace-nowrap text-black">
                     LOVELLI.STUDIOS • LOVELLI.STUDIOS • LOVELLI.STUDIOS
                 </h2>
             </div>
@@ -29,7 +29,7 @@ export default function Preloader() {
                         <img
                             src="/logo.png"
                             alt="Lovelli"
-                            className="h-16 md:h-24 w-auto invert"
+                            className="h-16 md:h-24 w-auto"
                         />
                     </motion.div>
                 </div>
@@ -37,7 +37,7 @@ export default function Preloader() {
                 {/* Progress Container */}
                 <div className="relative w-64 md:w-96">
                     {/* Track */}
-                    <div className="h-[2px] w-full bg-white/5 rounded-full overflow-hidden">
+                    <div className="h-[2px] w-full bg-black/5 rounded-full overflow-hidden">
                         {/* Moving Progress Fill */}
                         <motion.div
                             initial={{ x: '-100%' }}
@@ -50,7 +50,7 @@ export default function Preloader() {
                         />
                     </div>
 
-                    <div className="mt-8 flex justify-between items-center text-[8px] font-bold uppercase tracking-[0.5em] text-white/30">
+                    <div className="mt-8 flex justify-between items-center text-[8px] font-bold uppercase tracking-[0.5em] text-black/40">
                         <motion.span
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -74,13 +74,13 @@ export default function Preloader() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1 }}
-                className="absolute bottom-12 left-12 h-20 w-[1px] bg-gradient-to-t from-primary-500/40 to-transparent"
+                className="absolute bottom-12 left-12 h-20 w-[1px] bg-gradient-to-t from-primary-500/50 to-transparent"
             />
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1.1 }}
-                className="absolute top-12 right-12 h-20 w-[1px] bg-gradient-to-b from-primary-500/40 to-transparent"
+                className="absolute top-12 right-12 h-20 w-[1px] bg-gradient-to-b from-primary-500/50 to-transparent"
             />
         </motion.div>
     );

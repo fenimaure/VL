@@ -102,15 +102,12 @@ export default function Navbar() {
           {/* Modern Menu Button (Mobile/Tablet Only) */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden group relative z-[70] flex items-center gap-4 transition-all duration-300"
+            className="lg:hidden group relative z-[70] flex items-center justify-center w-12 h-12 rounded-full border border-black/10 dark:border-white/10 bg-white/50 dark:bg-white/5 backdrop-blur-sm transition-all duration-300 hover:bg-black/5 dark:hover:bg-white/10"
             aria-label="Toggle Menu"
           >
-            <span className={`text-xs uppercase tracking-[0.3em] font-bold text-black dark:text-white transition-opacity duration-300 ${isOpen ? 'opacity-0' : 'opacity-100'}`}>
-              Menu
-            </span>
-            <div className="relative h-2 w-8 flex flex-col justify-between overflow-hidden">
-              <span className={`burger-line burger-line-1 bg-black dark:bg-white ${isOpen ? 'is-open !bg-black dark:!bg-white' : ''}`} />
-              <span className={`burger-line burger-line-2 bg-black dark:bg-white ${isOpen ? 'is-open !bg-black dark:!bg-white' : ''}`} />
+            <div className="relative h-3 w-6 flex flex-col justify-between">
+              <span className={`block h-[2px] w-full bg-black dark:bg-white rounded-full transition-all duration-300 origin-center ${isOpen ? 'rotate-45 translate-y-[5px]' : ''}`} />
+              <span className={`block h-[2px] w-full bg-black dark:bg-white rounded-full transition-all duration-300 origin-center ${isOpen ? '-rotate-45 -translate-y-[5px]' : ''}`} />
             </div>
           </button>
         </div>

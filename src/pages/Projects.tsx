@@ -84,7 +84,7 @@ export default function Projects() {
             {/* Animated background gradients */}
             <div className="fixed inset-0 pointer-events-none">
                 <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary-500/20 dark:bg-primary-500/10 rounded-full blur-[120px] animate-pulse-glow" />
-                <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/20 dark:bg-purple-500/10 rounded-full blur-[120px] animate-pulse-glow" style={{ animationDelay: '1s' }} />
+                <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-primary-500/20 dark:bg-primary-500/10 rounded-full blur-[120px] animate-pulse-glow" style={{ animationDelay: '1s' }} />
             </div>
 
             <Navbar />
@@ -97,10 +97,10 @@ export default function Projects() {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <div className="text-center max-w-5xl mx-auto">
                         {/* Floating badge */}
-                        <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary-500/10 to-purple-500/10 backdrop-blur-xl rounded-full mb-12 border border-primary-500/20 reveal-item">
+                        <div className="inline-flex items-center gap-2 px-6 py-3 bg-primary-500/10 backdrop-blur-xl rounded-full mb-12 border border-primary-500/20 reveal-item">
                             <Sparkles className="h-4 w-4 text-primary-500 dark:text-primary-400 animate-pulse" />
                             <span className="text-sm font-bold tracking-wider text-black dark:text-white">Portfolio Showcase</span>
-                            <Zap className="h-4 w-4 text-purple-500 dark:text-purple-400" />
+                            <Zap className="h-4 w-4 text-primary-500 dark:text-primary-400" />
                         </div>
 
                         {/* Massive headline */}
@@ -108,7 +108,7 @@ export default function Projects() {
                             <span className="block bg-clip-text text-transparent bg-gradient-to-r from-black to-black/60 dark:from-white dark:to-white/60 animate-fade-in-up">
                                 Our
                             </span>
-                            <span className="block bg-clip-text text-transparent bg-gradient-to-r from-primary-500 via-purple-500 to-pink-500 animate-gradient-xy animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+                            <span className="block text-primary-500 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
                                 Projects
                             </span>
                         </h1>
@@ -124,11 +124,11 @@ export default function Projects() {
                                 <div className="text-sm text-black/70 dark:text-gray-400 uppercase tracking-wider">Projects</div>
                             </div>
                             <div className="text-center">
-                                <div className="text-4xl font-bold text-purple-500 mb-2">{categories.length - 1}</div>
+                                <div className="text-4xl font-bold text-primary-500 mb-2">{categories.length - 1}</div>
                                 <div className="text-sm text-black/70 dark:text-gray-400 uppercase tracking-wider">Categories</div>
                             </div>
                             <div className="text-center">
-                                <div className="text-4xl font-bold text-pink-500 mb-2">100%</div>
+                                <div className="text-4xl font-bold text-primary-500 mb-2">100%</div>
                                 <div className="text-sm text-black/70 dark:text-gray-400 uppercase tracking-wider">Satisfaction</div>
                             </div>
                         </div>
@@ -155,7 +155,7 @@ export default function Projects() {
                                 key={category}
                                 onClick={() => setSelectedCategory(category)}
                                 className={`group relative px-6 py-3 rounded-full font-bold transition-all duration-500 whitespace-nowrap overflow-hidden ${selectedCategory === category
-                                    ? 'bg-gradient-to-r from-primary-500 to-purple-500 text-white shadow-lg shadow-primary-500/30'
+                                    ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/30'
                                     : 'bg-black/5 text-black/60 hover:bg-black/10 hover:text-black border border-black/10 dark:bg-white/5 dark:text-gray-400 dark:hover:bg-white/10 dark:hover:text-white dark:border-white/10'
                                     }`}
                             >
@@ -265,14 +265,14 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             >
                 {/* Featured Badge */}
                 {project.is_featured && (
-                    <div className="absolute top-4 right-4 z-30 px-4 py-2 text-xs font-bold text-white bg-gradient-to-r from-primary-500 via-purple-500 to-pink-500 rounded-full shadow-lg animate-pulse">
+                    <div className="absolute top-4 right-4 z-30 px-4 py-2 text-xs font-bold text-white bg-primary-500 rounded-full shadow-lg animate-pulse">
                         ⭐ FEATURED
                     </div>
                 )}
 
                 {/* Luminous glow effect */}
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
-                    <div className="absolute inset-0 bg-gradient-to-r from-primary-500/20 via-purple-500/20 to-pink-500/20 animate-gradient-xy" />
+                    <div className="absolute inset-0 bg-primary-500/20 animate-gradient-xy" />
                 </div>
 
                 {/* Image Container */}
