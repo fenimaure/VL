@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
     LogOut, LayoutGrid, FileText, BookOpen, Briefcase,
     BarChart3, Plus, Star, Search, Bell, Info, Settings,
-    Menu, X, ChevronLeft, ChevronRight
+    Menu, X, ChevronLeft, ChevronRight, DollarSign
 } from 'lucide-react';
 
 import ProjectsManager from '../../components/admin/ProjectsManager';
@@ -16,8 +16,9 @@ import BlogsManager from '../../components/admin/BlogsManager';
 import CareersManager from '../../components/admin/CareersManager';
 import AboutManager from '../../components/admin/AboutManager';
 import FooterManager from '../../components/admin/FooterManager';
+import PricingManager from '../../components/admin/PricingManager';
 
-type ModuleType = 'Overview' | 'Services' | 'Projects' | 'Testimonials' | 'Blogs' | 'Careers' | 'About' | 'Footer';
+type ModuleType = 'Overview' | 'Services' | 'Projects' | 'Testimonials' | 'Blogs' | 'Careers' | 'About' | 'Footer' | 'Pricing';
 
 export default function Dashboard() {
     const navigate = useNavigate();
@@ -64,6 +65,7 @@ export default function Dashboard() {
         { id: 'Careers', label: 'Careers', icon: Briefcase },
         { id: 'About', label: 'About Page', icon: Info },
         { id: 'Footer', label: 'Footer Links', icon: Settings },
+        { id: 'Pricing', label: 'Pricing', icon: DollarSign },
     ];
 
     if (!user) return null;
@@ -321,6 +323,7 @@ export default function Dashboard() {
                             {activeModule === 'Careers' && <CareersManager />}
                             {activeModule === 'About' && <AboutManager />}
                             {activeModule === 'Footer' && <FooterManager />}
+                            {activeModule === 'Pricing' && <PricingManager />}
                         </div>
                     )}
                 </div>

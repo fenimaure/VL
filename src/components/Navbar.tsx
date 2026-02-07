@@ -51,13 +51,14 @@ export default function Navbar() {
     { title: 'About', path: '/about' },
     { title: 'Projects', path: '/projects' },
     { title: 'Services', path: '/#services' },
+    { title: 'Pricing', path: '/pricing' },
     { title: 'Careers', path: '/careers' },
     { title: 'Blog', path: '/blog' },
   ];
 
   return (
     <>
-      <nav className={`fixed w-full z-[60] transition-all duration-500 ${scrolled ? 'py-4 bg-white/80 dark:bg-dark-950/80 backdrop-blur-xl border-b border-black/5 dark:border-white/5' : 'py-8'}`}>
+      <nav className={`fixed w-full z-[60] transition-all duration-500 ${scrolled ? 'py-4 bg-white/95 dark:bg-black/95 backdrop-blur-xl border-b border-black/5 dark:border-white/5 shadow-sm' : 'py-8'}`}>
         <div className="max-w-7xl mx-auto px-6 sm:px-8 flex justify-between items-center">
           <Link to="/" className="z-[70] transition-all duration-300 hover:opacity-80">
             <img

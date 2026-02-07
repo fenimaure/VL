@@ -73,10 +73,10 @@ export default function SocialShare({
                             {/* Facebook */}
                             <button
                                 onClick={() => handleShare('facebook')}
-                                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-500/10 dark:hover:bg-blue-500/20 text-black dark:text-white transition-all duration-300 group"
+                                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-black/5 dark:hover:bg-white/10 text-black dark:text-white transition-all duration-300 group"
                             >
-                                <div className="w-10 h-10 rounded-full bg-blue-500/10 dark:bg-blue-500/20 flex items-center justify-center group-hover:bg-blue-500 transition-colors">
-                                    <Facebook className="h-5 w-5 text-blue-600 dark:text-blue-400 group-hover:text-white" />
+                                <div className="w-10 h-10 rounded-full bg-black/5 dark:bg-white/10 flex items-center justify-center group-hover:bg-black dark:group-hover:bg-white transition-colors">
+                                    <Facebook className="h-5 w-5 text-black dark:text-white group-hover:text-white dark:group-hover:text-black" />
                                 </div>
                                 <span className="font-medium">Share on Facebook</span>
                             </button>
@@ -95,10 +95,10 @@ export default function SocialShare({
                             {/* LinkedIn */}
                             <button
                                 onClick={() => handleShare('linkedin')}
-                                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-700/10 dark:hover:bg-blue-700/20 text-black dark:text-white transition-all duration-300 group"
+                                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-black/5 dark:hover:bg-white/10 text-black dark:text-white transition-all duration-300 group"
                             >
-                                <div className="w-10 h-10 rounded-full bg-blue-700/10 dark:bg-blue-700/20 flex items-center justify-center group-hover:bg-blue-700 transition-colors">
-                                    <Linkedin className="h-5 w-5 text-blue-700 dark:text-blue-600 group-hover:text-white" />
+                                <div className="w-10 h-10 rounded-full bg-black/5 dark:bg-white/10 flex items-center justify-center group-hover:bg-black dark:group-hover:bg-white transition-colors">
+                                    <Linkedin className="h-5 w-5 text-black dark:text-white group-hover:text-white dark:group-hover:text-black" />
                                 </div>
                                 <span className="font-medium">Share on LinkedIn</span>
                             </button>
@@ -106,13 +106,13 @@ export default function SocialShare({
                             {/* Copy Link */}
                             <button
                                 onClick={handleCopyLink}
-                                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-primary-500/10 dark:hover:bg-primary-500/20 text-black dark:text-white transition-all duration-300 group border-t border-black/5 dark:border-white/5 mt-2 pt-4"
+                                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-black/5 dark:hover:bg-white/10 text-black dark:text-white transition-all duration-300 group border-t border-black/5 dark:border-white/5 mt-2 pt-4"
                             >
-                                <div className="w-10 h-10 rounded-full bg-primary-500/10 dark:bg-primary-500/20 flex items-center justify-center group-hover:bg-primary-500 transition-colors">
+                                <div className="w-10 h-10 rounded-full bg-black/5 dark:bg-white/10 flex items-center justify-center group-hover:bg-black dark:group-hover:bg-white transition-colors">
                                     {copied ? (
-                                        <Check className="h-5 w-5 text-green-600 dark:text-green-400 group-hover:text-white" />
+                                        <Check className="h-5 w-5 text-black dark:text-white group-hover:text-white dark:group-hover:text-black" />
                                     ) : (
-                                        <LinkIcon className="h-5 w-5 text-primary-600 dark:text-primary-400 group-hover:text-white" />
+                                        <LinkIcon className="h-5 w-5 text-black dark:text-white group-hover:text-white dark:group-hover:text-black" />
                                     )}
                                 </div>
                                 <span className="font-medium">{copied ? 'Link Copied!' : 'Copy Link'}</span>

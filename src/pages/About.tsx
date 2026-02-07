@@ -173,6 +173,9 @@ export default function About() {
             {/* ANIMATED STATS SECTION */}
             <StatsSection />
 
+            {/* TRUSTED BY / CLIENTS - REMOVED TO MOVE TO HERO */}
+
+
             {/* OUR STORY with Rich Animation */}
             <section id="story" className="py-32 bg-gray-50/50 dark:bg-dark-900/30 relative overflow-hidden transition-colors duration-500">
                 {/* Background Decorations */}

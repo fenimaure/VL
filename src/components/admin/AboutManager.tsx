@@ -69,17 +69,30 @@ export default function AboutManager() {
 
     const updateItem = (sectionKey: string, index: number, field: string, value: any) => {
         setSections(prev => {
-            const newItems = [...(prev[sectionKey].items || [])];
-            newItems[index] = { ...newItems[index], [field]: value };
-            return { ...prev, [sectionKey]: { ...prev[sectionKey], items: newItems } };
+            const section = prev[sectionKey] || { items: [] };
+            const newItems = [...(section.items || [])];
+            if (newItems[index]) {
+                newItems[index] = { ...newItems[index], [field]: value };
+            }
+            return {
+                ...prev,
+                [sectionKey]: { ...section, items: newItems }
+            };
         });
     };
 
     const addItem = (sectionKey: string, initialItem: any) => {
-        setSections(prev => ({
-            ...prev,
-            [sectionKey]: { ...prev[sectionKey], items: [...(prev[sectionKey].items || []), initialItem] }
-        }));
+        setSections(prev => {
+            const section = prev[sectionKey] || { items: [], section_key: sectionKey };
+            const currentItems = section.items || [];
+            return {
+                ...prev,
+                [sectionKey]: {
+                    ...section,
+                    items: [...currentItems, initialItem]
+                }
+            };
+        });
     };
 
     const deleteItem = (sectionKey: string, index: number) => {
@@ -190,7 +203,7 @@ export default function AboutManager() {
             <div className="bg-white/5 p-6 rounded-xl border border-white/10">
                 {renderSectionHeader('team', '5. The Team')}
                 <div className="grid grid-cols-1 gap-4">
-                    {sections.team?.items?.map((item, idx) => (
+                    {(sections.team?.items || []).map((item, idx) => (
                         <div key={idx} className="bg-dark-950 p-4 rounded border border-white/10 flex gap-4 items-start">
                             <div className="flex-1 space-y-2">
                                 <input className="w-full bg-dark-900 border border-white/10 rounded px-3 py-2 text-white" placeholder="Name" value={item.name} onChange={e => updateItem('team', idx, 'name', e.target.value)} />
@@ -204,8 +217,39 @@ export default function AboutManager() {
                 </div>
             </div>
 
+            {/* Clients / Logos Section */}
+            <div className="bg-white/5 p-6 rounded-xl border border-white/10 mt-8">
+                {renderSectionHeader('clients', '3. Trusted By (Logos)')}
+                <div className="space-y-4">
+                    <div>
+                        <label className="block text-sm text-gray-400 mb-1">Section Title</label>
+                        <input className="w-full bg-dark-950 border border-white/10 rounded-lg px-4 py-2 text-white"
+                            value={sections.clients?.title || ''}
+                            onChange={e => updateSection('clients', 'title', e.target.value)}
+                            placeholder="e.g. Trusted By"
+                        />
+                    </div>
+                </div>
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                    {(sections.clients?.items || []).map((item, idx) => (
+                        <div key={idx} className="bg-dark-950 p-4 rounded border border-white/10 flex flex-col gap-2">
+                            <input className="w-full bg-dark-900 border border-white/10 rounded px-3 py-2 text-white" placeholder="Client Name" value={item.name} onChange={e => updateItem('clients', idx, 'name', e.target.value)} />
+                            <input className="w-full bg-dark-900 border border-white/10 rounded px-3 py-2 text-white" placeholder="Logo URL" value={item.logo_url} onChange={e => updateItem('clients', idx, 'logo_url', e.target.value)} />
+                            <div className="flex justify-between items-center mt-2">
+                                <span className="text-xs text-gray-500">Preview:</span>
+                                {item.logo_url && <img src={item.logo_url} className="h-6 w-auto object-contain bg-white/10 p-1 rounded" alt="Preview" />}
+                                <button onClick={() => deleteItem('clients', idx)} className="text-red-500 hover:text-red-400 p-1"><Trash2 className="h-4 w-4" /></button>
+                            </div>
+                        </div>
+                    ))}
+                    <button onClick={() => addItem('clients', { name: '', logo_url: '' })} className="col-span-1 border border-dashed border-white/20 rounded flex items-center justify-center p-8 text-primary-400 hover:text-white hover:border-white/40 transition-colors gap-2">
+                        <Plus className="h-5 w-5" /> Add Client Logo
+                    </button>
+                </div>
+            </div>
 
 
-        </div>
+
+        </div >
     );
 }

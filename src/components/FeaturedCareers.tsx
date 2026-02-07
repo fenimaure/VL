@@ -79,7 +79,7 @@ export default function FeaturedCareers() {
                             </span>
                         </div>
                         <h2 className="text-5xl md:text-6xl font-bold font-display text-black dark:text-white transition-colors duration-500 leading-tight">
-                            Build the <span className="italic font-light font-serif text-black/50 dark:text-white/30">Future</span> With Us.
+                            Build the <span className="text-stroke-light dark:text-stroke-white italic font-light font-serif">Future</span> With Us.
                         </h2>
                     </div>
 

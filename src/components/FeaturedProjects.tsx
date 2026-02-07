@@ -74,11 +74,11 @@ export default function FeaturedProjects() {
           <div className="max-w-2xl stagger-item">
             <div className="flex items-center gap-3 mb-6">
               <span className="w-12 h-[1px] bg-primary-500"></span>
-              <span className="text-primary-500 font-bold tracking-[0.3em] text-xs uppercase">Portfolio</span>
+              <span className="text-primary-500 dark:text-white font-bold tracking-[0.3em] text-xs uppercase">Portfolio</span>
             </div>
             <h2 className="text-5xl lg:text-7xl font-bold font-display mb-8 leading-none transition-colors duration-300">
               <span className="text-black dark:text-white">Selected </span>
-              <span className="text-black/60 dark:text-white/40 italic">Works</span>
+              <span className="text-stroke-light dark:text-stroke-white italic font-light font-serif">Works</span>
             </h2>
             <p className="text-xl text-black/70 dark:text-gray-400 leading-relaxed font-light max-w-lg transition-colors duration-300">
               A curated collection of digital transformations where strategy meets art.
@@ -151,7 +151,7 @@ export default function FeaturedProjects() {
               {/* Content Container */}
               <div className="w-full md:w-5/12 stagger-item relative z-10">
                 <div className="space-y-6">
-                  <div className="flex items-center gap-4 text-primary-500 font-bold text-xs uppercase tracking-[0.2em]">
+                  <div className="flex items-center gap-4 text-primary-500 dark:text-white font-bold text-xs uppercase tracking-[0.2em]">
                     <span>{project.category}</span>
                     <span className="w-8 h-[1px] bg-black/30 dark:bg-white/20 transition-colors duration-300"></span>
                     <span>{String(index + 1).padStart(2, '0')}</span>
@@ -183,7 +183,7 @@ export default function FeaturedProjects() {
                       <span className="relative pb-1 after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-primary-500 after:transform after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:duration-500 after:origin-left">
                         View Discovery
                       </span>
-                      <ArrowUpRight className="h-4 w-4 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform text-primary-500" />
+                      <ArrowUpRight className="h-4 w-4 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform text-primary-500 dark:text-white" />
                     </Link>
                   </div>
                 </div>

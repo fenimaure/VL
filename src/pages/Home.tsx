@@ -32,7 +32,7 @@ export default function Home() {
     }, []);
 
     return (
-        <div className="min-h-screen bg-white dark:bg-dark-950 text-gray-900 dark:text-gray-300 transition-colors duration-500">
+        <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white transition-colors duration-500">
             <Navbar />
             <Hero />
 

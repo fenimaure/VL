@@ -13,8 +13,9 @@ import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
 import About from './pages/About';
 import Contact from './pages/Contact';
+import Pricing from './pages/Pricing';
 
-import CustomCursor from './components/CustomCursor';
+
 import PageTransition from './components/PageTransition';
 import FloatingContact from './components/FloatingContact';
 import Preloader from './components/Preloader';
@@ -33,11 +34,9 @@ function AppContent() {
 
   return (
     <>
-      <div className="noise-bg"></div>
       <AnimatePresence mode="wait">
         {loading && <Preloader key="preloader" />}
       </AnimatePresence>
-      <CustomCursor />
       <FloatingContact />
       <PageTransition>
         <Routes location={location} key={location.pathname}>
@@ -52,6 +51,7 @@ function AppContent() {
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/about" element={<About />} />
+          <Route path="/pricing" element={<Pricing />} />
           <Route path="/contact" element={<Contact />} />
         </Routes>
       </PageTransition>

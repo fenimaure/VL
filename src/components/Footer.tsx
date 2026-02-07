@@ -29,7 +29,7 @@ export default function Footer() {
   const contactEmail = links.contact_email || 'hello@lovelli.com';
 
   return (
-    <footer className="bg-gray-50 dark:bg-dark-950 pt-40 pb-20 relative overflow-hidden text-black dark:text-white mt-20 transition-colors duration-500">
+    <footer className="bg-white dark:bg-black pt-40 pb-20 relative overflow-hidden text-black dark:text-white mt-20 transition-colors duration-500 border-t border-black/5 dark:border-white/5">
       <div className="absolute inset-0 bg-primary-500/5 blur-[120px] rounded-full pointer-events-none -bottom-1/2"></div>
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">

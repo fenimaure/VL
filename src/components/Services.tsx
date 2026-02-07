@@ -154,10 +154,10 @@ export default function Services() {
         <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-24 gap-12 px-6 lg:px-0">
           <div className="max-w-3xl stagger-item">
             <div className="flex items-center gap-3 mb-8">
-              <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary-500/10 text-primary-500">
+              <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary-500/10 dark:bg-white/10 text-primary-500 dark:text-white">
                 <Zap className="w-4 h-4 fill-current" />
               </span>
-              <span className="text-primary-500 font-bold tracking-[0.3em] text-xs uppercase">
+              <span className="text-primary-500 dark:text-white font-bold tracking-[0.3em] text-xs uppercase">
                 Our Capabilities
               </span>
             </div>
@@ -166,7 +166,7 @@ export default function Services() {
               <span className="block text-transparent bg-clip-text bg-gradient-to-r from-black via-black to-black/50 dark:from-white dark:via-white dark:to-white/50 animate-gradient-x">
                 Expert
               </span>
-              <span className="block text-black/50 dark:text-white/30 italic font-light font-serif transform translate-x-4">
+              <span className="block text-stroke-light dark:text-stroke-white italic font-light font-serif transform translate-x-4">
                 Solutions
               </span>
             </h2>
@@ -176,30 +176,33 @@ export default function Services() {
             </p>
           </div>
 
-          <div className="stagger-item hidden lg:flex flex-col gap-4">
-            <div className="flex gap-2">
-              <button
-                onClick={prevSlide}
-                disabled={currentIndex === 0}
-                className="w-16 h-16 flex items-center justify-center rounded-full border border-black/10 dark:border-white/10 bg-white/50 dark:bg-white/5 backdrop-blur-md text-black dark:text-white disabled:opacity-30 disabled:cursor-not-allowed hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all duration-300 group"
-              >
-                <ChevronLeft className="h-6 w-6 group-hover:-translate-x-1 transition-transform" />
-              </button>
-              <button
-                onClick={nextSlide}
-                disabled={currentIndex === maxIndex}
-                className="w-16 h-16 flex items-center justify-center rounded-full border border-black/10 dark:border-white/10 bg-white/50 dark:bg-white/5 backdrop-blur-md text-black dark:text-white disabled:opacity-30 disabled:cursor-not-allowed hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all duration-300 group"
-              >
-                <ChevronRight className="h-6 w-6 group-hover:translate-x-1 transition-transform" />
-              </button>
-            </div>
-            <div className="flex gap-1 justify-center">
-              {Array.from({ length: maxIndex + 1 }).map((_, i) => (
-                <div
-                  key={i}
-                  className={`h-1 rounded-full transition-all duration-300 ${i === currentIndex ? 'w-8 bg-primary-500' : 'w-2 bg-black/10 dark:bg-white/10'}`}
-                />
-              ))}
+          <div className="stagger-item flex flex-col gap-4 w-full lg:w-auto">
+            {/* Controls - Desktop Only */}
+            <div className="hidden lg:flex flex-col gap-4 w-full lg:w-auto">
+              <div className="flex gap-2 justify-end lg:justify-start">
+                <button
+                  onClick={prevSlide}
+                  disabled={currentIndex === 0}
+                  className="w-12 h-12 lg:w-16 lg:h-16 flex items-center justify-center rounded-full border border-black/10 dark:border-white/10 bg-white/50 dark:bg-white/5 backdrop-blur-md text-black dark:text-white disabled:opacity-30 disabled:cursor-not-allowed hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all duration-300 group"
+                >
+                  <ChevronLeft className="h-5 w-5 lg:h-6 lg:w-6 group-hover:-translate-x-1 transition-transform" />
+                </button>
+                <button
+                  onClick={nextSlide}
+                  disabled={currentIndex === maxIndex}
+                  className="w-12 h-12 lg:w-16 lg:h-16 flex items-center justify-center rounded-full border border-black/10 dark:border-white/10 bg-white/50 dark:bg-white/5 backdrop-blur-md text-black dark:text-white disabled:opacity-30 disabled:cursor-not-allowed hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all duration-300 group"
+                >
+                  <ChevronRight className="h-5 w-5 lg:h-6 lg:w-6 group-hover:translate-x-1 transition-transform" />
+                </button>
+              </div>
+              <div className="flex gap-1 justify-end lg:justify-center">
+                {Array.from({ length: maxIndex + 1 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className={`h-1 rounded-full transition-all duration-300 ${i === currentIndex ? 'w-8 bg-primary-500' : 'w-2 bg-black/10 dark:bg-white/10'}`}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -218,7 +221,7 @@ export default function Services() {
               {services.map((service, index) => (
                 <div
                   key={service.id}
-                  className="flex-shrink-0 w-[85vw] md:w-auto pr-2 md:px-2"
+                  className="flex-shrink-0 w-[88vw] md:w-auto pr-4 md:px-2"
                   style={{ width: window.innerWidth >= 768 ? `${cardWidth}%` : undefined }}
                 >
                   <ServiceCard
@@ -229,6 +232,41 @@ export default function Services() {
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+
+        {/* Controls - Mobile Only (Bottom Center) */}
+        <div className="flex lg:hidden flex-col items-center gap-6 mt-8 stagger-item">
+          {/* Mobile Swipe Hint */}
+          <div className="flex items-center gap-2 animate-pulse">
+            <span className="w-8 h-[1px] bg-black/20 dark:bg-white/20"></span>
+            <span className="text-[10px] uppercase tracking-widest text-black/40 dark:text-white/40 font-bold">Swipe to Explore</span>
+            <span className="w-8 h-[1px] bg-black/20 dark:bg-white/20"></span>
+          </div>
+
+          <div className="flex gap-4">
+            <button
+              onClick={prevSlide}
+              disabled={currentIndex === 0}
+              className="w-14 h-14 flex items-center justify-center rounded-full border border-black/10 dark:border-white/10 bg-white dark:bg-white/5 backdrop-blur-md text-black dark:text-white disabled:opacity-30 disabled:cursor-not-allowed active:bg-black active:text-white dark:active:bg-white dark:active:text-black transition-all duration-300 group"
+            >
+              <ChevronLeft className="h-6 w-6 group-hover:-translate-x-1 transition-transform" />
+            </button>
+            <button
+              onClick={nextSlide}
+              disabled={currentIndex === maxIndex}
+              className="w-14 h-14 flex items-center justify-center rounded-full border border-black/10 dark:border-white/10 bg-white dark:bg-white/5 backdrop-blur-md text-black dark:text-white disabled:opacity-30 disabled:cursor-not-allowed active:bg-black active:text-white dark:active:bg-white dark:active:text-black transition-all duration-300 group"
+            >
+              <ChevronRight className="h-6 w-6 group-hover:translate-x-1 transition-transform" />
+            </button>
+          </div>
+          <div className="flex gap-1">
+            {Array.from({ length: maxIndex + 1 }).map((_, i) => (
+              <div
+                key={i}
+                className={`h-1 rounded-full transition-all duration-300 ${i === currentIndex ? 'w-8 bg-primary-500' : 'w-2 bg-black/10 dark:bg-white/10'}`}
+              />
+            ))}
           </div>
         </div>
       </div>
@@ -265,9 +303,9 @@ function ServiceCard({ service, index, onClick }: { service: Service; index: num
     const y = e.clientY - rect.top;
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
-    const rotateX = (y - centerY) / 25;
-    const rotateY = (centerX - x) / 25;
-    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+    const rotateX = (y - centerY) / 50;
+    const rotateY = (centerX - x) / 50;
+    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.01, 1.01, 1.01)`;
   };
 
   const handleMouseLeave = () => {
@@ -285,11 +323,11 @@ function ServiceCard({ service, index, onClick }: { service: Service; index: num
         onClick={onClick}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        className="group relative h-[550px] flex flex-col justify-between p-8 rounded-[2rem] bg-white dark:bg-zinc-900/50 border border-black/5 dark:border-white/5 overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-2xl hover:shadow-primary-500/20 dark:hover:shadow-primary-500/10"
+        className="group relative h-auto min-h-[450px] md:h-[550px] flex flex-col justify-between p-8 rounded-[2rem] bg-white dark:bg-black border border-black/5 dark:border-white/5 overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-2xl hover:shadow-black/5 dark:hover:shadow-white/5"
         style={{ transition: 'transform 0.1s ease-out' }}
       >
-        {/* Animated Gradient Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-zinc-900/80 dark:via-zinc-900 dark:to-zinc-950/80 opacity-100 transition-colors duration-500" />
+        {/* Animated Gradient Background - REMOVED for clean white look */}
+        {/* <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-zinc-900/80 dark:via-zinc-900 dark:to-zinc-950/80 opacity-100 transition-colors duration-500" /> */}
 
         {/* Hover Highlight Blob */}
         <div className="absolute -top-20 -right-20 w-80 h-80 bg-primary-500/10 rounded-full blur-[80px] group-hover:bg-primary-500/20 transition-all duration-700 group-hover:scale-125" />
@@ -307,7 +345,7 @@ function ServiceCard({ service, index, onClick }: { service: Service; index: num
               <div className="absolute inset-0 bg-primary-500 rounded-2xl animate-ping opacity-0 group-hover:opacity-20" />
             </div>
 
-            <span className="font-mono text-xs font-bold tracking-widest text-black/20 dark:text-white/20 group-hover:text-primary-500 transition-colors duration-300">
+            <span className="font-mono text-xs font-bold tracking-widest text-black/20 dark:text-white/20 group-hover:text-primary-500 dark:group-hover:text-white transition-colors duration-300">
               {String(index + 1).padStart(2, '0')}
             </span>
           </div>

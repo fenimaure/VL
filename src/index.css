@@ -6,10 +6,14 @@
 
 @layer base {
   body {
-    @apply antialiased font-sans overflow-x-hidden cursor-none transition-colors duration-300;
-    @apply bg-white text-gray-900 dark:bg-black dark:text-gray-300;
-    @apply selection:bg-black/20 dark:selection:bg-white/20;
-    @apply selection:text-black dark:selection:text-white;
+    @apply antialiased font-sans overflow-x-hidden bg-white text-black dark:bg-black dark:text-white;
+    transition-property: background-color, color;
+    transition-duration: 700ms;
+    transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+
+    /* Selection styles */
+    @apply selection:bg-black/10 selection:text-black;
+    @apply dark:selection:bg-white/10 dark:selection:text-white;
   }
 
   h1,
@@ -18,53 +22,47 @@
   h4,
   h5,
   h6 {
-    @apply font-display tracking-tight transition-colors duration-300;
-    @apply text-black dark:text-white;
+    @apply font-display tracking-tight text-black dark:text-white;
+    letter-spacing: -0.02em;
+  }
+
+  p {
+    @apply text-gray-600 dark:text-gray-400 leading-relaxed;
   }
 
   html {
     scroll-behavior: smooth;
     font-feature-settings: "cv11", "ss01";
+    -webkit-tap-highlight-color: transparent;
   }
 
-  /* Custom Scrollbar - Light Theme */
+  /* Refined Scrollbar */
   ::-webkit-scrollbar {
-    width: 4px;
+    width: 6px;
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-gray-100 dark:bg-black;
+    @apply bg-transparent;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-black/20 dark:bg-white/20 rounded-full;
-    @apply hover:bg-black/40 dark:hover:bg-white/40 transition-colors;
+    @apply bg-gray-200 dark:bg-gray-800 rounded-full;
+    @apply hover:bg-gray-400 dark:hover:bg-gray-600 transition-colors;
   }
 }
 
 @layer components {
-  .noise-bg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    pointer-events: none;
-    z-index: 50;
-    opacity: 0.05;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-    mix-blend-mode: overlay;
-  }
+  /* Removed noise-bg for cleaner look */
 
   .magnetic-btn {
-    @apply relative transition-transform duration-300 ease-out;
+    @apply relative transition-transform duration-300 ease-out active:scale-95;
   }
 }
 
 @layer utilities {
   .glass-panel {
-    @apply backdrop-blur-xl border shadow-glass transition-colors duration-300;
-    @apply bg-black/[0.03] border-black/[0.1] dark:bg-white/[0.03] dark:border-white/[0.1];
+    @apply backdrop-blur-md border shadow-clean transition-colors duration-300;
+    @apply bg-white/70 border-gray-100 dark:bg-black/70 dark:border-gray-800;
   }
 
   .text-glow {
@@ -75,14 +73,10 @@
     text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
   }
 
-  .cursor-dot {
-    @apply fixed top-0 left-0 w-3 h-3 rounded-full pointer-events-none z-[100] mix-blend-difference transition-transform duration-100 ease-linear;
-    @apply bg-black dark:bg-white;
-  }
-
+  /* Removed custom cursor for native OS feel (iPhone style) */
+  .cursor-dot,
   .cursor-outline {
-    @apply fixed top-0 left-0 w-10 h-10 border rounded-full pointer-events-none z-[100] transition-transform duration-300 ease-out mix-blend-difference;
-    @apply border-black/50 dark:border-white/50;
+    display: none;
   }
 
   /* Full Screen Menu Animations */
@@ -421,5 +415,25 @@
   .footer-section-label {
     @apply text-[10px] font-bold uppercase tracking-[0.4em] mb-8 block;
     @apply text-black/20 dark:text-white/20;
+  }
+
+  /* Infinite Logo Scroll */
+  @keyframes scroll-left {
+    0% {
+      transform: translateX(0);
+    }
+
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  .animate-scroll {
+    animation: scroll-left 30s linear infinite;
+  }
+
+  /* Pause on hover if desired */
+  .animate-scroll:hover {
+    animation-play-state: paused;
   }
 }

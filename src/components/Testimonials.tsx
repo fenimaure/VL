@@ -75,7 +75,7 @@ export default function Testimonials() {
             </div>
             <h2 className="text-6xl lg:text-8xl font-bold font-display leading-[0.8] tracking-tighter text-black dark:text-white">
               Kind <br />
-              <span className="text-black/50 dark:text-white/30 italic font-light font-serif">Words</span><span className="text-primary-500">.</span>
+              <span className="text-stroke-light dark:text-stroke-white italic font-light font-serif">Words</span><span className="text-primary-500">.</span>
             </h2>
           </div>
         </div>

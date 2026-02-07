@@ -103,10 +103,10 @@ export default function FloatingContact() {
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     variants={itemVariants}
-                                    className="group relative flex items-center justify-center h-16 w-16 bg-white/10 backdrop-blur-3xl border border-white/20 rounded-full hover:scale-110 hover:bg-white transition-all duration-500 shadow-2xl"
+                                    className="group relative flex items-center justify-center h-16 w-16 bg-white dark:bg-black border border-black/10 dark:border-white/10 rounded-full hover:scale-110 transition-all duration-500 shadow-xl"
                                 >
-                                    <div className="absolute inset-0 bg-[#25D366] rounded-full blur-lg opacity-0 group-hover:opacity-20 transition-opacity"></div>
-                                    <FaWhatsapp className="h-8 w-8 text-[#25D366] group-hover:scale-110 transition-transform" />
+                                    <div className="absolute inset-0 bg-black dark:bg-white rounded-full blur-lg opacity-0 group-hover:opacity-10 transition-opacity"></div>
+                                    <FaWhatsapp className="h-8 w-8 text-black dark:text-white group-hover:scale-110 transition-transform" />
                                 </motion.a>
 
                                 {/* Messenger Link */}
@@ -115,13 +115,11 @@ export default function FloatingContact() {
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     variants={itemVariants}
-                                    className="group relative flex items-center justify-center h-16 w-16 bg-white/10 backdrop-blur-3xl border border-white/20 rounded-full hover:scale-110 hover:bg-white transition-all duration-500 shadow-2xl"
+                                    className="group relative flex items-center justify-center h-16 w-16 bg-white dark:bg-black border border-black/10 dark:border-white/10 rounded-full hover:scale-110 transition-all duration-500 shadow-xl"
                                 >
-                                    <div className="absolute inset-0 bg-[#00B2FF] rounded-full blur-lg opacity-0 group-hover:opacity-20 transition-opacity"></div>
-                                    <FaFacebookMessenger className="h-8 w-8 text-[#00B2FF] group-hover:scale-110 transition-transform" />
+                                    <div className="absolute inset-0 bg-black dark:bg-white rounded-full blur-lg opacity-0 group-hover:opacity-10 transition-opacity"></div>
+                                    <FaFacebookMessenger className="h-8 w-8 text-black dark:text-white group-hover:scale-110 transition-transform" />
                                 </motion.a>
-
-                                {/* Status Indicator REMOVED as per request */}
                             </motion.div>
                         )}
                     </AnimatePresence>
@@ -134,10 +132,10 @@ export default function FloatingContact() {
                         className="relative h-[3.6rem] w-[3.6rem] md:h-20 md:w-20 rounded-full shadow-2xl shadow-primary-500/20 group z-[110]"
                     >
                         {/* Particle Glow Effect */}
-                        <div className="absolute inset-0 bg-primary-500 rounded-full blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-700" />
+                        <div className="absolute inset-0 bg-black dark:bg-white rounded-full blur-xl opacity-0 group-hover:opacity-10 transition-opacity duration-700" />
 
                         {/* Glass Container */}
-                        <div className="absolute inset-0 bg-dark-900/80 backdrop-blur-xl border border-white/10 rounded-full flex items-center justify-center overflow-hidden z-[120]">
+                        <div className="absolute inset-0 bg-white dark:bg-black border border-black/10 dark:border-white/10 rounded-full flex items-center justify-center overflow-hidden z-[120]">
                             <AnimatePresence mode="wait">
                                 {!isOpen ? (
                                     <motion.div
@@ -156,7 +154,7 @@ export default function FloatingContact() {
                                                 />
                                             </div>
                                         ) : (
-                                            <Send className="h-6 w-6 md:h-8 md:w-8 text-primary-500 group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform relative z-[130]" />
+                                            <Send className="h-6 w-6 md:h-8 md:w-8 text-black dark:text-white group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform relative z-[130]" />
                                         )}
                                     </motion.div>
                                 ) : (
@@ -167,7 +165,7 @@ export default function FloatingContact() {
                                         exit={{ rotate: -90, opacity: 0 }}
                                         className="relative z-[130]"
                                     >
-                                        <X className="h-6 w-6 md:h-8 md:w-8 text-white" />
+                                        <X className="h-6 w-6 md:h-8 md:w-8 text-black dark:text-white" />
                                     </motion.div>
                                 )}
                             </AnimatePresence>
