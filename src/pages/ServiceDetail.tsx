@@ -106,24 +106,7 @@ export default function ServiceDetail() {
                 </div>
             </section>
 
-            {/* Core Narrative Section */}
-            <section className="py-40 relative">
-                <div className="max-w-7xl mx-auto px-6 lg:px-8">
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-20 items-start">
-                        <div className="lg:col-span-4 stagger-item">
-                            <h2 className="text-xs uppercase tracking-[0.5em] text-primary-500 font-bold mb-10">Narrative & Purpose</h2>
-                            <p className="text-2xl md:text-3xl text-black dark:text-white font-light leading-relaxed font-display transition-colors duration-500">
-                                {service.description}
-                            </p>
-                        </div>
-                        <div className="lg:col-span-7 lg:offset-1 stagger-item">
-                            <div className="lg:col-span-7 lg:offset-1 stagger-item">
-                                <MarkdownRenderer content={service.content || 'Our architectural approach ensures...'} className="font-light leading-[1.8]" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+
 
             {/* Editorial Features Grid */}
             <section className="py-40 bg-black/[0.01] dark:bg-white/[0.01] border-y border-black/5 dark:border-white/5 relative overflow-hidden transition-colors duration-500">

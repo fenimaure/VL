@@ -103,6 +103,12 @@ export default function FooterManager() {
         { key: 'messenger_url', label: 'Messenger URL (e.g. https://m.me/...)', icon: MessageSquare },
     ];
 
+    const contactFormFields = [
+        { key: 'whatsapp_number', label: 'WhatsApp Number (e.g. 639123456789)', icon: MessageCircle, placeholder: '639123456789' },
+        { key: 'messenger_id', label: 'Facebook Page ID/Username', icon: MessageSquare, placeholder: 'your.page.username' },
+        { key: 'contact_email', label: 'Contact Email', icon: Mail, placeholder: 'hello@example.com' },
+    ];
+
     return (
         <div className="space-y-12 pb-20">
             <div>
@@ -155,6 +161,35 @@ export default function FooterManager() {
                                 />
                             </div>
                         ))}
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h2 className="text-2xl font-bold text-white mb-6">Contact Form Messaging</h2>
+                <p className="text-sm text-gray-400 mb-4">Configure instant messaging options shown after form submission</p>
+                <div className="bg-dark-900 p-8 rounded-2xl border border-white/10 space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {contactFormFields.map(({ key, label, icon: Icon, placeholder }) => (
+                            <div key={key}>
+                                <label className="block text-sm text-gray-400 mb-2 flex items-center gap-2">
+                                    <Icon className="h-3 w-3" /> {label}
+                                </label>
+                                <input
+                                    className="w-full bg-dark-950 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:border-primary-500 transition-colors"
+                                    value={links[key] || ''}
+                                    onChange={e => handleChange(key, e.target.value)}
+                                    placeholder={placeholder}
+                                />
+                            </div>
+                        ))}
+                    </div>
+                    <div className="mt-4 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
+                        <p className="text-xs text-blue-400 leading-relaxed">
+                            <strong>WhatsApp:</strong> Use international format without + or spaces (e.g., 639123456789)<br />
+                            <strong>Messenger:</strong> Your Facebook Page username or ID (found in Page settings)<br />
+                            <strong>Email:</strong> The email address where inquiries should be sent
+                        </p>
                     </div>
                 </div>
             </div>

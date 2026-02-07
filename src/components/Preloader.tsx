@@ -10,12 +10,7 @@ export default function Preloader() {
             }}
             className="fixed inset-0 z-[9999] bg-white flex flex-col items-center justify-center overflow-hidden"
         >
-            {/* Background Kinetic Text */}
-            <div className="absolute inset-0 flex items-center justify-center opacity-[0.05] select-none pointer-events-none">
-                <h2 className="text-[20vw] font-black font-display rotate-12 leading-none whitespace-nowrap text-black">
-                    LOVELLI.STUDIOS • LOVELLI.STUDIOS • LOVELLI.STUDIOS
-                </h2>
-            </div>
+
 
             <div className="relative z-10 flex flex-col items-center gap-12 text-center px-6">
                 {/* Main Logo Image Animation */}

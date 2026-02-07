@@ -16,15 +16,17 @@ import BlogsManager from '../../components/admin/BlogsManager';
 import CareersManager from '../../components/admin/CareersManager';
 import AboutManager from '../../components/admin/AboutManager';
 import FooterManager from '../../components/admin/FooterManager';
-import PricingManager from '../../components/admin/PricingManager';
 
-type ModuleType = 'Overview' | 'Services' | 'Projects' | 'Testimonials' | 'Blogs' | 'Careers' | 'About' | 'Footer' | 'Pricing';
+import PricingManager from '../../components/admin/PricingManager';
+import InquiriesManager from '../../components/admin/InquiriesManager';
+
+type ModuleType = 'Overview' | 'Services' | 'Projects' | 'Inquiries' | 'Testimonials' | 'Blogs' | 'Careers' | 'About' | 'Footer' | 'Pricing';
 
 export default function Dashboard() {
     const navigate = useNavigate();
     const [user, setUser] = useState<any>(null);
     const [activeModule, setActiveModule] = useState<ModuleType>('Overview');
-    const [stats, setStats] = useState({ projects: 0, blogs: 0, careers: 0, services: 0 });
+    const [stats, setStats] = useState({ projects: 0, blogs: 0, careers: 0, services: 0, inquiries: 0 });
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [isMobileOpen, setIsMobileOpen] = useState(false);
 
@@ -43,11 +45,14 @@ export default function Dashboard() {
         const c = await supabase.from('careers').select('id', { count: 'exact' }).eq('is_active', true);
         const s = await supabase.from('services').select('id', { count: 'exact' });
 
+        const i = await supabase.from('project_inquiries').select('id', { count: 'exact' }).eq('status', 'new');
+
         setStats({
             projects: p.count || 0,
             blogs: b.count || 0,
             careers: c.count || 0,
-            services: s.count || 0
+            services: s.count || 0,
+            inquiries: i.count || 0
         });
     }
 
@@ -59,6 +64,7 @@ export default function Dashboard() {
     const modules = [
         { id: 'Overview', label: 'Overview', icon: BarChart3 },
         { id: 'Services', label: 'Services', icon: LayoutGrid },
+        { id: 'Inquiries', label: 'Inquiries', icon: Bell },
         { id: 'Projects', label: 'Projects', icon: FileText },
         { id: 'Testimonials', label: 'Testimonials', icon: Star },
         { id: 'Blogs', label: 'Blog Posts', icon: BookOpen },
@@ -263,7 +269,7 @@ export default function Dashboard() {
                                     { label: 'Total Projects', value: stats.projects, icon: FileText, color: 'text-blue-400', bg: 'bg-blue-400/10' },
                                     { label: 'Published Posts', value: stats.blogs, icon: BookOpen, color: 'text-indigo-400', bg: 'bg-indigo-400/10' },
                                     { label: 'Active Jobs', value: stats.careers, icon: Briefcase, color: 'text-teal-400', bg: 'bg-teal-400/10' },
-                                    { label: 'Services', value: stats.services, icon: LayoutGrid, color: 'text-orange-400', bg: 'bg-orange-400/10' },
+                                    { label: 'New Inquiries', value: stats.inquiries, icon: Bell, color: 'text-red-400', bg: 'bg-red-400/10' },
                                 ].map((stat, i) => (
                                     <div key={i} className="bg-white/5 border border-white/5 rounded-2xl p-6 hover:bg-white/10 transition-colors group">
                                         <div className="flex justify-between items-start mb-4">
@@ -318,6 +324,7 @@ export default function Dashboard() {
                         <div className="max-w-7xl mx-auto animate-fade-in">
                             {activeModule === 'Projects' && <ProjectsManager />}
                             {activeModule === 'Services' && <ServicesManager />}
+                            {activeModule === 'Inquiries' && <InquiriesManager />}
                             {activeModule === 'Testimonials' && <TestimonialsManager />}
                             {activeModule === 'Blogs' && <BlogsManager />}
                             {activeModule === 'Careers' && <CareersManager />}

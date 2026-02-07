@@ -7,6 +7,7 @@ import {
   Megaphone, Terminal, Layers, Search
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import MarkdownRenderer from './MarkdownRenderer';
 
 interface Service {
   id: string;
@@ -356,9 +357,9 @@ function ServiceCard({ service, index, onClick }: { service: Service; index: num
               {service.title}
             </h3>
             <div className="w-12 h-1 bg-black/10 dark:bg-white/10 rounded-full mb-6 group-hover:w-full group-hover:bg-primary-500 transition-all duration-700" />
-            <p className="text-black/60 dark:text-zinc-400 leading-relaxed font-light line-clamp-3 group-hover:text-black/80 dark:group-hover:text-zinc-300 transition-colors duration-300">
-              {service.description}
-            </p>
+            <div className="line-clamp-3 text-black/60 dark:text-zinc-400 leading-relaxed font-light group-hover:text-black/80 dark:group-hover:text-zinc-300 transition-colors duration-300">
+              <MarkdownRenderer content={service.description} className="prose-p:text-inherit prose-p:leading-relaxed prose-p:font-light prose-p:m-0" />
+            </div>
           </div>
 
           {/* Footer - "Learn More" Button */}
