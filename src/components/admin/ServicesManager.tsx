@@ -97,13 +97,18 @@ export default function ServicesManager() {
     }
 
     async function handleDelete(id: string) {
-        if (!confirm('Are you sure you want to delete this service?')) return;
+        if (!window.confirm('Are you sure you want to delete this service?')) return;
         try {
-            const { error } = await supabase.from('services').delete().eq('id', id);
+            const { data, error } = await supabase.from('services').delete().eq('id', id).select();
             if (error) throw error;
+            if (!data || data.length === 0) {
+                alert('Delete was blocked by Supabase RLS. Please add a DELETE policy for authenticated users on the "services" table.');
+                return;
+            }
             fetchServices();
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error deleting service:', error);
+            alert('Failed to delete: ' + (error?.message || 'Unknown error'));
         }
     }
 

@@ -65,13 +65,18 @@ export default function TestimonialsManager() {
     }
 
     async function handleDelete(id: string) {
-        if (!confirm('Delete this testimonial?')) return;
+        if (!window.confirm('Delete this testimonial?')) return;
         try {
-            const { error } = await supabase.from('testimonials').delete().eq('id', id);
+            const { data, error } = await supabase.from('testimonials').delete().eq('id', id).select();
             if (error) throw error;
+            if (!data || data.length === 0) {
+                alert('Delete was blocked. Please check your Supabase RLS policies — you may need to add a DELETE policy for authenticated users on the "testimonials" table.');
+                return;
+            }
             fetchItems();
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error deleting:', error);
+            alert('Failed to delete: ' + (error?.message || 'Unknown error'));
         }
     }
 

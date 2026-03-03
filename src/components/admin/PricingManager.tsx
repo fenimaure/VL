@@ -110,13 +110,18 @@ export default function PricingManager() {
     }
 
     async function handleDelete(id: string) {
-        if (!confirm('Are you sure you want to delete this package?')) return;
+        if (!window.confirm('Are you sure you want to delete this package?')) return;
         try {
-            const { error } = await supabase.from('pricing_packages').delete().eq('id', id);
+            const { data, error } = await supabase.from('pricing_packages').delete().eq('id', id).select();
             if (error) throw error;
+            if (!data || data.length === 0) {
+                alert('Delete was blocked by Supabase RLS. Please add a DELETE policy for authenticated users on the "pricing_packages" table.');
+                return;
+            }
             fetchPackages();
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error deleting package:', error);
+            alert('Failed to delete: ' + (error?.message || 'Unknown error'));
         }
     }
 

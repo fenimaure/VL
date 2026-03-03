@@ -69,13 +69,18 @@ export default function BlogsManager() {
     }
 
     async function handleDelete(id: string) {
-        if (!confirm('Convert this post to history? (Delete)')) return;
+        if (!window.confirm('Delete this blog post?')) return;
         try {
-            const { error } = await supabase.from('blogs').delete().eq('id', id);
+            const { data, error } = await supabase.from('blogs').delete().eq('id', id).select();
             if (error) throw error;
+            if (!data || data.length === 0) {
+                alert('Delete was blocked. Please check your Supabase RLS policies — you may need to add a DELETE policy for authenticated users on the "blogs" table.');
+                return;
+            }
             fetchPosts();
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error deleting blog:', error);
+            alert('Failed to delete: ' + (error?.message || 'Unknown error'));
         }
     }
 

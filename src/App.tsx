@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import Login from './pages/admin/Login';
 import Dashboard from './pages/admin/Dashboard';
 import ServiceDetail from './pages/ServiceDetail';
+import ServicesPage from './pages/Services';
 import ProjectDetail from './pages/ProjectDetail';
 import Projects from './pages/Projects';
 import Careers from './pages/Careers';
@@ -27,10 +28,25 @@ function AppContent() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    let timeout: NodeJS.Timeout;
+
+    const handleLoad = () => {
       setLoading(false);
-    }, 2000);
-    return () => clearTimeout(timer);
+    };
+
+    if (document.readyState === 'complete') {
+      // If already loaded, still show for a minimum time for the premium feel
+      timeout = setTimeout(handleLoad, 800);
+    } else {
+      window.addEventListener('load', handleLoad);
+      // Fallback maximum time
+      timeout = setTimeout(handleLoad, 2000);
+    }
+
+    return () => {
+      window.removeEventListener('load', handleLoad);
+      if (timeout) clearTimeout(timeout);
+    };
   }, []);
 
   return (
@@ -44,6 +60,7 @@ function AppContent() {
           <Route path="/" element={<Home />} />
           <Route path="/admin" element={<Login />} />
           <Route path="/admin/dashboard" element={<Dashboard />} />
+          <Route path="/services" element={<ServicesPage />} />
           <Route path="/services/:slug" element={<ServiceDetail />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/projects/:slug" element={<ProjectDetail />} />

@@ -76,9 +76,19 @@ export default function CareersManager() {
     }
 
     async function handleDelete(id: string) {
-        if (!confirm('Delete this listing?')) return;
-        await supabase.from('careers').delete().eq('id', id);
-        fetchItems();
+        if (!window.confirm('Delete this listing?')) return;
+        try {
+            const { data, error } = await supabase.from('careers').delete().eq('id', id).select();
+            if (error) throw error;
+            if (!data || data.length === 0) {
+                alert('Delete was blocked. Please check your Supabase RLS policies — you may need to add a DELETE policy for authenticated users on the "careers" table.');
+                return;
+            }
+            fetchItems();
+        } catch (error: any) {
+            console.error('Error deleting career:', error);
+            alert('Failed to delete: ' + (error?.message || 'Unknown error'));
+        }
     }
 
     if (loading) return <div>Loading Careers...</div>;

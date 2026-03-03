@@ -87,46 +87,52 @@ export default function About() {
                     </motion.div>
 
                     {/* Main Headline */}
-                    <motion.h1
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.2 }}
-                        className={`font-bold font-display text-black dark:text-white mb-8 tracking-tighter leading-[0.9] ${(() => {
-                            const items: any[] = Array.isArray(data.hero?.items) ? data.hero.items : [];
-                            const settings = items.find((i: any) => i._settings);
-                            const sizeMap: Record<string, string> = {
-                                xs: 'text-3xl md:text-4xl lg:text-5xl',
-                                sm: 'text-4xl md:text-5xl lg:text-6xl',
-                                md: 'text-5xl md:text-6xl lg:text-7xl',
-                                lg: 'text-6xl md:text-7xl lg:text-8xl',
-                                xl: 'text-6xl md:text-8xl lg:text-9xl',
-                            };
-                            return sizeMap[settings?.title_size || 'xl'] ?? 'text-6xl md:text-8xl lg:text-9xl';
-                        })()
-                            }`}
-                    >
-                        {data.hero?.title || 'Crafting Digital Excellence'}
-                    </motion.h1>
+                    {data.hero?.title && (
+                        <motion.h1
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8, delay: 0.2 }}
+                            className={`font-bold font-display text-black dark:text-white mb-8 tracking-tighter leading-[0.9] ${(() => {
+                                const items: any[] = Array.isArray(data.hero?.items) ? data.hero.items : [];
+                                const settings = items.find((i: any) => i._settings);
+                                const sizeMap: Record<string, string> = {
+                                    xs: 'text-3xl md:text-4xl lg:text-5xl',
+                                    sm: 'text-4xl md:text-5xl lg:text-6xl',
+                                    md: 'text-5xl md:text-6xl lg:text-7xl',
+                                    lg: 'text-6xl md:text-7xl lg:text-8xl',
+                                    xl: 'text-6xl md:text-8xl lg:text-9xl',
+                                };
+                                return sizeMap[settings?.title_size || 'xl'] ?? 'text-6xl md:text-8xl lg:text-9xl';
+                            })()
+                                }`}
+                        >
+                            {data.hero.title}
+                        </motion.h1>
+                    )}
 
                     {/* Subtitle */}
-                    <motion.p
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.4 }}
-                        className="text-2xl md:text-3xl text-primary-500 font-medium max-w-4xl mx-auto mb-6"
-                    >
-                        {data.hero?.subtitle || 'Where Innovation Meets Artistry'}
-                    </motion.p>
+                    {data.hero?.subtitle && (
+                        <motion.p
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8, delay: 0.4 }}
+                            className="text-2xl md:text-3xl text-primary-500 font-medium max-w-4xl mx-auto mb-6"
+                        >
+                            {data.hero.subtitle}
+                        </motion.p>
+                    )}
 
                     {/* Description */}
-                    <motion.p
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.6 }}
-                        className="text-lg md:text-xl text-black/60 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed mb-12"
-                    >
-                        {data.hero?.content || 'We are a collective of digital artisans, strategists, and innovators dedicated to transforming visions into unforgettable digital experiences.'}
-                    </motion.p>
+                    {data.hero?.content && (
+                        <motion.p
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8, delay: 0.6 }}
+                            className="text-lg md:text-xl text-black/60 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed mb-12"
+                        >
+                            {data.hero.content}
+                        </motion.p>
+                    )}
 
                     {/* CTA Buttons */}
                     <motion.div
@@ -198,15 +204,19 @@ export default function About() {
                     <AnimatedSection>
                         <div className="text-center mb-16">
                             <span className="text-sm font-bold uppercase tracking-widest text-primary-500 mb-4 block">Our Journey</span>
-                            <h2 className="text-5xl md:text-7xl font-bold text-black dark:text-white font-display tracking-tight">
-                                {data.story?.title || 'Our Story'}
-                            </h2>
+                            {data.story?.title && (
+                                <h2 className="text-5xl md:text-7xl font-bold text-black dark:text-white font-display tracking-tight">
+                                    {data.story.title}
+                                </h2>
+                            )}
                         </div>
 
-                        <ComponentRenderer
-                            content={data.story?.content || 'Every great journey begins with a vision. Ours started with a simple belief: that digital experiences should be more than functional—they should be unforgettable.'}
-                            className="text-xl leading-relaxed text-black/70 dark:text-gray-300 text-center"
-                        />
+                        {data.story?.content && (
+                            <ComponentRenderer
+                                content={data.story.content}
+                                className="text-xl leading-relaxed text-black/70 dark:text-gray-300 text-center"
+                            />
+                        )}
                     </AnimatedSection>
                 </div>
             </section>
@@ -219,9 +229,11 @@ export default function About() {
                     <AnimatedSection>
                         <div className="text-center mb-20">
                             <span className="text-sm font-bold uppercase tracking-widest text-primary-500 mb-4 block">The Dream Team</span>
-                            <h2 className="text-5xl md:text-7xl font-bold text-black dark:text-white font-display tracking-tight">
-                                {data.team?.title || 'Meet Our Team'}
-                            </h2>
+                            {data.team?.title && (
+                                <h2 className="text-5xl md:text-7xl font-bold text-black dark:text-white font-display tracking-tight">
+                                    {data.team.title}
+                                </h2>
+                            )}
                         </div>
                     </AnimatedSection>
 

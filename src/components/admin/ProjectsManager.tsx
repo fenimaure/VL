@@ -134,13 +134,18 @@ export default function ProjectsManager() {
     }
 
     async function handleDelete(id: string) {
-        if (!confirm('Are you sure you want to delete this project?')) return;
+        if (!window.confirm('Are you sure you want to delete this project?')) return;
         try {
-            const { error } = await supabase.from('projects').delete().eq('id', id);
+            const { data, error } = await supabase.from('projects').delete().eq('id', id).select();
             if (error) throw error;
+            if (!data || data.length === 0) {
+                alert('Delete was blocked by Supabase RLS. Please add a DELETE policy for authenticated users on the "projects" table.');
+                return;
+            }
             fetchData();
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error deleting project:', error);
+            alert('Failed to delete: ' + (error?.message || 'Unknown error'));
         }
     }
 
