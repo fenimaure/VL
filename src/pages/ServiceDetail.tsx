@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabase';
 import { ArrowLeft, ArrowUpRight, Sparkles, Zap, Shield, Target } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import MarkdownRenderer from '../components/MarkdownRenderer';
+import ComponentRenderer from '../components/ComponentRenderer';
 
 export default function ServiceDetail() {
     const { slug } = useParams();

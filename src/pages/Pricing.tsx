@@ -17,21 +17,28 @@ interface PricingPackage {
     cta_link: string;
 }
 
-const CATEGORIES = [
-    'Social Media Management',
-    'Web Development',
-    'Virtual Assistants',
-    'Talent Acquisition'
-];
-
 export default function Pricing() {
     const [packages, setPackages] = useState<PricingPackage[]>([]);
+    const [categories, setCategories] = useState<string[]>([]);
     const [loading, setLoading] = useState(true);
-    const [activeCategory, setActiveCategory] = useState(CATEGORIES[0]);
+    const [activeCategory, setActiveCategory] = useState('');
 
     useEffect(() => {
-        async function fetchPackages() {
+        async function fetchData() {
             try {
+                // Fetch services to build dynamic categories
+                const { data: services } = await supabase
+                    .from('services')
+                    .select('title')
+                    .order('created_at', { ascending: true });
+
+                const serviceCategories = services?.map(s => s.title) || [];
+                setCategories(serviceCategories);
+                if (serviceCategories.length > 0 && !activeCategory) {
+                    setActiveCategory(serviceCategories[0]);
+                }
+
+                // Fetch pricing packages
                 const { data, error } = await supabase
                     .from('pricing_packages')
                     .select('*')
@@ -41,12 +48,12 @@ export default function Pricing() {
                 if (error) throw error;
                 setPackages(data || []);
             } catch (error) {
-                console.error('Error fetching pricing packages:', error);
+                console.error('Error fetching pricing data:', error);
             } finally {
                 setLoading(false);
             }
         }
-        fetchPackages();
+        fetchData();
     }, []);
 
     const filteredPackages = packages.filter(p => p.category === activeCategory);
@@ -97,7 +104,7 @@ export default function Pricing() {
                     transition={{ delay: 0.3 }}
                     className="flex flex-nowrap overflow-x-auto pb-4 md:pb-0 md:justify-center gap-2 mb-12 scrollbar-hide px-2"
                 >
-                    {CATEGORIES.map((cat) => (
+                    {categories.map((cat) => (
                         <button
                             key={cat}
                             onClick={() => setActiveCategory(cat)}

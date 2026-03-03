@@ -1,13 +1,9 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { supabase } from '../lib/supabase';
-import {
-  ArrowUpRight, ChevronLeft, ChevronRight, Zap,
-  Code, Palette, Smartphone, BarChart3,
-  Megaphone, Terminal, Layers, Search
-} from 'lucide-react';
+import { ArrowRight, Zap } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import MarkdownRenderer from './MarkdownRenderer';
+import { motion, useScroll, useTransform } from 'framer-motion';
 
 interface Service {
   id: string;
@@ -17,25 +13,49 @@ interface Service {
   icon_url?: string;
   color_theme: string;
   slug: string;
+  tags?: string[];
+}
+
+// Palette of subtle background colors per card (cycles)
+const CARD_COLORS = [
+  { bg: 'bg-white dark:bg-zinc-900', accent: 'bg-violet-100 dark:bg-violet-900/30' },
+  { bg: 'bg-gray-50 dark:bg-zinc-950', accent: 'bg-rose-100 dark:bg-rose-900/30' },
+  { bg: 'bg-white dark:bg-zinc-900', accent: 'bg-sky-100 dark:bg-sky-900/30' },
+  { bg: 'bg-gray-50 dark:bg-zinc-950', accent: 'bg-amber-100 dark:bg-amber-900/30' },
+  { bg: 'bg-white dark:bg-zinc-900', accent: 'bg-emerald-100 dark:bg-emerald-900/30' },
+  { bg: 'bg-gray-50 dark:bg-zinc-950', accent: 'bg-fuchsia-100 dark:bg-fuchsia-900/30' },
+];
+
+function useIsMobile(breakpoint = 768) {
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth < breakpoint : false
+  );
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth < breakpoint);
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, [breakpoint]);
+  return isMobile;
 }
 
 export default function Services() {
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [touchStart, setTouchStart] = useState(0);
-  const [touchEnd, setTouchEnd] = useState(0);
   const navigate = useNavigate();
-  const carouselRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     async function fetchServices() {
       try {
-        const { data, error } = await supabase.from('services').select('*').order('created_at', { ascending: true });
+        const { data, error } = await supabase
+          .from('services')
+          .select('*')
+          .order('created_at', { ascending: true });
         if (error) throw error;
         setServices(data || []);
       } catch (error) {
-        console.error("Error fetching services:", error);
+        console.error('Error fetching services:', error);
       } finally {
         setLoading(false);
       }
@@ -43,342 +63,379 @@ export default function Services() {
     fetchServices();
   }, []);
 
-  // Intersection Observer for scroll reveal
-  useEffect(() => {
-    if (loading || services.length === 0) return;
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) entry.target.classList.add('visible');
-      });
-    }, { threshold: 0.1 });
-
-    const items = document.querySelectorAll('#services .stagger-item');
-    items.forEach(item => observer.observe(item));
-    return () => observer.disconnect();
-  }, [loading, services]);
-
-  // Get cards per view based on screen size
-  const getCardsPerView = () => {
-    if (typeof window === 'undefined') return 1;
-    if (window.innerWidth >= 1024) return 3; // lg
-    if (window.innerWidth >= 768) return 2; // md
-    return 1; // mobile
-  };
-
-  const [cardsPerView, setCardsPerView] = useState(getCardsPerView());
-
-  useEffect(() => {
-    const handleResize = () => {
-      setCardsPerView(getCardsPerView());
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  const maxIndex = Math.max(0, services.length - cardsPerView);
-
-  const nextSlide = () => {
-    setCurrentIndex((prev) => Math.min(prev + 1, maxIndex));
-  };
-
-  const prevSlide = () => {
-    setCurrentIndex((prev) => Math.max(prev - 1, 0));
-  };
-
-  /* Removed unused goToSlide */
-
-  // Touch handlers for swipe
-  const handleTouchStart = (e: React.TouchEvent) => {
-    setTouchStart(e.targetTouches[0].clientX);
-    setTouchEnd(e.targetTouches[0].clientX);
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientX);
-    const touchDiff = touchStart - e.targetTouches[0].clientX;
-    const isHorizontalSwipe = Math.abs(touchDiff) > 10;
-    if (isHorizontalSwipe && touchStart !== 0) {
-      e.preventDefault();
-    }
-  };
-
-  const handleTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
-    const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > 50;
-    const isRightSwipe = distance < -50;
-
-    if (isLeftSwipe && currentIndex < maxIndex) nextSlide();
-    if (isRightSwipe && currentIndex > 0) prevSlide();
-    setTouchStart(0);
-    setTouchEnd(0);
-  };
-
-  // Keyboard navigation
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft') prevSlide();
-      if (e.key === 'ArrowRight') nextSlide();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentIndex, maxIndex]);
-
-  /* Removed unused handleArrowClick */
-
-  if (loading && services.length === 0) {
+  if (loading) {
     return (
-      <section className="py-40 bg-white dark:bg-dark-950 flex items-center justify-center transition-colors duration-500 min-h-screen">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-16 h-16 border-2 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
-          <p className="animate-pulse text-sm tracking-widest uppercase text-black/50 dark:text-white/50">Loading Excellence...</p>
-        </div>
+      <section className="py-40 bg-white dark:bg-dark-950 flex items-center justify-center min-h-screen">
+        <div className="w-12 h-12 border-2 border-primary-500 border-t-transparent rounded-full animate-spin" />
       </section>
     );
   }
 
-  const cardWidth = 100 / cardsPerView;
-  const translateX = -(currentIndex * cardWidth);
-
   return (
-    <section id="services" className="py-40 bg-white dark:bg-dark-950 relative overflow-hidden transition-colors duration-500">
+    <section id="services" className="bg-white dark:bg-dark-950 transition-colors duration-500">
+      {/* Section Header */}
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-32 pb-20">
+        <div className="flex items-center gap-3 mb-6">
+          <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary-500/10 dark:bg-white/10 text-primary-500 dark:text-white">
+            <Zap className="w-4 h-4 fill-current" />
+          </span>
+          <span className="text-primary-500 dark:text-white font-bold tracking-[0.3em] text-xs uppercase">
+            Our Capabilities
+          </span>
+        </div>
 
-      {/* Dynamic Background Elements */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-primary-500/5 blur-[150px] rounded-full animate-pulse-slow"></div>
-        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-primary-500/5 blur-[150px] rounded-full animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-mesh opacity-[0.03] z-0"></div>
+        <h2 className="text-6xl md:text-7xl lg:text-8xl font-bold font-display leading-[0.9] tracking-tighter mb-6 transition-colors duration-300">
+          <span className="block text-black dark:text-white">Expert</span>
+          <span className="block text-stroke-light dark:text-stroke-white italic font-light font-serif translate-x-4">
+            Solutions
+          </span>
+        </h2>
+
+        <p className="text-xl text-black/50 dark:text-gray-400 max-w-xl font-light leading-relaxed border-l-2 border-primary-500/30 pl-6">
+          We architect digital ecosystems that blend{' '}
+          <span className="text-black dark:text-white font-medium">high-performance utility</span>{' '}
+          with <span className="text-black dark:text-white font-medium">breathtaking aesthetics</span>.
+        </p>
       </div>
 
-      <div className="relative max-w-7xl mx-auto md:px-4 md:sm:px-6 lg:px-8">
-        {/* Header Section */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-24 gap-12 px-6 lg:px-0">
-          <div className="max-w-3xl stagger-item">
-            <div className="flex items-center gap-3 mb-8">
-              <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary-500/10 dark:bg-white/10 text-primary-500 dark:text-white">
-                <Zap className="w-4 h-4 fill-current" />
-              </span>
-              <span className="text-primary-500 dark:text-white font-bold tracking-[0.3em] text-xs uppercase">
-                Our Capabilities
-              </span>
-            </div>
-
-            <h2 className="text-6xl md:text-7xl lg:text-8xl font-bold font-display mb-8 leading-[0.9] tracking-tighter transition-colors duration-300">
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-black via-black to-black/50 dark:from-white dark:via-white dark:to-white/50 animate-gradient-x">
-                Expert
-              </span>
-              <span className="block text-stroke-light dark:text-stroke-white italic font-light font-serif transform translate-x-4">
-                Solutions
-              </span>
-            </h2>
-
-            <p className="text-xl md:text-2xl text-black/60 dark:text-gray-400 leading-relaxed font-light max-w-xl transition-colors duration-300 border-l-2 border-primary-500/30 pl-6">
-              We architect digital ecosystems that blend <span className="text-black dark:text-white font-medium">high-performance utility</span> with <span className="text-black dark:text-white font-medium">breathtaking aesthetics</span>.
-            </p>
-          </div>
-
-          <div className="stagger-item flex flex-col gap-4 w-full lg:w-auto">
-            {/* Controls - Desktop Only */}
-            <div className="hidden lg:flex flex-col gap-4 w-full lg:w-auto">
-              <div className="flex gap-2 justify-end lg:justify-start">
-                <button
-                  onClick={prevSlide}
-                  disabled={currentIndex === 0}
-                  className="w-12 h-12 lg:w-16 lg:h-16 flex items-center justify-center rounded-full border border-black/10 dark:border-white/10 bg-white/50 dark:bg-white/5 backdrop-blur-md text-black dark:text-white disabled:opacity-30 disabled:cursor-not-allowed hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all duration-300 group"
-                >
-                  <ChevronLeft className="h-5 w-5 lg:h-6 lg:w-6 group-hover:-translate-x-1 transition-transform" />
-                </button>
-                <button
-                  onClick={nextSlide}
-                  disabled={currentIndex === maxIndex}
-                  className="w-12 h-12 lg:w-16 lg:h-16 flex items-center justify-center rounded-full border border-black/10 dark:border-white/10 bg-white/50 dark:bg-white/5 backdrop-blur-md text-black dark:text-white disabled:opacity-30 disabled:cursor-not-allowed hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all duration-300 group"
-                >
-                  <ChevronRight className="h-5 w-5 lg:h-6 lg:w-6 group-hover:translate-x-1 transition-transform" />
-                </button>
-              </div>
-              <div className="flex gap-1 justify-end lg:justify-center">
-                {Array.from({ length: maxIndex + 1 }).map((_, i) => (
-                  <div
-                    key={i}
-                    className={`h-1 rounded-full transition-all duration-300 ${i === currentIndex ? 'w-8 bg-primary-500' : 'w-2 bg-black/10 dark:bg-white/10'}`}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Carousel Viewport */}
-        <div className="relative z-10">
-          <div className="overflow-visible stagger-item">
-            <div
-              ref={carouselRef}
-              onTouchStart={handleTouchStart}
-              onTouchMove={handleTouchMove}
-              onTouchEnd={handleTouchEnd}
-              className="flex transition-transform duration-700 cubic-bezier(0.2, 0.8, 0.2, 1) touch-pan-y md:touch-auto pl-6 md:pl-0"
-              style={{ transform: `translateX(${translateX}%)` }}
-            >
-              {services.map((service, index) => (
-                <div
-                  key={service.id}
-                  className="flex-shrink-0 w-[88vw] md:w-auto pr-4 md:px-2"
-                  style={{ width: window.innerWidth >= 768 ? `${cardWidth}%` : undefined }}
-                >
-                  <ServiceCard
-                    service={service}
-                    index={index}
-                    onClick={() => navigate(`/services/${service.slug}`)}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Controls - Mobile Only (Bottom Center) */}
-        <div className="flex lg:hidden flex-col items-center gap-6 mt-8 stagger-item">
-          {/* Mobile Swipe Hint */}
-          <div className="flex items-center gap-2 animate-pulse">
-            <span className="w-8 h-[1px] bg-black/20 dark:bg-white/20"></span>
-            <span className="text-[10px] uppercase tracking-widest text-black/40 dark:text-white/40 font-bold">Swipe to Explore</span>
-            <span className="w-8 h-[1px] bg-black/20 dark:bg-white/20"></span>
-          </div>
-
-          <div className="flex gap-4">
-            <button
-              onClick={prevSlide}
-              disabled={currentIndex === 0}
-              className="w-14 h-14 flex items-center justify-center rounded-full border border-black/10 dark:border-white/10 bg-white dark:bg-white/5 backdrop-blur-md text-black dark:text-white disabled:opacity-30 disabled:cursor-not-allowed active:bg-black active:text-white dark:active:bg-white dark:active:text-black transition-all duration-300 group"
-            >
-              <ChevronLeft className="h-6 w-6 group-hover:-translate-x-1 transition-transform" />
-            </button>
-            <button
-              onClick={nextSlide}
-              disabled={currentIndex === maxIndex}
-              className="w-14 h-14 flex items-center justify-center rounded-full border border-black/10 dark:border-white/10 bg-white dark:bg-white/5 backdrop-blur-md text-black dark:text-white disabled:opacity-30 disabled:cursor-not-allowed active:bg-black active:text-white dark:active:bg-white dark:active:text-black transition-all duration-300 group"
-            >
-              <ChevronRight className="h-6 w-6 group-hover:translate-x-1 transition-transform" />
-            </button>
-          </div>
-          <div className="flex gap-1">
-            {Array.from({ length: maxIndex + 1 }).map((_, i) => (
-              <div
-                key={i}
-                className={`h-1 rounded-full transition-all duration-300 ${i === currentIndex ? 'w-8 bg-primary-500' : 'w-2 bg-black/10 dark:bg-white/10'}`}
-              />
-            ))}
-          </div>
-        </div>
+      {/* Stacking Cards */}
+      <div ref={containerRef} className="relative">
+        {services.map((service, index) => (
+          <StackingServiceCard
+            key={service.id}
+            service={service}
+            index={index}
+            colors={CARD_COLORS[index % CARD_COLORS.length]}
+            onClick={() => navigate(`/services/${service.slug}`)}
+            isMobile={isMobile}
+          />
+        ))}
       </div>
+
+      {/* Bottom Spacer */}
+      <div className="h-24" />
     </section>
   );
 }
 
-// Helper to get icon based on name
-const getIcon = (name: string) => {
-  const n = name?.toLowerCase() || '';
-  if (n.includes('web') || n.includes('dev')) return Code;
-  if (n.includes('design') || n.includes('ui')) return Palette;
-  if (n.includes('mobile') || n.includes('app')) return Smartphone;
-  if (n.includes('seo') || n.includes('search')) return Search;
-  if (n.includes('marketing') || n.includes('social')) return Megaphone;
-  if (n.includes('data') || n.includes('analytics')) return BarChart3;
-  if (n.includes('system') || n.includes('tech')) return Terminal;
-  return Layers; // Default
-};
+// Individual stacking card with scroll-driven sticky + scale-out effect
+function StackingServiceCard({
+  service,
+  index,
+  colors,
+  onClick,
+  isMobile,
+}: {
+  service: Service;
+  index: number;
+  colors: { bg: string; accent: string };
+  onClick: () => void;
+  isMobile: boolean;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
 
-// Premium 3D Card Component
-function ServiceCard({ service, index, onClick }: { service: Service; index: number; onClick: () => void }) {
-  const cardRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start end', 'start start', 'end start'],
+  });
 
+  // Focal Scale Effect: 
+  // 1. Approaching: 0.95 -> 1.05
+  // 2. Active/At top: 1.05
+  // 3. Leaving/Scrolled past: 1.05 -> 0.9 (and fade)
+  const scale = useTransform(scrollYProgress,
+    [0, 0.45, 0.55, 1],
+    [0.92, 1.05, 1.05, 0.9]
+  );
 
-  const Icon = getIcon(service.icon_name || service.title);
+  const opacity = useTransform(scrollYProgress,
+    [0, 0.4, 0.5, 0.8, 1],
+    [0, 1, 1, 0.8, 0]
+  );
 
-  // 3D Tilt Effect
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
-    const card = cardRef.current;
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotateX = (y - centerY) / 50;
-    const rotateY = (centerX - x) / 50;
-    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.01, 1.01, 1.01)`;
-  };
+  const y = useTransform(scrollYProgress, [0.5, 1], ['0%', '-10%']);
+  const filter = useTransform(scrollYProgress, [0.7, 1], ['blur(0px)', 'blur(8px)']);
 
-  const handleMouseLeave = () => {
-    if (!cardRef.current) return;
-    cardRef.current.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
-  };
+  // Parse tags from description or use icon_name as tag hint
+  const tags = parseTags(service);
+
+  // Top offset so cards stack — each card is sticky a bit lower than the previous
+  const stickyTop = 80 + index * 20;
+
+  // On mobile: plain relative layout, no scroll effects
+  if (isMobile) {
+    return (
+      <div ref={ref} className="relative" style={{ zIndex: 10 + index }}>
+        <div className="mx-auto max-w-6xl px-4 pb-6">
+          {/* Card */}
+          <div
+            onClick={onClick}
+            className={`
+              group relative flex flex-col gap-0 rounded-[2rem] overflow-hidden cursor-pointer
+              border border-black/5 dark:border-white/5
+              shadow-xl shadow-black/5 dark:shadow-black/30
+              transition-shadow duration-500 hover:shadow-2xl hover:shadow-black/10 dark:hover:shadow-black/50
+              ${colors.bg}
+            `}
+          >
+            {/* Left Content */}
+            <div className="flex-1 p-8 flex flex-col justify-between min-h-[360px]">
+              <div className="flex items-center gap-3 mb-8">
+                <span className="font-mono text-xs font-bold tracking-widest text-black/20 dark:text-white/20">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                <div className="h-[1px] w-8 bg-black/10 dark:bg-white/10" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-3xl font-black font-display leading-[1] tracking-tighter text-black dark:text-white mb-6 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-300">
+                  {service.title}
+                </h3>
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {tags.map((tag, i) => (
+                    <span
+                      key={i}
+                      className="px-4 py-1.5 rounded-full border border-black/10 dark:border-white/10 text-sm font-medium text-black/70 dark:text-white/70 bg-white/60 dark:bg-white/5 backdrop-blur-sm"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <p className="text-base text-black/60 dark:text-gray-400 leading-relaxed font-light line-clamp-3">
+                  {stripMarkdown(service.description)}
+                </p>
+              </div>
+              <div className="mt-8">
+                <button
+                  onClick={(e) => { e.stopPropagation(); onClick(); }}
+                  className="inline-flex items-center gap-3 px-7 py-3.5 rounded-full border border-black/15 dark:border-white/15 bg-white dark:bg-white/5 text-black dark:text-white font-semibold text-sm hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all duration-300 group/btn"
+                >
+                  Find out more
+                  <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                </button>
+              </div>
+            </div>
+            {/* Right Visual */}
+            <div className={`relative min-h-[220px] flex items-center justify-center overflow-hidden ${colors.accent}`}>
+              {service.icon_url ? (
+                <div className="relative w-full h-full">
+                  {isVideoUrl(service.icon_url) ? (
+                    <video
+                      src={getRawMediaUrl(service.icon_url)}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <img
+                      src={getRawMediaUrl(service.icon_url)}
+                      alt={service.title}
+                      className="w-full h-full object-cover"
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-l from-transparent to-white/10 dark:to-black/10" />
+                </div>
+              ) : (
+                <div className="relative flex items-center justify-center w-full h-full p-12">
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-48 h-48 rounded-full bg-white/30 dark:bg-white/5 blur-xl" />
+                  </div>
+                  <div className="relative flex flex-col items-center gap-4">
+                    <span className="text-[80px] font-black font-display leading-none text-black/10 dark:text-white/10 select-none">
+                      {service.title.charAt(0)}
+                    </span>
+                    <div className="flex gap-3">
+                      {[...Array(3)].map((_, i) => (
+                        <div
+                          key={i}
+                          className="w-10 h-10 rounded-xl bg-black/10 dark:bg-white/10"
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
-      className="p-4 h-full"
-      style={{ perspective: '1000px' }}
+      ref={ref}
+      className="sticky"
+      style={{ top: `${stickyTop}px`, zIndex: 10 + index }}
     >
-      <div
-        ref={cardRef}
-        onClick={onClick}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
-        className="group relative h-auto min-h-[450px] md:h-[550px] flex flex-col justify-between p-8 rounded-[2rem] bg-white dark:bg-black border border-black/5 dark:border-white/5 overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-2xl hover:shadow-black/5 dark:hover:shadow-white/5"
-        style={{ transition: 'transform 0.1s ease-out' }}
+      <motion.div
+        style={{ scale, opacity, y, filter }}
+        className="mx-auto max-w-6xl px-4 md:px-6 pb-6"
       >
-        {/* Animated Gradient Background - REMOVED for clean white look */}
-        {/* <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-zinc-900/80 dark:via-zinc-900 dark:to-zinc-950/80 opacity-100 transition-colors duration-500" /> */}
+        {/* Card */}
+        <div
+          onClick={onClick}
+          className={`
+            group relative flex flex-col md:flex-row gap-0 rounded-[2rem] overflow-hidden cursor-pointer
+            border border-black/5 dark:border-white/5
+            shadow-xl shadow-black/5 dark:shadow-black/30
+            transition-shadow duration-500 hover:shadow-2xl hover:shadow-black/10 dark:hover:shadow-black/50
+            ${colors.bg}
+          `}
+        >
+          {/* Left Content */}
+          <div className="flex-1 p-10 md:p-14 flex flex-col justify-between min-h-[400px] md:min-h-[480px]">
+            {/* Index tag */}
+            <div className="flex items-center gap-3 mb-8">
+              <span className="font-mono text-xs font-bold tracking-widest text-black/20 dark:text-white/20">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <div className="h-[1px] w-8 bg-black/10 dark:bg-white/10" />
+            </div>
 
-        {/* Hover Highlight Blob */}
-        <div className="absolute -top-20 -right-20 w-80 h-80 bg-primary-500/10 rounded-full blur-[80px] group-hover:bg-primary-500/20 transition-all duration-700 group-hover:scale-125" />
-        <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-primary-500/5 rounded-full blur-[60px] group-hover:bg-primary-500/15 transition-all duration-700 group-hover:scale-125" />
+            {/* Title */}
+            <div className="flex-1">
+              <h3 className="text-4xl md:text-5xl lg:text-6xl font-black font-display leading-[1] tracking-tighter text-black dark:text-white mb-8 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-300">
+                {service.title}
+              </h3>
 
-        {/* Content Container */}
-        <div className="relative z-10 flex flex-col h-full">
-          {/* Header */}
-          <div className="flex justify-between items-start mb-auto">
-            <div className="relative">
-              <div className="w-16 h-16 rounded-2xl bg-primary-500/5 dark:bg-white/5 border border-primary-500/10 dark:border-white/10 flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 group-hover:bg-primary-500 group-hover:border-primary-500 shadow-sm">
-                <Icon className="w-8 h-8 text-primary-600 dark:text-white group-hover:text-white transition-colors duration-300" />
+              {/* Tags / Pills */}
+              <div className="flex flex-wrap gap-2 mb-8">
+                {tags.map((tag, i) => (
+                  <span
+                    key={i}
+                    className="px-4 py-1.5 rounded-full border border-black/10 dark:border-white/10 text-sm font-medium text-black/70 dark:text-white/70 bg-white/60 dark:bg-white/5 backdrop-blur-sm"
+                  >
+                    {tag}
+                  </span>
+                ))}
               </div>
-              {/* Icon Ping Effect */}
-              <div className="absolute inset-0 bg-primary-500 rounded-2xl animate-ping opacity-0 group-hover:opacity-20" />
+
+              {/* Description */}
+              <p className="text-base md:text-lg text-black/60 dark:text-gray-400 leading-relaxed font-light max-w-md line-clamp-3">
+                {stripMarkdown(service.description)}
+              </p>
             </div>
 
-            <span className="font-mono text-xs font-bold tracking-widest text-black/20 dark:text-white/20 group-hover:text-primary-500 dark:group-hover:text-white transition-colors duration-300">
-              {String(index + 1).padStart(2, '0')}
-            </span>
+            {/* CTA */}
+            <div className="mt-10">
+              <button
+                onClick={(e) => { e.stopPropagation(); onClick(); }}
+                className="inline-flex items-center gap-3 px-7 py-3.5 rounded-full border border-black/15 dark:border-white/15 bg-white dark:bg-white/5 text-black dark:text-white font-semibold text-sm hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all duration-300 group/btn"
+              >
+                Find out more
+                <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+              </button>
+            </div>
           </div>
 
-          {/* Body */}
-          <div className="mt-8">
-            <h3 className="text-3xl font-bold font-display leading-tight mb-4 text-black dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-300">
-              {service.title}
-            </h3>
-            <div className="w-12 h-1 bg-black/10 dark:bg-white/10 rounded-full mb-6 group-hover:w-full group-hover:bg-primary-500 transition-all duration-700" />
-            <div className="line-clamp-3 text-black/60 dark:text-zinc-400 leading-relaxed font-light group-hover:text-black/80 dark:group-hover:text-zinc-300 transition-colors duration-300">
-              <MarkdownRenderer content={service.description} className="prose-p:text-inherit prose-p:leading-relaxed prose-p:font-light prose-p:m-0" />
-            </div>
-          </div>
-
-          {/* Footer - "Learn More" Button */}
-          <div className="mt-8 pt-6 border-t border-black/5 dark:border-white/5 flex items-center justify-between group-hover:border-primary-500/20 transition-colors duration-500">
-            <span className="text-xs font-bold uppercase tracking-[0.2em] text-black/40 dark:text-white/40 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-300">
-              Explore Service
-            </span>
-            <div className="w-10 h-10 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center group-hover:bg-primary-600 dark:group-hover:bg-primary-500 transition-all duration-300 group-hover:scale-110">
-              <ArrowUpRight className="w-4 h-4 text-black/60 dark:text-white/60 group-hover:text-white transition-colors duration-300" />
-            </div>
+          {/* Right Visual */}
+          <div className={`relative md:w-[45%] min-h-[300px] md:min-h-0 flex items-center justify-center overflow-hidden ${colors.accent}`}>
+            {service.icon_url ? (
+              <div className="relative w-full h-full">
+                {isVideoUrl(service.icon_url) ? (
+                  <video
+                    src={getRawMediaUrl(service.icon_url)}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                ) : (
+                  <img
+                    src={getRawMediaUrl(service.icon_url)}
+                    alt={service.title}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                )}
+                {/* Soft overlay */}
+                <div className="absolute inset-0 bg-gradient-to-l from-transparent to-white/10 dark:to-black/10" />
+              </div>
+            ) : (
+              /* Decorative placeholder with service initials */
+              <div className="relative flex items-center justify-center w-full h-full p-12">
+                {/* Geometric shapes */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-64 h-64 rounded-full bg-white/30 dark:bg-white/5 blur-xl" />
+                </div>
+                <div className="relative flex flex-col items-center gap-4">
+                  <span className="text-[120px] font-black font-display leading-none text-black/10 dark:text-white/10 select-none">
+                    {service.title.charAt(0)}
+                  </span>
+                  {/* Decorative blocks inspired by reference */}
+                  <div className="flex gap-3">
+                    {[...Array(3)].map((_, i) => (
+                      <div
+                        key={i}
+                        className="w-12 h-12 rounded-xl bg-black/10 dark:bg-white/10 group-hover:scale-110 transition-transform duration-500"
+                        style={{ transitionDelay: `${i * 80}ms` }}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
-
-        {/* Shine Overlay */}
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-700">
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 dark:via-white/5 to-transparent -skew-x-12 translate-x-[-100%] group-hover:animate-shine" />
-        </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
 
+// Strip video:: / image:: prefix to get actual src URL
+function getRawMediaUrl(url: string): string {
+  if (!url) return '';
+  if (url.startsWith('video::') || url.startsWith('image::')) return url.slice(7);
+  return url;
+}
+
+// Detect video from URL or explicit prefix
+function isVideoUrl(url: string): boolean {
+  if (!url) return false;
+  if (url.startsWith('video::')) return true;
+  if (url.startsWith('image::')) return false;
+  const lower = url.toLowerCase();
+  if (/\.(mp4|webm|mov|ogg|avi)([?#]|$)/i.test(lower)) return true;
+  // Pexels video patterns
+  if (lower.includes('pexels.com/download/video') || lower.includes('pexels.com/video')) return true;
+  return false;
+}
+
+// Extract tags from service data
+function parseTags(service: Service): string[] {
+  // Priority 1: tags encoded in icon_name as "tags:Tag1,Tag2,..."
+  if (service.icon_name?.startsWith('tags:')) {
+    return service.icon_name.slice(5).split(',').map(t => t.trim()).filter(Boolean).slice(0, 5);
+  }
+
+  // Priority 2: derive from icon_name or title as fallback hints
+  const name = (service.icon_name || service.title).toLowerCase();
+  const map: Record<string, string[]> = {
+    web: ['Web Design', 'Development', 'Responsive'],
+    design: ['UI/UX Design', 'Branding', 'Visual Identity'],
+    seo: ['SEO', 'Analytics', 'Growth'],
+    mobile: ['iOS', 'Android', 'React Native'],
+    marketing: ['Social Media', 'Content', 'Strategy'],
+    brand: ['Brand Strategy', 'Identity', 'Tone of voice'],
+    ecommerce: ['E-Commerce', 'Shopify', 'Conversion'],
+  };
+
+  for (const [key, tags] of Object.entries(map)) {
+    if (name.includes(key)) return tags;
+  }
+
+  return [service.title, 'Strategy', 'Execution'];
+}
+
+// Strip basic markdown for plain text preview
+function stripMarkdown(text: string): string {
+  if (!text) return '';
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '$1')
+    .replace(/\*(.*?)\*/g, '$1')
+    .replace(/#{1,6}\s/g, '')
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    .trim();
+}

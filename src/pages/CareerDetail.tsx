@@ -7,7 +7,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import SEO from '../components/SEO';
 import SocialShare from '../components/SocialShare';
-import MarkdownRenderer from '../components/MarkdownRenderer';
+import ComponentRenderer from '../components/ComponentRenderer';
 
 export default function CareerDetail() {
     const { slug } = useParams();
@@ -72,7 +72,7 @@ export default function CareerDetail() {
                         <div className="md:col-span-2 space-y-12">
                             <div>
                                 <h2 className="text-2xl font-bold text-black dark:text-white mb-4 transition-colors duration-500">About the Role</h2>
-                                <MarkdownRenderer content={job.content || job.description} />
+                                <ComponentRenderer content={job.content || job.description} />
                             </div>
 
                             <div>

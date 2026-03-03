@@ -7,6 +7,7 @@ import Services from '../components/Services';
 import FeaturedProjects from '../components/FeaturedProjects';
 import FeaturedCareers from '../components/FeaturedCareers';
 import Testimonials from '../components/Testimonials';
+import LatestBlogs from '../components/LatestBlogs';
 import Footer from '../components/Footer';
 
 export default function Home() {
@@ -61,6 +62,7 @@ export default function Home() {
             <FeaturedProjects />
             <FeaturedCareers />
             <Testimonials />
+            <LatestBlogs />
             <Footer />
         </div>
     );

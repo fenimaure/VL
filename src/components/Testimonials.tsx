@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { ChevronLeft, ChevronRight, Star } from 'lucide-react';
+import { Star } from 'lucide-react';
 
 interface Testimonial {
   id: string;
@@ -14,7 +14,6 @@ interface Testimonial {
 export default function Testimonials() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
     async function fetchTestimonials() {
@@ -45,115 +44,95 @@ export default function Testimonials() {
     return () => observer.disconnect();
   }, [loading, testimonials]);
 
-  const nextTestimonial = () => {
-    setActiveIndex((prev) => (prev + 1) % testimonials.length);
-  };
-
-  const prevTestimonial = () => {
-    setActiveIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
-  };
-
   if (loading && testimonials.length === 0) {
     return null;
   }
 
-  const activeTestimonial = testimonials[activeIndex];
-
-  if (!activeTestimonial) return null;
-
   return (
-    <section id="testimonials" className="py-40 relative overflow-hidden transition-colors duration-300 bg-gray-50 dark:bg-dark-950 text-black dark:text-white">
-      {/* Immersive Background Blur */}
-      <div className="absolute top-[20%] right-[-10%] w-[600px] h-[600px] bg-primary-500/10 blur-[180px] rounded-full pointer-events-none opacity-30"></div>
+    <section id="testimonials" className="py-40 relative overflow-hidden transition-colors duration-500 bg-white dark:bg-black text-black dark:text-white border-t border-black/5 dark:border-white/5">
+      {/* Subtle Grid Background */}
+      <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.05] pointer-events-none"
+        style={{
+          backgroundImage: 'linear-gradient(rgba(0,0,0,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.1) 1px, transparent 1px)',
+          backgroundSize: '60px 60px'
+        }}
+      />
+
+      {/* Decorative Accents */}
+      <div className="absolute top-10 left-10 w-16 h-16 border-l border-t border-black/10 dark:border-white/10 pointer-events-none md:block hidden"></div>
+      <div className="absolute bottom-10 right-10 w-16 h-16 border-r border-b border-black/10 dark:border-white/10 pointer-events-none md:block hidden"></div>
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-24 gap-8">
-          <div className="max-w-2xl stagger-item">
-            <div className="flex items-center gap-3 mb-6">
-              <span className="w-12 h-[1px] bg-primary-500"></span>
-              <span className="text-primary-500 font-bold tracking-[0.4em] text-[10px] uppercase">Appreciation</span>
-            </div>
-            <h2 className="text-6xl lg:text-8xl font-bold font-display leading-[0.8] tracking-tighter text-black dark:text-white">
-              Kind <br />
-              <span className="text-stroke-light dark:text-stroke-white italic font-light font-serif">Words</span><span className="text-primary-500">.</span>
-            </h2>
+        <div className="max-w-3xl mb-24 stagger-item">
+          <div className="flex items-center gap-3 mb-6">
+            <span className="w-12 h-[1px] bg-primary-500"></span>
+            <span className="text-primary-500 font-bold tracking-[0.4em] text-[10px] uppercase">Testimonials</span>
           </div>
+          <h2 className="text-6xl lg:text-8xl font-bold font-display leading-none tracking-tighter text-black dark:text-white">
+            Kind <br />
+            <span className="text-stroke-light dark:text-stroke-white italic font-light font-serif">Aura</span><span className="text-primary-500">.</span>
+          </h2>
+          <p className="mt-8 text-lg text-black/60 dark:text-gray-400 font-light max-w-xl transition-colors duration-300">
+            A small selection of words from our global network of creative partners and industry leaders.
+          </p>
         </div>
 
-        <div className="relative stagger-item">
-          {/* Main Cinematic Card */}
-          <div className="relative border rounded-[3rem] p-12 md:p-24 overflow-hidden shadow-2xl transition-colors duration-300 bg-white dark:bg-[#080808] border-black/5 dark:border-white/5">
-
-            {/* Massive Background Quote Icon */}
-            <div className="absolute top-10 left-12 text-[15rem] font-serif leading-none select-none pointer-events-none transition-colors duration-300 text-black/[0.03] dark:text-white/[0.03]">
-              "
-            </div>
-
-            <div className="relative z-10">
-              {/* Star Rating Section */}
-              <div className="flex gap-2 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {testimonials.map((testimonial, idx) => (
+            <div
+              key={testimonial.id}
+              className="group relative stagger-item flex flex-col p-8 rounded-[2rem] bg-white dark:bg-[#0a0a0a] border border-black/5 dark:border-white/10 shadow-xl shadow-black/[0.02] hover:shadow-2xl hover:shadow-black/5 dark:hover:shadow-black/40 transition-all duration-500 hover:-translate-y-2 overflow-hidden"
+              style={{ transitionDelay: `${0.1 + idx * 0.05}s` }}
+            >
+              {/* Star Rating - Subtle */}
+              <div className="flex gap-1 mb-6">
                 {[...Array(5)].map((_, i) => (
-                  <div key={i} className="h-6 w-6 flex items-center justify-center">
-                    <Star
-                      className={`h-4 w-4 ${i < (activeTestimonial.rating || 5) ? 'fill-black dark:fill-white text-black dark:text-white' : 'text-black/10 dark:text-white/10'}`}
-                      strokeWidth={0}
-                      fill="currentColor"
-                    />
-                  </div>
+                  <Star
+                    key={i}
+                    className={`h-3 w-3 ${i < (testimonial.rating || 5) ? 'fill-primary-500 text-primary-500' : 'text-black/10 dark:text-white/10'}`}
+                    strokeWidth={0}
+                    fill="currentColor"
+                  />
                 ))}
               </div>
 
-              {/* The Bold Statement */}
-              <blockquote className="text-4xl md:text-6xl lg:text-7xl font-bold mb-20 leading-[1.1] tracking-tighter max-w-5xl">
-                "{activeTestimonial.content}"
+              {/* Content */}
+              <blockquote className="flex-1 text-lg italic font-light leading-relaxed text-black/80 dark:text-gray-300 mb-8 border-l border-primary-500/20 pl-6 h-full transition-colors duration-300">
+                "{testimonial.content}"
               </blockquote>
 
-              {/* Author & Control Bar */}
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-12">
-
-                {/* Profile Identity Pillar */}
-                <div className="flex items-center gap-8 group">
-                  <div className="relative h-20 w-20 rounded-full overflow-hidden border-2 transition-colors duration-500 border-black/10 dark:border-white/10 group-hover:border-primary-500/50">
-                    <img
-                      src={activeTestimonial.image_url}
-                      alt={activeTestimonial.name}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <h4 className="text-2xl font-bold font-display tracking-tight text-black dark:text-white">{activeTestimonial.name}</h4>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.3em] font-sans text-black/30 dark:text-white/30">
-                      {activeTestimonial.role}
-                    </p>
-                  </div>
+              {/* Author Pillar */}
+              <div className="flex items-center gap-4 mt-4 pt-6 border-t border-black/5 dark:border-white/5">
+                <div className="h-12 w-12 rounded-full overflow-hidden border border-black/5 dark:border-white/10 grayscale group-hover:grayscale-0 transition-all duration-700 ring-2 ring-transparent group-hover:ring-primary-500/20">
+                  <img
+                    src={testimonial.image_url}
+                    alt={testimonial.name}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
-
-                {/* Kinetic Controls */}
-                <div className="flex items-center gap-4">
-                  <button
-                    onClick={prevTestimonial}
-                    className="w-16 h-16 rounded-full border flex items-center justify-center transition-all duration-500 group active:scale-90 border-black/10 dark:border-white/10 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-dark-950"
-                  >
-                    <ChevronLeft className="h-6 w-6 group-hover:-translate-x-1 transition-transform" />
-                  </button>
-                  <button
-                    onClick={nextTestimonial}
-                    className="w-16 h-16 rounded-full border flex items-center justify-center transition-all duration-500 group active:scale-90 border-black/10 dark:border-white/10 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-dark-950"
-                  >
-                    <ChevronRight className="h-6 w-6 group-hover:translate-x-1 transition-transform" />
-                  </button>
+                <div className="space-y-0.5">
+                  <h4 className="text-sm font-bold tracking-tight text-black dark:text-white">{testimonial.name}</h4>
+                  <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-black/30 dark:text-white/30 truncate max-w-[150px]">
+                    {testimonial.role}
+                  </p>
                 </div>
               </div>
-            </div>
 
-            {/* Faded Legacy Counter */}
-            <div className="absolute bottom-6 right-16 text-[10vw] font-black font-display select-none pointer-events-none tracking-tighter transition-colors duration-300 text-black/[0.02] dark:text-white/[0.02]">
-              {String(activeIndex + 1).padStart(2, '0')}
+              {/* Big decorative number in background */}
+              <div className="absolute -bottom-4 -right-2 text-[6rem] font-black font-display pointer-events-none opacity-[0.015] text-black dark:text-white select-none">
+                {String(idx + 1).padStart(2, '0')}
+              </div>
             </div>
-          </div>
+          ))}
+        </div>
+
+        {/* Massive Watermark */}
+        <div className="absolute -bottom-20 left-0 w-full text-center pointer-events-none select-none opacity-[0.012] text-[20vw] font-black font-display text-black dark:text-white overflow-hidden whitespace-nowrap">
+          TRUSTED.
         </div>
       </div>
     </section>
+
   );
 }
 

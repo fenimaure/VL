@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
-import { Plus, Trash2, Edit2, X, Save, DollarSign, Check } from 'lucide-react';
+import { Plus, Trash2, Edit2, X, Save, Check } from 'lucide-react';
 
 interface PricingPackage {
     id: string;
@@ -14,23 +14,30 @@ interface PricingPackage {
     cta_link: string;
 }
 
-const CATEGORIES = [
-    'Social Media Management',
-    'Web Development',
-    'Virtual Assistants',
-    'Talent Acquisition'
-];
-
 export default function PricingManager() {
     const [packages, setPackages] = useState<PricingPackage[]>([]);
+    const [categories, setCategories] = useState<string[]>([]);
     const [loading, setLoading] = useState(true);
     const [editing, setEditing] = useState<PricingPackage | null>(null);
     const [isNew, setIsNew] = useState(false);
     const [formData, setFormData] = useState<Partial<PricingPackage>>({});
 
     useEffect(() => {
+        fetchCategories();
         fetchPackages();
     }, []);
+
+    async function fetchCategories() {
+        try {
+            const { data: services } = await supabase
+                .from('services')
+                .select('title')
+                .order('created_at', { ascending: true });
+            setCategories(services?.map(s => s.title) || []);
+        } catch (error) {
+            console.error('Error fetching services for categories:', error);
+        }
+    }
 
     async function fetchPackages() {
         try {
@@ -59,7 +66,7 @@ export default function PricingManager() {
     function handleAddNew() {
         setEditing({
             id: '',
-            category: CATEGORIES[0],
+            category: categories[0] || '',
             title: '',
             price: '',
             description: '',
@@ -69,7 +76,7 @@ export default function PricingManager() {
             cta_link: '/contact'
         });
         setFormData({
-            category: CATEGORIES[0],
+            category: categories[0] || '',
             title: '',
             price: '',
             description: '',
@@ -139,11 +146,11 @@ export default function PricingManager() {
                                 <div>
                                     <label className="block text-sm text-gray-400 mb-1">Category</label>
                                     <select
-                                        value={formData.category || CATEGORIES[0]}
+                                        value={formData.category || categories[0] || ''}
                                         onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                                         className="w-full bg-dark-950 border border-white/10 rounded-lg px-4 py-2 text-white"
                                     >
-                                        {CATEGORIES.map(cat => (
+                                        {categories.map((cat: string) => (
                                             <option key={cat} value={cat}>{cat}</option>
                                         ))}
                                     </select>
@@ -240,7 +247,7 @@ export default function PricingManager() {
             )}
 
             <div className="grid grid-cols-1 gap-8">
-                {CATEGORIES.map(category => {
+                {categories.map((category: string) => {
                     const categoryPackages = packages.filter(p => p.category === category);
                     if (categoryPackages.length === 0) return null;
 

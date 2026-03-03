@@ -7,7 +7,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import SEO from '../components/SEO';
 import SocialShare from '../components/SocialShare';
-import MarkdownRenderer from '../components/MarkdownRenderer';
+import ComponentRenderer from '../components/ComponentRenderer';
 
 export default function BlogPost() {
     const { slug } = useParams();
@@ -70,7 +70,7 @@ export default function BlogPost() {
                     </div>
 
                     <div className="prose prose-lg max-w-none dark:prose-invert prose-headings:text-black dark:prose-headings:text-white prose-p:text-gray-700 dark:prose-p:text-gray-300 transition-colors duration-500">
-                        <MarkdownRenderer content={post.content || ''} />
+                        <ComponentRenderer content={post.content || ''} />
                     </div>
                 </div>
             </article>

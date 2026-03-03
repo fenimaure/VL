@@ -3,27 +3,55 @@ import { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { motion } from 'framer-motion';
-import ClientLogos from './ClientLogos';
+
 
 export default function Hero() {
   const [heroData, setHeroData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
 
-
-
   useEffect(() => {
     async function fetchHero() {
       try {
-        const { data } = await supabase.from('about_content').select('*').eq('section_key', 'hero').single();
-        if (data) setHeroData(data);
+        // Fetch home_hero (separate from about page hero)
+        const { data } = await supabase.from('about_content').select('*').eq('section_key', 'home_hero').single();
+        if (data) {
+          setHeroData(data);
+        } else {
+          // Fallback to legacy 'hero' key if home_hero doesn't exist yet
+          const { data: fallback } = await supabase.from('about_content').select('*').eq('section_key', 'hero').single();
+          if (fallback) setHeroData(fallback);
+        }
       } catch (error) {
-        console.error('Error fetching hero data:', error);
+        // Fallback to legacy 'hero' key
+        try {
+          const { data: fallback } = await supabase.from('about_content').select('*').eq('section_key', 'hero').single();
+          if (fallback) setHeroData(fallback);
+        } catch (e) {
+          console.error('Error fetching hero data:', e);
+        }
       } finally {
         setLoading(false);
       }
     }
+
+    // Fetch and apply dynamic favicon from site_settings
+    async function fetchFavicon() {
+      try {
+        const { data } = await supabase.from('about_content').select('image_url').eq('section_key', 'site_settings').single();
+        if (data?.image_url) {
+          const link = document.querySelector("link[rel='icon']") as HTMLLinkElement;
+          const appleLink = document.querySelector("link[rel='apple-touch-icon']") as HTMLLinkElement;
+          if (link) link.href = data.image_url;
+          if (appleLink) appleLink.href = data.image_url;
+        }
+      } catch (error) {
+        // Keep default favicon
+      }
+    }
+
     fetchHero();
+    fetchFavicon();
   }, []);
 
   if (loading && !heroData) {
@@ -55,7 +83,7 @@ export default function Hero() {
             muted
             playsInline
             className="w-full h-full object-cover scale-105"
-            style={{ filter: 'grayscale(100%) contrast(1.1) brightness(0.9)' }}
+            style={{ filter: 'contrast(1.1) brightness(0.9)' }}
           >
             <source src={heroData.image_url} type="video/mp4" />
           </video>
@@ -64,17 +92,23 @@ export default function Hero() {
             className="absolute inset-0 bg-cover bg-center"
             style={{
               backgroundImage: `url(${heroData.image_url})`,
-              filter: 'grayscale(100%) contrast(1.1) brightness(0.9)'
+              filter: 'contrast(1.1) brightness(0.9)'
             }}
           ></div>
         ) : null}
 
-        {/* Premium Overlays - Clean & Bright */}
-        <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-white/50 to-white dark:from-black/90 dark:via-black/50 dark:to-black"></div>
-        <div className="absolute inset-0 bg-white/20 dark:bg-black/20 backdrop-blur-[1px]"></div>
+        {/* Premium Overlays - Subtle when media present, stronger without */}
+        {heroData?.image_url ? (
+          <>
+            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60 dark:from-black/60 dark:via-black/30 dark:to-black/70"></div>
+          </>
+        ) : (
+          <>
+            <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-white/50 to-white dark:from-black/90 dark:via-black/50 dark:to-black"></div>
+            <div className="absolute inset-0 bg-white/20 dark:bg-black/20 backdrop-blur-[1px]"></div>
+          </>
+        )}
       </div>
-
-
 
       <div className="relative max-w-[90rem] mx-auto px-6 lg:px-8 pt-32 pb-40 z-10 w-full">
 
@@ -82,50 +116,94 @@ export default function Hero() {
         <div className="flex flex-col items-center text-center">
 
           {/* Main Headline - Massive & Editorial */}
-          <div className="relative mb-16 flex flex-col items-center leading-[0.9]">
-            <h1 className="flex flex-col items-center">
-              <span className="sr-only">{heroData?.title || 'Digital Excellence'}</span>
+          {(() => {
+            const hasMedia = !!heroData?.image_url;
+            const rawTitle = heroData?.title || 'Digital Excellence';
+            // Support **bold part** syntax — text inside ** is bold, rest is outline italic
+            const boldMatch = rawTitle.match(/\*\*(.*?)\*\*/);
+            const boldPart = boldMatch
+              ? boldMatch[1]
+              : rawTitle.split(' ')[0];
+            const outlinePart = boldMatch
+              ? rawTitle.replace(/\*\*.*?\*\*/, '').trim()
+              : rawTitle.split(' ').slice(1).join(' ');
 
-              {/* First Word */}
-              <div className="flex overflow-hidden">
-                {(heroData?.title ? heroData.title.split(' ')[0] : 'Digital').split('').map((char: string, i: number) => (
-                  <motion.span
-                    key={i}
-                    initial={{ y: 200 }}
-                    animate={{ y: 0 }}
-                    transition={{ duration: 1, delay: i * 0.05, ease: [0.2, 0.65, 0.3, 0.9] }}
-                    className="text-[13vw] font-black tracking-tighter text-black dark:text-white hover:text-primary-500 dark:hover:text-primary-400 transition-colors duration-300 cursor-default select-none"
-                    whileHover={{ scale: 1.1, y: -20 }}
-                  >
-                    {char}
-                  </motion.span>
-                ))}
-              </div>
+            // Read title_size from items settings object
+            const items: any[] = Array.isArray(heroData?.items) ? heroData.items : [];
+            const settingsObj = items.find((i: any) => i._settings);
+            const titleSize: string = settingsObj?.title_size || 'xl';
+            const sizeMap: Record<string, string> = {
+              xs: 'text-[5vw]',
+              sm: 'text-[7vw]',
+              md: 'text-[9vw]',
+              lg: 'text-[11vw]',
+              xl: 'text-[13vw]',
+            };
+            const sizeClass = sizeMap[titleSize] ?? 'text-[13vw]';
 
-              {/* Second Word */}
-              <div className="flex overflow-hidden mt-2 md:mt-4">
-                {(heroData?.title ? heroData.title.split(' ').slice(1).join(' ') : 'Excellence').split('').map((char: string, i: number) => (
-                  <motion.span
-                    key={i}
-                    initial={{ y: 200 }}
-                    animate={{ y: 0 }}
-                    transition={{ duration: 1, delay: 0.2 + (i * 0.05), ease: [0.2, 0.65, 0.3, 0.9] }}
-                    className="text-[13vw] font-serif italic font-light tracking-tighter text-stroke-light dark:text-stroke-white hover:text-primary-500 dark:hover:text-primary-400 transition-colors duration-300 cursor-default select-none"
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                  >
-                    {char}
-                  </motion.span>
-                ))}
+            return (
+              <div className="relative mb-16 flex flex-col items-center leading-[0.9]">
+                <h1 className="flex flex-col items-center">
+                  <span className="sr-only">{rawTitle.replace(/\*\*/g, '')}</span>
+
+                  {/* Bold Line */}
+                  {boldPart && (
+                    <div className="flex overflow-hidden flex-wrap justify-center">
+                      {boldPart.split('').map((char: string, i: number) => (
+                        <motion.span
+                          key={i}
+                          initial={{ y: 200 }}
+                          animate={{ y: 0 }}
+                          transition={{ duration: 1, delay: i * 0.05, ease: [0.2, 0.65, 0.3, 0.9] }}
+                          className={`${sizeClass} font-black tracking-tighter ${hasMedia ? 'text-white hover:text-primary-300' : 'text-black dark:text-white hover:text-primary-500 dark:hover:text-primary-400'} transition-colors duration-300 cursor-default select-none`}
+                          whileHover={{ scale: 1.1, y: -20 }}
+                        >
+                          {char === ' ' ? '\u00A0' : char}
+                        </motion.span>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Outline Italic Line */}
+                  {outlinePart && (
+                    <div className="flex overflow-hidden mt-2 md:mt-4 flex-wrap justify-center">
+                      {outlinePart.split('').map((char: string, i: number) => (
+                        <motion.span
+                          key={i}
+                          initial={{ y: 200 }}
+                          animate={{ y: 0 }}
+                          transition={{ duration: 1, delay: 0.2 + (i * 0.05), ease: [0.2, 0.65, 0.3, 0.9] }}
+                          className={`${sizeClass} font-serif italic font-light tracking-tighter ${hasMedia ? 'text-stroke-white hover:text-primary-300' : 'text-stroke-light dark:text-stroke-white hover:text-primary-500 dark:hover:text-primary-400'} transition-colors duration-300 cursor-default select-none`}
+                          whileHover={{ scale: 1.1, rotate: 5 }}
+                        >
+                          {char === ' ' ? '\u00A0' : char}
+                        </motion.span>
+                      ))}
+                    </div>
+                  )}
+                </h1>
               </div>
-            </h1>
-          </div>
+            );
+          })()}
+
+          {/* Editable Tagline / Subtitle */}
+          {heroData?.subtitle && (
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.5 }}
+              className={`text-2xl md:text-3xl ${heroData?.image_url ? 'text-primary-300' : 'text-primary-500'} font-medium max-w-3xl mx-auto mb-6 tracking-wide`}
+            >
+              {heroData.subtitle}
+            </motion.p>
+          )}
 
           {/* Minimal Description */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.6 }}
-            className="text-xl md:text-2xl text-black/60 dark:text-gray-400 max-w-2xl mx-auto font-light leading-relaxed mb-12 tracking-wide"
+            className={`text-xl md:text-2xl ${heroData?.image_url ? 'text-white/80' : 'text-black/60 dark:text-gray-400'} max-w-2xl mx-auto font-light leading-relaxed mb-12 tracking-wide`}
           >
             {heroData?.content || 'We craft immersive digital experiences that blur the line between utility and art.'}
           </motion.p>
@@ -139,7 +217,7 @@ export default function Hero() {
           >
             <Link
               to="/contact"
-              className="group relative px-10 py-4 bg-black dark:bg-white text-white dark:text-black rounded-full transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] hover:scale-105 hover:shadow-2xl hover:shadow-black/20 dark:hover:shadow-white/20 active:scale-95"
+              className={`group relative px-10 py-4 ${heroData?.image_url ? 'bg-white text-black hover:shadow-white/20' : 'bg-black dark:bg-white text-white dark:text-black hover:shadow-black/20 dark:hover:shadow-white/20'} rounded-full transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] hover:scale-105 hover:shadow-2xl active:scale-95`}
             >
               <span className="font-medium text-lg tracking-wide flex items-center gap-2">
                 Start Project <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -148,7 +226,7 @@ export default function Hero() {
 
             <a
               href="#projects"
-              className="group flex items-center gap-3 text-lg font-bold uppercase tracking-widest text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white transition-colors duration-500"
+              className={`group flex items-center gap-3 text-lg font-bold uppercase tracking-widest ${heroData?.image_url ? 'text-white/60 hover:text-white' : 'text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white'} transition-colors duration-500`}
             >
               <span className="w-12 h-[1px] bg-current transition-all duration-500 group-hover:w-20"></span>
               View Work
@@ -158,10 +236,7 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Hero Footprint - Trusted By */}
-      <div className="absolute bottom-0 w-full z-20 pb-2 md:pb-6">
-        <ClientLogos />
-      </div>
+
 
       {/* Scroll Indicator - Minimal Line */}
       <motion.div

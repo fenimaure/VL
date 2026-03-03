@@ -14,6 +14,7 @@ import BlogPost from './pages/BlogPost';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import Pricing from './pages/Pricing';
+import NotFound from './pages/NotFound';
 
 
 import PageTransition from './components/PageTransition';
@@ -53,6 +54,7 @@ function AppContent() {
           <Route path="/about" element={<About />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </PageTransition>
     </>

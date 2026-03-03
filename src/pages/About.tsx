@@ -7,7 +7,7 @@ import {
     Users, Target, Heart, Award,
     ArrowRight, Sparkles
 } from 'lucide-react';
-import MarkdownRenderer from '../components/MarkdownRenderer';
+import ComponentRenderer from '../components/ComponentRenderer';
 
 interface AboutSection {
     content: string;
@@ -48,7 +48,7 @@ export default function About() {
             <Navbar />
 
             {/* CINEMATIC HERO with Parallax */}
-            <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
+            <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden pt-32 pb-20">
                 {/* Parallax Background */}
                 <motion.div
                     style={{ y }}
@@ -91,7 +91,19 @@ export default function About() {
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.2 }}
-                        className="text-6xl md:text-8xl lg:text-9xl font-bold font-display text-black dark:text-white mb-8 tracking-tighter leading-[0.9]"
+                        className={`font-bold font-display text-black dark:text-white mb-8 tracking-tighter leading-[0.9] ${(() => {
+                            const items: any[] = Array.isArray(data.hero?.items) ? data.hero.items : [];
+                            const settings = items.find((i: any) => i._settings);
+                            const sizeMap: Record<string, string> = {
+                                xs: 'text-3xl md:text-4xl lg:text-5xl',
+                                sm: 'text-4xl md:text-5xl lg:text-6xl',
+                                md: 'text-5xl md:text-6xl lg:text-7xl',
+                                lg: 'text-6xl md:text-7xl lg:text-8xl',
+                                xl: 'text-6xl md:text-8xl lg:text-9xl',
+                            };
+                            return sizeMap[settings?.title_size || 'xl'] ?? 'text-6xl md:text-8xl lg:text-9xl';
+                        })()
+                            }`}
                     >
                         {data.hero?.title || 'Crafting Digital Excellence'}
                     </motion.h1>
@@ -191,7 +203,7 @@ export default function About() {
                             </h2>
                         </div>
 
-                        <MarkdownRenderer
+                        <ComponentRenderer
                             content={data.story?.content || 'Every great journey begins with a vision. Ours started with a simple belief: that digital experiences should be more than functional—they should be unforgettable.'}
                             className="text-xl leading-relaxed text-black/70 dark:text-gray-300 text-center"
                         />

@@ -18,16 +18,16 @@ export default function ThemeToggle({ className }: { className?: string }) {
                  ${className || 'fixed z-[100] top-6 right-6 hidden lg:flex w-14 h-14'}`}
             aria-label="Toggle theme"
         >
-            <div className="relative w-6 h-6">
+            <div className="relative w-5 h-5">
                 <Sun
-                    className={`absolute inset-0 w-6 h-6 text-black dark:text-white
+                    className={`absolute inset-0 w-5 h-5
                      transition-all duration-500 ease-out
                      ${theme === 'light'
                             ? 'opacity-100 rotate-0 scale-100'
                             : 'opacity-0 rotate-90 scale-0'}`}
                 />
                 <Moon
-                    className={`absolute inset-0 w-6 h-6 text-black dark:text-white
+                    className={`absolute inset-0 w-5 h-5
                      transition-all duration-500 ease-out
                      ${theme === 'dark'
                             ? 'opacity-100 rotate-0 scale-100'

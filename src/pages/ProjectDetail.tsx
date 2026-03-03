@@ -6,7 +6,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import SEO from '../components/SEO';
 import SocialShare from '../components/SocialShare';
-import MarkdownRenderer from '../components/MarkdownRenderer';
+import ComponentRenderer from '../components/ComponentRenderer';
 
 export default function ProjectDetail() {
     const { slug } = useParams();
@@ -183,7 +183,7 @@ export default function ProjectDetail() {
                             </div>
                         </div>
                         <div className="lg:col-span-7 lg:offset-1 stagger-item">
-                            <MarkdownRenderer
+                            <ComponentRenderer
                                 content={project.content || 'Our architectural approach ensures that every pixel and line of code serves a higher brand purpose...'}
                                 className="font-light leading-[1.8] text-lg md:text-xl text-black/80 dark:text-gray-300 transition-colors duration-500"
                             />
