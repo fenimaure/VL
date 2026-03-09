@@ -142,7 +142,7 @@ export default function Navbar() {
             <img
               src="/logo.png"
               alt="Lovelli"
-              className="h-8 w-auto invert transition-all duration-300"
+              className={`h-8 w-auto transition-all duration-300 ${scrolled ? 'dark:invert' : 'invert'}`}
             />
           </Link>
 
@@ -176,7 +176,7 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto w-full flex flex-col lg:flex-row justify-between h-full pb-6 relative z-10 overflow-hidden">
           {/* Main Navigation Links Container */}
           <div className="flex-1 flex flex-col justify-center space-y-2 md:space-y-6 lg:space-y-12 overflow-y-auto pr-4 scrollbar-hide py-2 md:py-10">
-            {navLinks.map((link, idx) => {
+            {navLinks.filter(link => link.title !== 'Contact').map((link, idx) => {
               const active = isActive(link.path);
               return (
                 <div key={link.title} className="nav-link-reveal shrink-0">
