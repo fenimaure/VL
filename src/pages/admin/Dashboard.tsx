@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
     LogOut, LayoutGrid, FileText, BookOpen, Briefcase,
     BarChart3, Plus, Star, Search, Bell, Info, Settings,
-    Menu, X, ChevronLeft, ChevronRight, DollarSign
+    Menu, X, ChevronLeft, ChevronRight, DollarSign, HelpCircle
 } from 'lucide-react';
 
 import ProjectsManager from '../../components/admin/ProjectsManager';
@@ -19,8 +19,9 @@ import FooterManager from '../../components/admin/FooterManager';
 
 import PricingManager from '../../components/admin/PricingManager';
 import InquiriesManager from '../../components/admin/InquiriesManager';
+import FAQManager from '../../components/admin/FAQManager';
 
-type ModuleType = 'Overview' | 'Services' | 'Projects' | 'Inquiries' | 'Testimonials' | 'Blogs' | 'Careers' | 'About' | 'Footer' | 'Pricing';
+type ModuleType = 'Overview' | 'Services' | 'Projects' | 'Inquiries' | 'Testimonials' | 'Blogs' | 'Careers' | 'About' | 'Footer' | 'Pricing' | 'FAQ';
 
 export default function Dashboard() {
     const navigate = useNavigate();
@@ -72,6 +73,7 @@ export default function Dashboard() {
         { id: 'About', label: 'About Page', icon: Info },
         { id: 'Footer', label: 'Footer Links', icon: Settings },
         { id: 'Pricing', label: 'Pricing', icon: DollarSign },
+        { id: 'FAQ', label: 'FAQ', icon: HelpCircle },
     ];
 
     if (!user) return null;
@@ -331,6 +333,7 @@ export default function Dashboard() {
                             {activeModule === 'About' && <AboutManager />}
                             {activeModule === 'Footer' && <FooterManager />}
                             {activeModule === 'Pricing' && <PricingManager />}
+                            {activeModule === 'FAQ' && <FAQManager />}
                         </div>
                     )}
                 </div>

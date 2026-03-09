@@ -172,6 +172,18 @@ create table if not exists project_inquiries (
 );
 
 
+-- 11. FAQS
+create table if not exists faqs (
+  id uuid primary key default uuid_generate_v4(),
+  question text not null,
+  answer text not null,
+  category text default 'General',
+  order_index integer default 0,
+  is_published boolean default true,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+
 -- ================================================================
 -- ROW LEVEL SECURITY (RLS)
 -- ================================================================
@@ -186,6 +198,7 @@ alter table testimonials enable row level security;
 alter table footer_content enable row level security;
 alter table pricing_packages enable row level security;
 alter table project_inquiries enable row level security;
+alter table faqs enable row level security;
 
 
 -- ================================================================
@@ -217,6 +230,10 @@ create policy "Public read pricing_packages" on pricing_packages for select usin
 -- Inquiries: anyone can submit (insert), only admins can read
 create policy "Public submit inquiries" on project_inquiries for insert with check (true);
 create policy "Admin read inquiries" on project_inquiries for select to authenticated using (true);
+
+-- FAQs: anyone can read published FAQs
+drop policy if exists "Public read faqs" on faqs;
+create policy "Public read faqs" on faqs for select using (true);
 
 
 -- ================================================================
@@ -293,6 +310,14 @@ create policy "Admin delete pricing_packages" on pricing_packages for delete to 
 -- ---- PROJECT INQUIRIES ----
 create policy "Admin update inquiries" on project_inquiries for update to authenticated using (true) with check (true);
 create policy "Admin delete inquiries" on project_inquiries for delete to authenticated using (true);
+
+-- ---- FAQS ----
+drop policy if exists "Admin insert faqs" on faqs;
+drop policy if exists "Admin update faqs" on faqs;
+drop policy if exists "Admin delete faqs" on faqs;
+create policy "Admin insert faqs" on faqs for insert to authenticated with check (true);
+create policy "Admin update faqs" on faqs for update to authenticated using (true) with check (true);
+create policy "Admin delete faqs" on faqs for delete to authenticated using (true);
 
 
 -- ================================================================
