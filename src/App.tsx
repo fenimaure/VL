@@ -1,28 +1,39 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
-import Home from './pages/Home';
-import Login from './pages/admin/Login';
-import Dashboard from './pages/admin/Dashboard';
-import ServiceDetail from './pages/ServiceDetail';
-import ServicesPage from './pages/Services';
-import ProjectDetail from './pages/ProjectDetail';
-import Projects from './pages/Projects';
-import Careers from './pages/Careers';
-import CareerDetail from './pages/CareerDetail';
-import Blog from './pages/Blog';
-import BlogPost from './pages/BlogPost';
-import About from './pages/About';
-import Contact from './pages/Contact';
-import Pricing from './pages/Pricing';
-import FAQ from './pages/FAQ';
-import NotFound from './pages/NotFound';
-
-
+import SmoothScroll from './components/SmoothScroll';
 import PageTransition from './components/PageTransition';
 import FloatingContact from './components/FloatingContact';
 import Preloader from './components/Preloader';
+import Sidebars from './components/Sidebars';
 import { ThemeProvider } from './contexts/ThemeContext';
+
+// Route-based lazy loading — each page is a separate chunk
+const Home = lazy(() => import('./pages/Home'));
+const Login = lazy(() => import('./pages/admin/Login'));
+const Dashboard = lazy(() => import('./pages/admin/Dashboard'));
+const ServicesPage = lazy(() => import('./pages/Services'));
+const ServiceDetail = lazy(() => import('./pages/ServiceDetail'));
+const Works = lazy(() => import('./pages/Works'));
+const WorkDetail = lazy(() => import('./pages/WorkDetail'));
+const Careers = lazy(() => import('./pages/Careers'));
+const CareerDetail = lazy(() => import('./pages/CareerDetail'));
+const Blog = lazy(() => import('./pages/Blog'));
+const BlogPost = lazy(() => import('./pages/BlogPost'));
+const About = lazy(() => import('./pages/About'));
+const Contact = lazy(() => import('./pages/Contact'));
+const Pricing = lazy(() => import('./pages/Pricing'));
+const FAQ = lazy(() => import('./pages/FAQ'));
+const NotFound = lazy(() => import('./pages/NotFound'));
+
+// Minimal route loading fallback — keeps the layout shell visible
+function RouteLoadingFallback() {
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="w-8 h-8 border-2 border-black/10 dark:border-white/10 border-t-black dark:border-t-white rounded-full animate-spin" />
+    </div>
+  );
+}
 
 function AppContent() {
   const location = useLocation();
@@ -51,32 +62,41 @@ function AppContent() {
   }, []);
 
   return (
-    <>
+    <SmoothScroll>
+      {/* Feature 47: Skip-to-content for keyboard/screen reader users */}
+      <a href="#main-content" className="skip-to-content">
+        Skip to main content
+      </a>
       <AnimatePresence mode="wait">
         {loading && <Preloader key="preloader" />}
       </AnimatePresence>
       <FloatingContact />
-      <PageTransition>
-        <Routes location={location} key={location.pathname}>
-          <Route path="/" element={<Home />} />
-          <Route path="/admin" element={<Login />} />
-          <Route path="/admin/dashboard" element={<Dashboard />} />
-          <Route path="/services" element={<ServicesPage />} />
-          <Route path="/services/:slug" element={<ServiceDetail />} />
-          <Route path="/projects" element={<Projects />} />
-          <Route path="/projects/:slug" element={<ProjectDetail />} />
-          <Route path="/careers" element={<Careers />} />
-          <Route path="/careers/:slug" element={<CareerDetail />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/blog/:slug" element={<BlogPost />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/pricing" element={<Pricing />} />
-          <Route path="/faq" element={<FAQ />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </PageTransition>
-    </>
+      <Sidebars />
+      <main id="main-content">
+        <Suspense fallback={<RouteLoadingFallback />}>
+          <PageTransition>
+            <Routes location={location} key={location.pathname}>
+              <Route path="/" element={<Home />} />
+              <Route path="/admin" element={<Login />} />
+              <Route path="/admin/dashboard" element={<Dashboard />} />
+              <Route path="/services" element={<ServicesPage />} />
+              <Route path="/services/:slug" element={<ServiceDetail />} />
+              <Route path="/works" element={<Works />} />
+              <Route path="/works/:slug" element={<WorkDetail />} />
+              <Route path="/careers" element={<Careers />} />
+              <Route path="/careers/:slug" element={<CareerDetail />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:slug" element={<BlogPost />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/pricing" element={<Pricing />} />
+              <Route path="/faq" element={<FAQ />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </PageTransition>
+        </Suspense>
+      </main>
+    </SmoothScroll>
   );
 }
 

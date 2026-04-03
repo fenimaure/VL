@@ -162,9 +162,9 @@ export default function Footer() {
             <div>
               <span className="footer-section-label">Navigation</span>
               <ul className="space-y-4">
-                {['Home', 'About', 'Projects', 'Careers', 'FAQ', 'Blog'].map((item) => (
+                {['Home', 'About', 'Work', 'Careers', 'Blog'].map((item) => (
                   <li key={item}>
-                    <Link to={item === 'Home' ? '/' : `/${item.toLowerCase()}`} className="footer-link text-lg font-medium">
+                    <Link to={item === 'Home' ? '/' : item === 'Work' ? '/works' : `/${item.toLowerCase()}`} className="footer-link text-lg font-medium">
                       {item}
                     </Link>
                   </li>

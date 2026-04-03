@@ -135,7 +135,7 @@ export default function FeaturedProjects() {
                   {/* View indicator */}
                   <div className="absolute bottom-6 left-6 z-20 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500 delay-150">
                     <span className="px-4 py-2 bg-white/90 dark:bg-black/90 backdrop-blur-sm rounded-full text-[10px] font-bold uppercase tracking-widest text-black dark:text-white">
-                      View Project
+                      View Work
                     </span>
                   </div>
 

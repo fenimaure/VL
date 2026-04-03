@@ -109,7 +109,7 @@ export default function Projects() {
                                 Our
                             </span>
                             <span className="block text-primary-500 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-                                Projects
+                                Works
                             </span>
                         </h1>
 
@@ -121,7 +121,7 @@ export default function Projects() {
                         <div className="grid grid-cols-3 gap-8 max-w-2xl mx-auto reveal-item" style={{ animationDelay: '0.3s' }}>
                             <div className="text-center">
                                 <div className="text-4xl font-bold text-primary-500 mb-2">{projects.length}+</div>
-                                <div className="text-sm text-black/70 dark:text-gray-400 uppercase tracking-wider">Projects</div>
+                                <div className="text-sm text-black/70 dark:text-gray-400 uppercase tracking-wider">Works</div>
                             </div>
                             <div className="text-center">
                                 <div className="text-4xl font-bold text-primary-500 mb-2">{categories.length - 1}</div>
@@ -196,7 +196,7 @@ export default function Projects() {
                             {/* Results count */}
                             <div className="flex items-center justify-between mb-16">
                                 <div className="text-black/50 dark:text-gray-400 font-medium">
-                                    Showing <span className="text-primary-500 font-bold">{filteredProjects.length}</span> {filteredProjects.length === 1 ? 'project' : 'projects'}
+                                    Showing <span className="text-primary-500 font-bold">{filteredProjects.length}</span> {filteredProjects.length === 1 ? 'work' : 'works'}
                                 </div>
                             </div>
 
@@ -339,7 +339,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                     </p>
 
                     <div className="flex items-center gap-2 text-primary-500 dark:text-primary-400 font-bold group-hover:gap-4 transition-all duration-300 text-sm uppercase tracking-wider">
-                        View Project
+                        View Work
                         <ArrowUpRight className="h-4 w-4 transform group-hover:translate-x-2 group-hover:-translate-y-2 transition-transform duration-300" />
                     </div>
                 </div>

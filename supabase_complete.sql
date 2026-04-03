@@ -16,8 +16,8 @@ create extension if not exists "uuid-ossp";
 -- TABLES
 -- ================================================================
 
--- 2. PROJECTS
-create table if not exists projects (
+-- 2. works
+create table if not exists works (
   id uuid primary key default uuid_generate_v4(),
   title text not null,
   slug text unique not null,
@@ -37,13 +37,13 @@ create table if not exists projects (
 );
 
 -- Add columns that may be missing from older schema
-alter table projects add column if not exists challenge text;
-alter table projects add column if not exists content text;
-alter table projects add column if not exists client text;
-alter table projects add column if not exists role text;
-alter table projects add column if not exists duration text;
-alter table projects add column if not exists live_url text;
-alter table projects add column if not exists contact_email text;
+alter table works add column if not exists challenge text;
+alter table works add column if not exists content text;
+alter table works add column if not exists client text;
+alter table works add column if not exists role text;
+alter table works add column if not exists duration text;
+alter table works add column if not exists live_url text;
+alter table works add column if not exists contact_email text;
 
 
 -- 3. SERVICES
@@ -189,7 +189,7 @@ create table if not exists faqs (
 -- ================================================================
 
 -- Enable RLS on all tables
-alter table projects enable row level security;
+alter table works enable row level security;
 alter table services enable row level security;
 alter table about_content enable row level security;
 alter table careers enable row level security;
@@ -206,7 +206,7 @@ alter table faqs enable row level security;
 -- ================================================================
 
 -- Drop existing policies first to avoid conflicts (safe if they don't exist)
-drop policy if exists "Public allowed to view projects" on projects;
+drop policy if exists "Public allowed to view works" on works;
 drop policy if exists "Public allowed to view services" on services;
 drop policy if exists "Public allowed to view about_content" on about_content;
 drop policy if exists "Public allowed to view careers" on careers;
@@ -218,7 +218,7 @@ drop policy if exists "Anyone can submit inquiries" on project_inquiries;
 drop policy if exists "Admins can view inquiries" on project_inquiries;
 
 -- Recreate public read policies
-create policy "Public read projects" on projects for select using (true);
+create policy "Public read works" on works for select using (true);
 create policy "Public read services" on services for select using (true);
 create policy "Public read about_content" on about_content for select using (true);
 create policy "Public read careers" on careers for select using (true);
@@ -242,7 +242,7 @@ create policy "Public read faqs" on faqs for select using (true);
 -- Using explicit per-operation policies for maximum compatibility.
 
 -- Drop any old "for all" policies that might conflict
-drop policy if exists "Admin manages projects" on projects;
+drop policy if exists "Admin manages works" on works;
 drop policy if exists "Admin manages services" on services;
 drop policy if exists "Admin manages about_content" on about_content;
 drop policy if exists "Admin manages careers" on careers;
@@ -260,17 +260,17 @@ drop policy if exists "Auth delete careers" on careers;
 drop policy if exists "Auth delete blogs" on blogs;
 drop policy if exists "Auth delete testimonials" on testimonials;
 drop policy if exists "Auth delete services" on services;
-drop policy if exists "Auth delete projects" on projects;
+drop policy if exists "Auth delete works" on works;
 drop policy if exists "Auth delete pricing_packages" on pricing_packages;
 drop policy if exists "Auth delete project_inquiries" on project_inquiries;
 drop policy if exists "Authenticated can delete careers" on careers;
 drop policy if exists "Authenticated can delete blogs" on blogs;
 drop policy if exists "Authenticated can delete testimonials" on testimonials;
 
--- ---- PROJECTS ----
-create policy "Admin insert projects" on projects for insert to authenticated with check (true);
-create policy "Admin update projects" on projects for update to authenticated using (true) with check (true);
-create policy "Admin delete projects" on projects for delete to authenticated using (true);
+-- ---- works ----
+create policy "Admin insert works" on works for insert to authenticated with check (true);
+create policy "Admin update works" on works for update to authenticated using (true) with check (true);
+create policy "Admin delete works" on works for delete to authenticated using (true);
 
 -- ---- SERVICES ----
 create policy "Admin insert services" on services for insert to authenticated with check (true);
@@ -326,3 +326,4 @@ create policy "Admin delete faqs" on faqs for delete to authenticated using (tru
 -- Create a public storage bucket named 'assets' in the Supabase Dashboard.
 -- Go to Storage → New Bucket → Name: "assets" → Check "Public bucket"
 -- Or run: insert into storage.buckets (id, name, public) values ('assets', 'assets', true);
+

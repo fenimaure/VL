@@ -9,7 +9,7 @@ import {
     Menu, X, ChevronLeft, ChevronRight, DollarSign, HelpCircle
 } from 'lucide-react';
 
-import ProjectsManager from '../../components/admin/ProjectsManager';
+import WorksManager from '../../components/admin/WorksManager';
 import ServicesManager from '../../components/admin/ServicesManager';
 import TestimonialsManager from '../../components/admin/TestimonialsManager';
 import BlogsManager from '../../components/admin/BlogsManager';
@@ -21,13 +21,13 @@ import PricingManager from '../../components/admin/PricingManager';
 import InquiriesManager from '../../components/admin/InquiriesManager';
 import FAQManager from '../../components/admin/FAQManager';
 
-type ModuleType = 'Overview' | 'Services' | 'Projects' | 'Inquiries' | 'Testimonials' | 'Blogs' | 'Careers' | 'About' | 'Footer' | 'Pricing' | 'FAQ';
+type ModuleType = 'Overview' | 'Services' | 'Works' | 'Inquiries' | 'Testimonials' | 'Blogs' | 'Careers' | 'About' | 'Footer' | 'Pricing' | 'FAQ';
 
 export default function Dashboard() {
     const navigate = useNavigate();
     const [user, setUser] = useState<any>(null);
     const [activeModule, setActiveModule] = useState<ModuleType>('Overview');
-    const [stats, setStats] = useState({ projects: 0, blogs: 0, careers: 0, services: 0, inquiries: 0 });
+    const [stats, setStats] = useState({ works: 0, blogs: 0, careers: 0, services: 0, inquiries: 0 });
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [isMobileOpen, setIsMobileOpen] = useState(false);
 
@@ -41,7 +41,7 @@ export default function Dashboard() {
     }, [navigate]);
 
     async function fetchStats() {
-        const p = await supabase.from('projects').select('id', { count: 'exact' });
+        const p = await supabase.from('works').select('id', { count: 'exact' });
         const b = await supabase.from('blogs').select('id', { count: 'exact' });
         const c = await supabase.from('careers').select('id', { count: 'exact' }).eq('is_active', true);
         const s = await supabase.from('services').select('id', { count: 'exact' });
@@ -49,7 +49,7 @@ export default function Dashboard() {
         const i = await supabase.from('project_inquiries').select('id', { count: 'exact' }).eq('status', 'new');
 
         setStats({
-            projects: p.count || 0,
+            works: p.count || 0,
             blogs: b.count || 0,
             careers: c.count || 0,
             services: s.count || 0,
@@ -66,7 +66,7 @@ export default function Dashboard() {
         { id: 'Overview', label: 'Overview', icon: BarChart3 },
         { id: 'Services', label: 'Services', icon: LayoutGrid },
         { id: 'Inquiries', label: 'Inquiries', icon: Bell },
-        { id: 'Projects', label: 'Projects', icon: FileText },
+        { id: 'Works', label: 'Works', icon: FileText },
         { id: 'Testimonials', label: 'Testimonials', icon: Star },
         { id: 'Blogs', label: 'Blog Posts', icon: BookOpen },
         { id: 'Careers', label: 'Careers', icon: Briefcase },
@@ -109,7 +109,7 @@ export default function Dashboard() {
                 </button>
             </div>
 
-            <nav className="flex-1 p-4 space-y-1 overflow-y-auto scrollbar-hide">
+            <nav className="flex-1 p-4 space-y-1 overflow-y-auto scrollbar-hide" data-lenis-prevent="true">
                 <p className={`px-4 text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em] mb-4 mt-2 ${isCollapsed ? 'text-center opacity-0 h-0 overflow-hidden' : ''}`}>Main Menu</p>
                 {modules.map((m) => {
                     const Icon = m.icon;
@@ -247,8 +247,7 @@ export default function Dashboard() {
                     </div>
                 </header>
 
-                {/* Content Body */}
-                <div className="flex-1 overflow-y-auto p-8">
+                <div className="flex-1 overflow-y-auto p-8" data-lenis-prevent="true">
                     {activeModule === 'Overview' && (
                         <div className="max-w-6xl mx-auto space-y-8 animate-fade-in">
                             {/* Welcome Banner */}
@@ -268,7 +267,7 @@ export default function Dashboard() {
                             {/* Stats Grid */}
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                                 {[
-                                    { label: 'Total Projects', value: stats.projects, icon: FileText, color: 'text-blue-400', bg: 'bg-blue-400/10' },
+                                    { label: 'Total Works', value: stats.works, icon: FileText, color: 'text-blue-400', bg: 'bg-blue-400/10' },
                                     { label: 'Published Posts', value: stats.blogs, icon: BookOpen, color: 'text-indigo-400', bg: 'bg-indigo-400/10' },
                                     { label: 'Active Jobs', value: stats.careers, icon: Briefcase, color: 'text-teal-400', bg: 'bg-teal-400/10' },
                                     { label: 'New Inquiries', value: stats.inquiries, icon: Bell, color: 'text-red-400', bg: 'bg-red-400/10' },
@@ -290,12 +289,12 @@ export default function Dashboard() {
                             <div>
                                 <h3 className="text-lg font-bold text-white mb-4">Quick Actions</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                    <button onClick={() => setActiveModule('Projects')} className="flex items-center gap-4 bg-dark-900 border border-white/5 p-4 rounded-xl hover:border-primary-500/50 hover:shadow-lg hover:shadow-primary-500/10 transition-all group text-left">
+                                    <button onClick={() => setActiveModule('Works')} className="flex items-center gap-4 bg-dark-900 border border-white/5 p-4 rounded-xl hover:border-primary-500/50 hover:shadow-lg hover:shadow-primary-500/10 transition-all group text-left">
                                         <div className="h-10 w-10 bg-dark-950 rounded-lg flex items-center justify-center border border-white/10 group-hover:border-primary-500/50">
                                             <Plus className="h-5 w-5 text-gray-400 group-hover:text-primary-400" />
                                         </div>
                                         <div>
-                                            <span className="block font-bold text-gray-200 group-hover:text-white">Add Project</span>
+                                            <span className="block font-bold text-gray-200 group-hover:text-white">Add Work</span>
                                             <span className="text-xs text-gray-500">Showcase new work</span>
                                         </div>
                                     </button>
@@ -324,7 +323,7 @@ export default function Dashboard() {
 
                     {activeModule !== 'Overview' && (
                         <div className="max-w-7xl mx-auto animate-fade-in">
-                            {activeModule === 'Projects' && <ProjectsManager />}
+                            {activeModule === 'Works' && <WorksManager />}
                             {activeModule === 'Services' && <ServicesManager />}
                             {activeModule === 'Inquiries' && <InquiriesManager />}
                             {activeModule === 'Testimonials' && <TestimonialsManager />}

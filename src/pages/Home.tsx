@@ -4,10 +4,11 @@ import { motion } from 'framer-motion';
 import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
 import Services from '../components/Services';
-import FeaturedProjects from '../components/FeaturedProjects';
+import FeaturedWorks from '../components/FeaturedWorks';
 import FeaturedCareers from '../components/FeaturedCareers';
 import Testimonials from '../components/Testimonials';
 import LatestBlogs from '../components/LatestBlogs';
+import HomeFAQ from '../components/HomeFAQ';
 import Footer from '../components/Footer';
 
 export default function Home() {
@@ -59,10 +60,11 @@ export default function Home() {
             )}
 
             <Services />
-            <FeaturedProjects />
+            <FeaturedWorks />
             <FeaturedCareers />
             <Testimonials />
             <LatestBlogs />
+            <HomeFAQ />
             <Footer />
         </div>
     );

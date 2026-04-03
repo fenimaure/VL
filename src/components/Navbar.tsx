@@ -3,6 +3,7 @@ import { Instagram, Linkedin, Facebook } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import ThemeToggle from './ThemeToggle';
+import MagneticHover from './MagneticHover';
 
 const TikTokIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="currentColor">
@@ -59,12 +60,9 @@ export default function Navbar() {
   }, [isOpen]);
 
   const navLinks = [
-    { title: 'Home', path: '/' },
     { title: 'About', path: '/about' },
-    { title: 'Projects', path: '/projects' },
+    { title: 'Work', path: '/works' },
     { title: 'Services', path: '/services' },
-    { title: 'Pricing', path: '/pricing' },
-    { title: 'FAQ', path: '/faq' },
     { title: 'Careers', path: '/careers' },
     { title: 'Blog', path: '/blog' },
     { title: 'Contact', path: '/contact' },
@@ -90,49 +88,55 @@ export default function Navbar() {
             : 'bg-dark-950/80 dark:bg-dark-950/80 border-white/5 shadow-xl shadow-black/20 backdrop-blur-xl'
             }`}
         >
-          {/* Logo */}
-          <Link to="/" className="flex items-center px-4 py-1.5 transition-all duration-300 hover:opacity-80 shrink-0">
-            <img
-              src="/logo.png"
-              alt="Lovelli"
-              className={`h-7 w-auto transition-all duration-300 ${scrolled ? 'dark:invert' : 'invert'}`}
-            />
-          </Link>
+          <MagneticHover strength={0.3}>
+            <Link to="/" className="flex items-center px-4 py-1.5 transition-all duration-300 hover:opacity-80 shrink-0">
+              <img
+                src="/logo.png"
+                alt="Lovelli"
+                className={`h-7 w-auto transition-all duration-300 ${scrolled ? 'dark:invert' : 'invert'}`}
+              />
+            </Link>
+          </MagneticHover>
 
           {/* Divider */}
           <div className={`w-[1px] h-6 mx-1 shrink-0 transition-colors duration-300 ${scrolled ? 'bg-black/10 dark:bg-white/10' : 'bg-white/10'}`}></div>
 
           {/* Nav Links */}
           <div className="flex items-center gap-0.5">
-            {navLinks.map((link) => {
+            {navLinks.filter(link => !['Blog', 'Careers'].includes(link.title)).map((link) => {
               const active = isActive(link.path);
-              const scrolledLinkClasses = `px-5 py-2 rounded-full text-[12px] font-semibold tracking-wide transition-all duration-300 whitespace-nowrap ${active
+              const scrolledLinkClasses = `px-7 py-2.5 rounded-full text-[12px] font-semibold tracking-wide transition-all duration-300 whitespace-nowrap flex items-center justify-center ${active
                 ? 'bg-black dark:bg-white text-white dark:text-black shadow-md'
                 : 'text-black/60 dark:text-white/50 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5'
                 }`;
-              const defaultLinkClasses = `px-5 py-2 rounded-full text-[12px] font-semibold tracking-wide transition-all duration-300 whitespace-nowrap ${active
+              const defaultLinkClasses = `px-7 py-2.5 rounded-full text-[12px] font-semibold tracking-wide transition-all duration-300 whitespace-nowrap flex items-center justify-center ${active
                 ? 'bg-white/15 text-white shadow-inner shadow-white/10'
                 : 'text-white/50 hover:text-white/90 hover:bg-white/5'
                 }`;
               const linkClasses = scrolled ? scrolledLinkClasses : defaultLinkClasses;
 
               return link.path.startsWith('/#') ? (
-                <a key={link.title} href={link.path} className={linkClasses}>
-                  {link.title}
-                </a>
+                <MagneticHover key={link.title} strength={0.4}>
+                    <a href={link.path} className={linkClasses}>
+                    {link.title}
+                    </a>
+                </MagneticHover>
               ) : (
-                <Link key={link.title} to={link.path} className={linkClasses}>
-                  {link.title}
-                </Link>
+                <MagneticHover key={link.title} strength={0.4}>
+                    <Link to={link.path} className={linkClasses}>
+                    {link.title}
+                    </Link>
+                </MagneticHover>
               );
             })}
           </div>
 
-          {/* Theme Toggle */}
           <div className="ml-1 shrink-0">
-            <ThemeToggle className={`w-9 h-9 border-0 bg-transparent hover:bg-white/5 ${scrolled
-              ? 'text-black/60 dark:text-white/50 hover:text-black dark:hover:text-white'
-              : 'text-white/80 hover:text-white'}`} />
+            <MagneticHover strength={0.5}>
+              <ThemeToggle className={`w-9 h-9 border-0 bg-transparent hover:bg-white/5 ${scrolled
+                ? 'text-black/60 dark:text-white/50 hover:text-black dark:hover:text-white'
+                : 'text-white/80 hover:text-white'}`} />
+            </MagneticHover>
           </div>
         </div>
 

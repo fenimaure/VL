@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
 import { motion, useSpring, useMotionValue, AnimatePresence } from 'framer-motion';
 
+/* ═══════════════════════════════════════
+   W-24: Custom Cursor with State Changes
+   States: default, hover, view, play, pointer, arrow
+   ═══════════════════════════════════════ */
 export default function CustomCursor() {
     const [cursorText, setCursorText] = useState('');
     const [cursorVariant, setCursorVariant] = useState('default');
@@ -27,21 +31,44 @@ export default function CustomCursor() {
         const handleMouseOver = (e: MouseEvent) => {
             const target = e.target as HTMLElement;
 
-            // Check for interactive elements
+            // Check for interactive elements — ordered by specificity
+            const cursorTextData = target.closest('[data-cursor-text]');
+            const cursorData = target.closest('[data-cursor]');
             const isLink = target.closest('a');
             const isButton = target.closest('button');
             const isInput = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA';
-            const cursorData = target.closest('[data-cursor]');
-            const cursorTextData = target.closest('[data-cursor-text]');
+            const isVideo = target.tagName === 'VIDEO' || target.closest('[data-cursor="play"]');
 
             if (cursorTextData) {
+                // W-24: Custom text cursor — "View", "Next", "Play" etc.
                 const text = cursorTextData.getAttribute('data-cursor-text');
                 setCursorText(text || '');
                 setCursorVariant('text-view');
             } else if (cursorData) {
                 const variant = cursorData.getAttribute('data-cursor');
-                setCursorVariant(variant || 'hover');
-                setCursorText('');
+                if (variant === 'view') {
+                    // W-24: Over work card — expanded circle with "View" text
+                    setCursorVariant('text-view');
+                    setCursorText('View');
+                } else if (variant === 'play') {
+                    // W-24: Over video — shows ▶ icon
+                    setCursorVariant('text-view');
+                    setCursorText('▶');
+                } else if (variant === 'arrow') {
+                    // W-24: Over "Next Case Study" — shows arrow
+                    setCursorVariant('text-view');
+                    setCursorText('→');
+                } else if (variant === 'pointer') {
+                    // W-24: Over filters — shrink to pointer
+                    setCursorVariant('pointer');
+                    setCursorText('');
+                } else {
+                    setCursorVariant(variant || 'hover');
+                    setCursorText('');
+                }
+            } else if (isVideo) {
+                setCursorVariant('text-view');
+                setCursorText('▶');
             } else if (isLink || isButton) {
                 setCursorVariant('hover');
                 setCursorText('');
@@ -90,6 +117,13 @@ export default function CustomCursor() {
             border: "none",
             mixBlendMode: "difference" as const,
             color: "black"
+        },
+        pointer: {
+            height: 12,
+            width: 12,
+            backgroundColor: "rgba(255, 255, 255, 0.6)",
+            border: "none",
+            mixBlendMode: "difference" as const
         },
         text: {
             height: 32,

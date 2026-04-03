@@ -3,6 +3,7 @@ import { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { motion } from 'framer-motion';
+import MagneticHover from './MagneticHover';
 
 
 export default function Hero() {
@@ -110,7 +111,7 @@ export default function Hero() {
         )}
       </div>
 
-      <div className="relative max-w-[90rem] mx-auto px-6 lg:px-8 pt-32 pb-40 z-10 w-full">
+      <div className="relative max-w-[90rem] mx-auto px-6 lg:px-8 pt-32 pb-20 z-10 w-full">
 
         {/* Main Content Grid */}
         <div className="flex flex-col items-center text-center">
@@ -215,22 +216,26 @@ export default function Hero() {
             transition={{ duration: 1, delay: 0.8 }}
             className="flex flex-col sm:flex-row gap-8 items-center"
           >
-            <Link
-              to="/contact"
-              className={`group relative px-10 py-4 ${heroData?.image_url ? 'bg-white text-black hover:shadow-white/20' : 'bg-black dark:bg-white text-white dark:text-black hover:shadow-black/20 dark:hover:shadow-white/20'} rounded-full transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] hover:scale-105 hover:shadow-2xl active:scale-95`}
-            >
-              <span className="font-medium text-lg tracking-wide flex items-center gap-2">
-                Start Project <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </span>
-            </Link>
+            <MagneticHover strength={0.3}>
+              <Link
+                to="/contact"
+                className={`group relative px-10 py-4 ${heroData?.image_url ? 'bg-white text-black hover:shadow-white/20' : 'bg-black dark:bg-white text-white dark:text-black hover:shadow-black/20 dark:hover:shadow-white/20'} rounded-full transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] hover:scale-105 hover:shadow-2xl active:scale-95 flex`}
+              >
+                <span className="font-medium text-lg tracking-wide flex items-center gap-2">
+                  Start Project <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </span>
+              </Link>
+            </MagneticHover>
 
-            <a
-              href="#projects"
-              className={`group flex items-center gap-3 text-lg font-bold uppercase tracking-widest ${heroData?.image_url ? 'text-white/60 hover:text-white' : 'text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white'} transition-colors duration-500`}
-            >
-              <span className="w-12 h-[1px] bg-current transition-all duration-500 group-hover:w-20"></span>
-              View Work
-            </a>
+            <MagneticHover strength={0.15}>
+              <a
+                href="#works"
+                className={`group flex items-center gap-3 text-lg font-bold uppercase tracking-widest ${heroData?.image_url ? 'text-white/60 hover:text-white' : 'text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white'} transition-colors duration-500 p-4 rounded-xl`}
+              >
+                <span className="w-12 h-[1px] bg-current transition-all duration-500 group-hover:w-20"></span>
+                View Work
+              </a>
+            </MagneticHover>
           </motion.div>
 
         </div>
