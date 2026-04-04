@@ -938,7 +938,6 @@ export default function Services() {
                     {/* S-3: Cards Grid */}
                     {loading ? (
                         <div className="flex justify-center py-20">
-                            <div className="w-12 h-12 border-2 border-black dark:border-white border-t-transparent rounded-full animate-spin" />
                         </div>
                     ) : (
                         <>

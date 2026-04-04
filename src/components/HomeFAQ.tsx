@@ -46,9 +46,6 @@ export default function HomeFAQ() {
     if (loading) {
         return (
             <section className="py-20 px-6 lg:px-8">
-                <div className="max-w-5xl mx-auto flex justify-center">
-                    <div className="w-10 h-10 border-2 border-black/10 dark:border-white/10 border-t-black dark:border-t-white rounded-full animate-spin"></div>
-                </div>
             </section>
         );
     }

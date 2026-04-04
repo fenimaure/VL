@@ -57,9 +57,7 @@ export default function Hero() {
 
   if (loading && !heroData) {
     return (
-      <section className="relative min-h-screen flex items-center justify-center bg-white dark:bg-dark-950 text-black dark:text-white overflow-hidden transition-colors duration-500">
-        <div className="w-12 h-12 border-2 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
-      </section>
+      <section className="relative min-h-screen bg-white dark:bg-black transition-colors duration-500" />
     );
   }
 

@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase';
 import { motion } from 'framer-motion';
 import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
+import HomeAbout from '../components/HomeAbout';
 import Services from '../components/Services';
 import FeaturedWorks from '../components/FeaturedWorks';
 import FeaturedCareers from '../components/FeaturedCareers';
@@ -37,6 +38,9 @@ export default function Home() {
         <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white transition-colors duration-500">
             <Navbar />
             <Hero />
+
+            {/* ═══ Premium About Section ═══ */}
+            <HomeAbout />
 
             {featuredImage && (
                 <section className="relative w-full h-[80vh] md:h-screen overflow-hidden">

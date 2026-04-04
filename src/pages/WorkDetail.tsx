@@ -472,7 +472,6 @@ export default function WorkDetail() {
 
     if (loading) return (
         <div className="min-h-screen bg-white dark:bg-dark-950 flex items-center justify-center transition-colors duration-500">
-            <div className="w-12 h-12 border-2 border-black/10 dark:border-white/10 border-t-black dark:border-t-white rounded-full animate-spin" />
         </div>
     );
 

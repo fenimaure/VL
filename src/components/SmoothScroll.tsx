@@ -86,9 +86,18 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
     };
   }, []);
 
-  // ---- Scroll to top on route change ----
+  // ---- Stop Lenis on admin routes, scroll to top on other route changes ----
   useEffect(() => {
-    if (lenisRef.current) {
+    if (!lenisRef.current) return;
+
+    const isAdmin = location.pathname.startsWith('/admin');
+
+    if (isAdmin) {
+      // Fully stop Lenis on admin pages — let native scroll handle everything
+      lenisRef.current.stop();
+    } else {
+      // Re-enable Lenis on public pages
+      lenisRef.current.start();
       // Small timeout lets the new page render before we scroll
       const t = setTimeout(() => {
         lenisRef.current?.scrollTo(0, { immediate: true });

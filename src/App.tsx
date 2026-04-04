@@ -1,10 +1,8 @@
-import { useState, useEffect, lazy, Suspense } from 'react';
+import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { AnimatePresence } from 'framer-motion';
 import SmoothScroll from './components/SmoothScroll';
 import PageTransition from './components/PageTransition';
 import FloatingContact from './components/FloatingContact';
-import Preloader from './components/Preloader';
 import Sidebars from './components/Sidebars';
 import { ThemeProvider } from './contexts/ThemeContext';
 
@@ -28,38 +26,11 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 
 // Minimal route loading fallback — keeps the layout shell visible
 function RouteLoadingFallback() {
-  return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="w-8 h-8 border-2 border-black/10 dark:border-white/10 border-t-black dark:border-t-white rounded-full animate-spin" />
-    </div>
-  );
+  return null;
 }
 
 function AppContent() {
   const location = useLocation();
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    let timeout: NodeJS.Timeout;
-
-    const handleLoad = () => {
-      setLoading(false);
-    };
-
-    if (document.readyState === 'complete') {
-      // If already loaded, still show for a minimum time for the premium feel
-      timeout = setTimeout(handleLoad, 800);
-    } else {
-      window.addEventListener('load', handleLoad);
-      // Fallback maximum time
-      timeout = setTimeout(handleLoad, 2000);
-    }
-
-    return () => {
-      window.removeEventListener('load', handleLoad);
-      if (timeout) clearTimeout(timeout);
-    };
-  }, []);
 
   return (
     <SmoothScroll>
@@ -67,9 +38,6 @@ function AppContent() {
       <a href="#main-content" className="skip-to-content">
         Skip to main content
       </a>
-      <AnimatePresence mode="wait">
-        {loading && <Preloader key="preloader" />}
-      </AnimatePresence>
       <FloatingContact />
       <Sidebars />
       <main id="main-content">

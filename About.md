@@ -402,7 +402,7 @@ const words = manifesto.split(' ');
 
 ## 📌 Phase 3: ACT III — The Humans
 
-### - [ ] A-6. 🔴 Editorial Team Roster with 3D Tilt & Video Crossfade
+### - [x] A-6. 🔴 Editorial Team Roster with 3D Tilt & Video Crossfade  ✅ DONE
 
 **Current:** Basic 4-column grid of cards with `whileInView` scale animation. Image + name + role. Static, flat, and forgettable.
 
@@ -468,7 +468,7 @@ const words = manifesto.split(' ');
 
 ---
 
-### - [ ] A-7. 🟡 Founder Spotlight Section
+### - [x] A-7. 🟡 Founder Spotlight Section  ✅ DONE
 
 **Target:** A dedicated full-width section for the agency founder. Large portrait on one side, a personal letter / manifesto on the other. Handwritten signature image at the bottom. This humanizes the brand — clients hire *people*, not agencies.
 
@@ -504,7 +504,7 @@ const words = manifesto.split(' ');
 
 ---
 
-### - [ ] A-8. 🔴 Studio Culture Bento Box
+### - [x] A-8. 🔴 Studio Culture Bento Box  ✅ DONE
 
 **Target:** An Apple-style bento grid showcasing the agency's personality. Mixed-size cards containing behind-the-scenes video, location, awards, design philosophy quotes, and live stats. A cursor-tracking radial glow effect follows the mouse under the borders.
 
@@ -570,7 +570,7 @@ CSS:
 
 ## 📌 Phase 4: ACT IV — The Proof
 
-### - [ ] A-9. 🔴 Orbital Stats Visualization
+### - [x] A-9. 🔴 Orbital Stats Visualization  ✅ DONE
 
 **Target:** Present agency metrics in a radial/orbital layout on desktop (reuse the exact pattern from Services S-8). Stats fly in from edges to orbital positions on scroll. Numbers count up when in view.
 
@@ -608,7 +608,7 @@ const stats = [
 
 ---
 
-### - [ ] A-10. 🟡 Client Logo Marquee with Tooltips
+### - [x] A-10. 🟡 Client Logo Marquee with Tooltips  ✅ DONE
 
 **Target:** Infinite horizontal marquee of grayscale client logos. On hover, each logo colorizes and shows a tooltip with client name + project type. Exact same implementation as Services S-10.
 
@@ -623,7 +623,7 @@ const stats = [
 
 ---
 
-### - [ ] A-11. 🟡 Testimonials Masonry Wall
+### - [x] A-11. 🟡 Testimonials Masonry Wall  ✅ DONE
 
 **Target:** Instead of a carousel (which the Services page already has), the About page shows testimonials in a staggered masonry layout. Large quotes with prominent avatars and glassmorphism card treatments.
 
@@ -656,7 +656,7 @@ const stats = [
 
 ## 📌 Phase 5: ACT V — The Journey
 
-### - [ ] A-12. 🔴 Stacked Scroll-Driven Timeline
+### - [x] A-12. 🔴 Stacked Scroll-Driven Timeline  ✅ DONE
 
 **Target:** Agency milestones presented as a vertical timeline with scroll-driven line-draw animation. Each milestone "activates" as the line reaches it. This matches the existing process timeline in Services (S-7/S-19) but with a historical narrative focus.
 
@@ -696,7 +696,7 @@ const stats = [
 
 ---
 
-### - [ ] A-13. 🟡 Core Values Carousel
+### - [x] A-13. 🟡 Core Values Carousel  ✅ DONE
 
 **Target:** Horizontal swipeable carousel of core values. Each value card has an icon, title, and short description. Auto-advances every 6 seconds. Matches the testimonials carousel from Services (S-12) but simpler.
 
@@ -726,7 +726,7 @@ const stats = [
 
 ---
 
-### - [ ] A-14. 🟢 Tools & Technology Stack
+### - [x] A-14. 🟢 Tools & Technology Stack  ✅ DONE
 
 **Target:** Showcase the tools and technologies the agency uses. A grid of tool icons/logos with hover animations. Matches Services S-21 "Tools & Technologies Used" pattern.
 
@@ -752,7 +752,7 @@ const stats = [
 
 ## 📌 Phase 6: ACT VI — The Exit
 
-### - [ ] A-15. 🟢 Awards & Recognition Wall
+### - [x] A-15. 🟢 Awards & Recognition Wall  ✅ DONE
 
 **Target:** A compact, elegant section showing agency awards and press mentions. Each award is a minimal card with the organization name, award title, and year.
 
@@ -777,7 +777,7 @@ const stats = [
 
 ---
 
-### - [ ] A-16. 🔴 The Final CTA — "Start a Dialogue"
+### - [x] A-16. 🔴 The Final CTA — "Start a Dialogue"  ✅ DONE
 
 **Target:** A seamless transition from the About story into a full-viewport call to action. This should feel like the finale of a film, not a sales pitch. Background fades to black, massive magnetic button appears, background video clips through a text mask.
 
@@ -870,7 +870,7 @@ const stats = [
 
 ---
 
-### - [ ] A-19. 🔴 Mobile-First Responsive Design
+### - [x] A-19. 🔴 Mobile-First Responsive Design  ✅ DONE
 
 **Target:** Every section must be designed mobile-first with touch-optimized interactions.
 
@@ -894,7 +894,7 @@ const stats = [
 
 ---
 
-### - [ ] A-20. 🟡 Image & Video Loading Strategy
+### - [x] A-20. 🟡 Image & Video Loading Strategy  ✅ DONE
 
 **Target:** Optimized media loading across the page.
 
@@ -965,12 +965,12 @@ const { scrollYProgress } = useScroll();
 |---------|----------|----------|--------|
 | **ACT I: The Hook** | A-1, A-2 | 2🔴 | ██████████ 100% (2/2) |
 | **ACT II: The Narrative** | A-3, A-4, A-5 | 1🔴 2🟡 | ██████████ 100% (3/3) |
-| **ACT III: The Humans** | A-6, A-7, A-8 | 2🔴 1🟡 | ░░░░░░░░░░ 0% (0/3) |
-| **ACT IV: The Proof** | A-9, A-10, A-11 | 1🔴 2🟡 | ░░░░░░░░░░ 0% (0/3) |
-| **ACT V: The Journey** | A-12, A-13, A-14 | 1🔴 1🟡 1🟢 | ░░░░░░░░░░ 0% (0/3) |
-| **ACT VI: The Exit** | A-15, A-16, A-17 | 1🔴 0🟡 1🟢 | ███░░░░░░░ 33% (1/3) |
-| **Motion/Mobile/Perf** | A-18 to A-23 | 2🔴 1🟡 3🟢 | █████████░ 83% (5/6) |
-| **TOTAL** | **23 Features** | **10🔴 7🟡 6🟢** | **█████░░░░░ 48% (11/23)** |
+| **ACT III: The Humans** | A-6, A-7, A-8 | 2🔴 1🟡 | ██████████ 100% (3/3) |
+| **ACT IV: The Proof** | A-9, A-10, A-11 | 1🔴 2🟡 | ██████████ 100% (3/3) |
+| **ACT V: The Journey** | A-12, A-13, A-14 | 1🔴 1🟡 1🟢 | ██████████ 100% (3/3) |
+| **ACT VI: The Exit** | A-15, A-16, A-17 | 1🔴 0🟡 1🟢 | ██████████ 100% (3/3) |
+| **Motion/Mobile/Perf** | A-18 to A-23 | 2🔴 1🟡 3🟢 | ██████████ 100% (6/6) |
+| **TOTAL** | **23 Features** | **10🔴 7🟡 6🟢** | **██████████ 100% (23/23)** |
 
 ---
 

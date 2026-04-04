@@ -594,7 +594,6 @@ export default function Works() {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     {loading ? (
                         <div className="flex items-center justify-center py-40">
-                            <div className="w-14 h-14 border-2 border-black/10 dark:border-white/10 border-t-black dark:border-t-white rounded-full animate-spin" />
                         </div>
                     ) : filteredWorks.length === 0 ? (
                         <div className="text-center py-40">

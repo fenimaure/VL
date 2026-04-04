@@ -121,7 +121,6 @@ export default function Pricing() {
                 {/* Pricing Cards */}
                 {loading ? (
                     <div className="flex justify-center py-20">
-                        <div className="w-10 h-10 border-2 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
                     </div>
                 ) : filteredPackages.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

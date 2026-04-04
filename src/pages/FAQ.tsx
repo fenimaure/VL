@@ -140,7 +140,6 @@ export default function FAQPage() {
                 {/* FAQ Accordion */}
                 {loading ? (
                     <div className="flex justify-center py-20">
-                        <div className="w-10 h-10 border-2 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
                     </div>
                 ) : filteredFAQs.length > 0 ? (
                     <motion.div
