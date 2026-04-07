@@ -1,6 +1,11 @@
 import { useState } from 'react';
 import { Share2, Facebook, Linkedin, Check, Link as LinkIcon } from 'lucide-react';
-import { FaXTwitter } from 'react-icons/fa6';
+
+const XIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932 6.064-6.932zm-1.292 19.49h2.039L6.486 3.24H4.298l13.311 17.403z" />
+  </svg>
+);
 
 interface SocialShareProps {
     url?: string;
@@ -87,7 +92,7 @@ export default function SocialShare({
                                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-black/10 dark:hover:bg-white/20 text-black dark:text-white transition-all duration-300 group"
                             >
                                 <div className="w-10 h-10 rounded-full bg-black/10 dark:bg-white/20 flex items-center justify-center group-hover:bg-black dark:group-hover:bg-white transition-colors">
-                                    <FaXTwitter className="h-5 w-5 text-black dark:text-white group-hover:text-white dark:group-hover:text-black" />
+                                    <XIcon className="h-5 w-5 text-black dark:text-white group-hover:text-white dark:group-hover:text-black" />
                                 </div>
                                 <span className="font-medium">Share on X</span>
                             </button>

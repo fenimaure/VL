@@ -187,8 +187,8 @@ function ManifestoBlock({ text }: { text: string }) {
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
             className="inline-flex items-center gap-3 mb-10"
           >
-            <span className="w-12 h-[1px] bg-primary-500" />
-            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary-500">
+            <span className="w-12 h-[1px] bg-primary-500 dark:bg-white" />
+            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary-500 dark:text-white">
               Who We Are
             </span>
           </motion.div>
@@ -355,8 +355,8 @@ function SplitStory({ imageUrl, storyData }: { imageUrl: string; storyData: Abou
             <div className="lg:pl-4">
               {/* Chapter label */}
               <div className="inline-flex items-center gap-3 mb-8">
-                <span className="w-8 h-[1px] bg-primary-500" />
-                <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary-500">
+                <span className="w-8 h-[1px] bg-primary-500 dark:bg-white" />
+                <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary-500 dark:text-white">
                   About Us
                 </span>
               </div>
@@ -375,14 +375,14 @@ function SplitStory({ imageUrl, storyData }: { imageUrl: string; storyData: Abou
               </h2>
 
               {/* Subtitle */}
-              <p className="text-lg md:text-xl text-primary-500 font-medium mb-8 tracking-wide leading-relaxed">
+              <p className="text-lg md:text-xl text-primary-500 dark:text-white font-medium mb-8 tracking-wide leading-relaxed">
                 {description}
               </p>
 
               {/* Animated reveal line */}
               <motion.div
                 style={{ width: lineWidth }}
-                className="h-[1px] bg-gradient-to-r from-primary-500/50 to-transparent mb-8"
+                className="h-[1px] bg-gradient-to-r from-primary-500/50 dark:from-white/50 to-transparent mb-8"
               />
 
               {/* Body text */}
@@ -397,10 +397,10 @@ function SplitStory({ imageUrl, storyData }: { imageUrl: string; storyData: Abou
                   className="group inline-flex items-center gap-4 px-8 py-4 rounded-full border border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.02] hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black text-black dark:text-white transition-all duration-500 font-bold uppercase tracking-widest text-xs"
                   data-cursor="pointer"
                 >
-                  <span className="relative pb-0.5 after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-primary-500 after:transform after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:duration-500 after:origin-left">
+                  <span className="relative pb-0.5 after:absolute after:bottom-0 after:left-0 after:w-full after:h-[1px] after:bg-primary-500 dark:after:bg-white after:transform after:scale-x-0 group-hover:after:scale-x-100 after:transition-transform after:duration-500 after:origin-left">
                     Discover More
                   </span>
-                  <ArrowRight className="h-4 w-4 transform group-hover:translate-x-1 transition-transform text-primary-500 group-hover:text-current" />
+                  <ArrowRight className="h-4 w-4 transform group-hover:translate-x-1 transition-transform text-primary-500 dark:text-white group-hover:text-current" />
                 </Link>
               </MagneticHover>
             </div>
@@ -424,10 +424,10 @@ function StatsRibbon({ stats }: { stats: any[] }) {
   return (
     <section
       ref={ribbonRef}
-      className="relative py-1 overflow-hidden bg-black dark:bg-white transition-colors duration-500"
+      className="relative py-1 overflow-hidden bg-white dark:bg-black transition-colors duration-500"
     >
       {/* Subtle shimmer overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.03] dark:via-black/[0.03] to-transparent animate-[shimmer_4s_infinite] pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/[0.03] dark:via-white/[0.03] to-transparent animate-[shimmer_4s_infinite] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-12 py-12 md:py-16">
@@ -449,12 +449,12 @@ function StatsRibbon({ stats }: { stats: any[] }) {
                 className="text-center group"
               >
                 {/* Number */}
-                <div className="text-4xl md:text-5xl lg:text-6xl font-black font-display text-white dark:text-black tracking-tighter mb-3 transition-colors duration-500">
+                <div className="text-4xl md:text-5xl lg:text-6xl font-black font-display text-black dark:text-white tracking-tighter mb-3 transition-colors duration-500">
                   <CountUp end={numericValue} suffix={suffix} prefix={prefix} />
                 </div>
 
                 {/* Label */}
-                <div className="text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] text-white/40 dark:text-black/40 transition-colors duration-500">
+                <div className="text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] text-black/50 dark:text-white/50 transition-colors duration-500">
                   {stat.label}
                 </div>
 
@@ -463,7 +463,7 @@ function StatsRibbon({ stats }: { stats: any[] }) {
                   initial={{ scaleX: 0 }}
                   animate={isInView ? { scaleX: 1 } : {}}
                   transition={{ duration: 1.2, delay: 0.5 + i * 0.15, ease: [0.16, 1, 0.3, 1] }}
-                  className="w-8 h-[1px] bg-primary-500/40 mx-auto mt-4 origin-left"
+                  className="w-8 h-[1px] bg-primary-500/40 dark:bg-white/40 mx-auto mt-4 origin-left"
                 />
               </motion.div>
             );

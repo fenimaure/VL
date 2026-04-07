@@ -320,6 +320,15 @@ function Marquee({ children }: { children?: ReactNode }) {
 
 // ── Media ───────────────────────────────────────
 
+function FullScreenImage({ src, alt }: { src?: string; alt?: string }) {
+    if (!src) return null;
+    return (
+        <figure className="w-[100vw] relative left-[50%] right-[50%] -ml-[50vw] -mr-[50vw] my-16">
+            <img src={src} alt={alt || ''} className="w-full h-auto object-cover !my-0" loading="lazy" />
+        </figure>
+    );
+}
+
 function ImageCaption({
     children,
     src,
@@ -488,6 +497,12 @@ export const CUSTOM_COMPONENTS: ComponentMeta[] = [
     },
     // Media
     {
+        name: 'FullScreenImage',
+        description: 'Edge-to-edge full screen image breakout',
+        snippet: '<FullScreenImage src="https://example.com/image.jpg" />',
+        category: 'Media',
+    },
+    {
         name: 'ImageCaption',
         description: 'Image with caption overlay',
         snippet: '<ImageCaption src="https://example.com/image.jpg" alt="description" caption="Photo caption" />',
@@ -517,6 +532,7 @@ const componentMap: Components = {
     timeline: Timeline as any,
     marquee: Marquee as any,
     imagecaption: ImageCaption as any,
+    fullscreenimage: FullScreenImage as any,
 };
 
 /* ══════════════════════════════════════════════
@@ -544,6 +560,7 @@ const sanitizeSchema = {
         'timeline',
         'marquee',
         'imagecaption',
+        'fullscreenimage',
     ],
     attributes: {
         ...defaultSchema.attributes,
@@ -562,6 +579,7 @@ const sanitizeSchema = {
         statcard: ['value', 'label'],
         timeline: ['date', 'title'],
         imagecaption: ['src', 'alt', 'caption'],
+        fullscreenimage: ['src', 'alt'],
         // Keep code/pre highlighting classes
         code: ['className'],
         span: ['className'],
@@ -581,7 +599,7 @@ const CUSTOM_TAG_NAMES = [
     'Grid', 'Columns', 'Spacer', 'Divider',
     'StatCard', 'Timeline',
     'Marquee',
-    'ImageCaption',
+    'ImageCaption', 'FullScreenImage',
 ];
 
 function preprocessContent(raw: string): string {
@@ -604,7 +622,7 @@ function preprocessContent(raw: string): string {
     const blockTags = [
         'Section', 'Grid', 'Columns', 'Spacer', 'Divider',
         'CalloutBox', 'FeatureCard', 'Testimonial', 'Accordion',
-        'StatCard', 'Timeline', 'Marquee', 'ImageCaption', 'Button',
+        'StatCard', 'Timeline', 'Marquee', 'ImageCaption', 'FullScreenImage', 'Button',
     ];
     const blockPattern = blockTags.join('|');
 

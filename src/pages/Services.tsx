@@ -145,7 +145,7 @@ function VelocityMarquee() {
     const tripled = [...MARQUEE_WORDS, ...MARQUEE_WORDS, ...MARQUEE_WORDS];
 
     return (
-        <section className="py-6 border-y border-black/5 dark:border-white/5 overflow-hidden bg-black dark:bg-white transition-colors duration-500">
+        <section className="py-6 border-y border-black/5 dark:border-white/5 overflow-hidden bg-white dark:bg-black transition-colors duration-500">
             <div className="relative flex overflow-hidden">
                 <div
                     className="velocity-marquee flex shrink-0"
@@ -156,12 +156,12 @@ function VelocityMarquee() {
                             key={i}
                             className={`marquee-word text-sm md:text-base font-bold tracking-[0.3em] uppercase whitespace-nowrap mx-8 md:mx-12 cursor-default ${
                                 i % 3 === 0
-                                    ? 'marquee-word-outlined text-white/60 dark:text-black/60'
-                                    : 'text-white/60 dark:text-black/60'
+                                    ? 'marquee-word-outlined text-black/60 dark:text-white/60'
+                                    : 'text-black/60 dark:text-white/60'
                             }`}
                         >
                             {word}
-                            <span className="ml-8 md:ml-12 text-white/20 dark:text-black/20">·</span>
+                            <span className="ml-8 md:ml-12 text-black/20 dark:text-white/20">·</span>
                         </span>
                     ))}
                 </div>
@@ -763,7 +763,7 @@ export default function Services() {
 
                 <motion.div
                     style={{ y: heroY, opacity: heroOpacity, filter: heroBlur }}
-                    className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 text-center"
+                    className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 pt-32 text-center"
                 >
                     {/* Floating Badge */}
                     <motion.div
@@ -1002,20 +1002,7 @@ export default function Services() {
                 </div>
             </section>
 
-            {/* ═══════════════════════════════════════════════════════
-                S-11: COMPARISON MATRIX
-            ═══════════════════════════════════════════════════════ */}
-            <section className="py-32 bg-white dark:bg-dark-950 transition-colors duration-500">
-                <div className="max-w-7xl mx-auto px-6 lg:px-8">
-                    <ScrollReveal className="mb-16">
-                        <span className="service-meta-label text-black/40 dark:text-white/40 mb-4 block">Compare</span>
-                        <h2 className="service-section-heading font-display text-black dark:text-white transition-colors">
-                            Service <span className="text-stroke-light dark:text-stroke-white italic font-light font-serif">Matrix</span>
-                        </h2>
-                    </ScrollReveal>
-                    <ServiceComparison services={services} />
-                </div>
-            </section>
+
 
             {/* ═══════════════════════════════════════════════════════
                 S-12: TESTIMONIALS

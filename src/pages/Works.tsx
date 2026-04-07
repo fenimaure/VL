@@ -409,9 +409,9 @@ export default function Works() {
                             transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
                             className="inline-flex items-center gap-3 mb-12"
                         >
-                            <span className="w-12 h-[1px] bg-primary-500" />
-                            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary-500">Portfolio · 2024—2026</span>
-                            <span className="w-12 h-[1px] bg-primary-500" />
+                            <span className="w-12 h-[1px] bg-primary-500 dark:bg-white" />
+                            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary-500 dark:text-white">Portfolio · 2024—2026</span>
+                            <span className="w-12 h-[1px] bg-primary-500 dark:bg-white" />
                         </motion.div>
 
                         {/* Title — word-level reveal */}
@@ -447,7 +447,7 @@ export default function Works() {
                             transition={{ duration: 1, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
                             className="text-xl sm:text-2xl text-black/60 dark:text-gray-400 leading-relaxed max-w-3xl mx-auto mb-20 font-light"
                         >
-                            A curated collection of <span className="text-primary-500 font-semibold">transformative</span> digital experiences where strategy meets craft.
+                            A curated collection of <span className="text-primary-500 dark:text-white font-semibold">transformative</span> digital experiences where strategy meets craft.
                         </motion.p>
 
                         {/* Animated counters */}
@@ -842,8 +842,8 @@ function WorkCard({ work, index, isLarge = false }: { work: Work; index: number;
                 {/* Content */}
                 <div className="p-6 sm:p-8">
                     <div className="flex items-center gap-3 mb-3">
-                        <span className="w-6 h-[1px] bg-primary-500" />
-                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary-500">{work.category}</span>
+                        <span className="w-6 h-[1px] bg-primary-500 dark:bg-white" />
+                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary-500 dark:text-white">{work.category}</span>
                     </div>
                     <h3 className="text-xl sm:text-2xl font-bold text-black dark:text-white mb-3 font-display group-hover:text-primary-500 dark:group-hover:text-primary-400 transition-colors duration-500 leading-tight">
                         {work.title}

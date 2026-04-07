@@ -191,7 +191,7 @@ export default function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.5 }}
-              className={`text-2xl md:text-3xl ${heroData?.image_url ? 'text-primary-300' : 'text-primary-500'} font-medium max-w-3xl mx-auto mb-6 tracking-wide`}
+              className={`text-2xl md:text-3xl ${heroData?.image_url ? 'text-primary-300' : 'text-primary-500 dark:text-white'} font-medium max-w-3xl mx-auto mb-6 tracking-wide`}
             >
               {heroData.subtitle}
             </motion.p>
@@ -240,19 +240,6 @@ export default function Hero() {
       </div>
 
 
-
-      {/* Scroll Indicator - Minimal Line */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5, duration: 1 }}
-        className="absolute bottom-12 left-10 hidden md:flex items-center gap-4 rotate-90 origin-left"
-      >
-        <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-black/30 dark:text-white/30">Scroll</span>
-        <div className="w-20 h-[1px] bg-black/10 dark:bg-white/10 overflow-hidden">
-          <div className="w-full h-full bg-primary-500/50 -translate-x-full animate-[shimmer_2s_infinite]"></div>
-        </div>
-      </motion.div>
 
     </section>
   );

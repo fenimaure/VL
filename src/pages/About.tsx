@@ -120,9 +120,9 @@ export default function About() {
                     <ScrollReveal>
                         <div className="text-center mb-20">
                             <div className="inline-flex items-center gap-3 mb-8">
-                                <span className="w-12 h-[1px] bg-primary-500" />
-                                <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary-500">The Dream Team</span>
-                                <span className="w-12 h-[1px] bg-primary-500" />
+                                <span className="w-12 h-[1px] bg-primary-500 dark:bg-white" />
+                                <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary-500 dark:text-white">The Dream Team</span>
+                                <span className="w-12 h-[1px] bg-primary-500 dark:bg-white" />
                             </div>
                             <h2 className="text-5xl md:text-7xl font-bold text-black dark:text-white font-display tracking-tight">
                                 {data.team?.title || <>The Minds <span className="text-stroke-light dark:text-stroke-white italic font-light font-serif">Behind It</span></>}
@@ -285,11 +285,11 @@ function CinematicHero({ data }: { data: Record<string, AboutSection> }) {
                         transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
                         className="inline-flex items-center gap-3 mb-12"
                     >
-                        <span className="w-12 h-[1px] bg-primary-500" />
-                        <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary-500">
+                        <span className="w-12 h-[1px] bg-primary-500 dark:bg-white" />
+                        <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary-500 dark:text-white">
                             About · Est. 2014
                         </span>
-                        <span className="w-12 h-[1px] bg-primary-500" />
+                        <span className="w-12 h-[1px] bg-primary-500 dark:bg-white" />
                     </motion.div>
 
                     {/* ═══ Bold + Outline Split Title (A-1) ═══ */}
@@ -336,7 +336,7 @@ function CinematicHero({ data }: { data: Record<string, AboutSection> }) {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 1, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
                             className={`text-2xl md:text-3xl font-medium max-w-4xl mx-auto mb-6 tracking-wide ${
-                                hasMedia ? 'text-primary-300' : 'text-primary-500'
+                                hasMedia ? 'text-primary-300' : 'text-primary-500 dark:text-white'
                             }`}
                         >
                             {data.hero.subtitle}
@@ -394,20 +394,6 @@ function CinematicHero({ data }: { data: Record<string, AboutSection> }) {
                 </div>
             </motion.div>
 
-            {/* ── L5: Scroll indicator ── */}
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.5, duration: 1 }}
-                className="absolute bottom-12 left-10 hidden md:flex items-center gap-4 rotate-90 origin-left z-10"
-            >
-                <span className={`text-[10px] font-bold uppercase tracking-[0.3em] ${hasMedia ? 'text-white/30' : 'text-black/30 dark:text-white/30'}`}>
-                    Scroll
-                </span>
-                <div className={`w-20 h-[1px] overflow-hidden ${hasMedia ? 'bg-white/10' : 'bg-black/10 dark:bg-white/10'}`}>
-                    <div className="w-full h-full bg-primary-500/50 -translate-x-full animate-[shimmer_2s_infinite]" />
-                </div>
-            </motion.div>
         </section>
     );
 }
@@ -468,8 +454,8 @@ function ManifestoSection({ data }: { data: Record<string, AboutSection> }) {
                         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
                         className="inline-flex items-center gap-3 mb-12"
                     >
-                        <span className="w-12 h-[1px] bg-primary-500" />
-                        <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary-500">
+                        <span className="w-12 h-[1px] bg-primary-500 dark:bg-white" />
+                        <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary-500 dark:text-white">
                             Our Manifesto
                         </span>
                     </motion.div>
@@ -564,11 +550,11 @@ function SplitNarrative({ data }: { data: Record<string, AboutSection> }) {
                 <ScrollReveal>
                     <div className="text-center mb-24">
                         <div className="inline-flex items-center gap-3 mb-8">
-                            <span className="w-12 h-[1px] bg-primary-500" />
-                            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary-500">
+                            <span className="w-12 h-[1px] bg-primary-500 dark:bg-white" />
+                            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary-500 dark:text-white">
                                 Our Story
                             </span>
-                            <span className="w-12 h-[1px] bg-primary-500" />
+                            <span className="w-12 h-[1px] bg-primary-500 dark:bg-white" />
                         </div>
                         <h2 className="text-5xl md:text-7xl font-bold text-black dark:text-white font-display tracking-tight">
                             How We{' '}
@@ -661,8 +647,8 @@ function NarrativeBlock({ block, index, isImageLeft }: {
                 <div className={`${!isImageLeft ? 'md:[direction:ltr]' : ''}`}>
                     {/* Chapter label */}
                     <div className="inline-flex items-center gap-3 mb-6">
-                        <span className="w-8 h-[1px] bg-primary-500" />
-                        <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary-500">
+                        <span className="w-8 h-[1px] bg-primary-500 dark:bg-white" />
+                        <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary-500 dark:text-white">
                             Chapter {String(index + 1).padStart(2, '0')}
                         </span>
                     </div>
@@ -729,7 +715,7 @@ function AboutMarquee() {
     const tripled = [...ABOUT_MARQUEE_WORDS, ...ABOUT_MARQUEE_WORDS, ...ABOUT_MARQUEE_WORDS];
 
     return (
-        <section className="py-6 border-y border-black/5 dark:border-white/5 overflow-hidden bg-black dark:bg-white transition-colors duration-500">
+        <section className="py-6 border-y border-black/5 dark:border-white/5 overflow-hidden bg-white dark:bg-black transition-colors duration-500">
             <div className="relative flex overflow-hidden">
                 <div
                     className="velocity-marquee flex shrink-0"
@@ -740,12 +726,12 @@ function AboutMarquee() {
                             key={i}
                             className={`marquee-word text-sm md:text-base font-bold tracking-[0.3em] uppercase whitespace-nowrap mx-8 md:mx-12 cursor-default ${
                                 i % 3 === 0
-                                    ? 'marquee-word-outlined text-white/60 dark:text-black/60'
-                                    : 'text-white/60 dark:text-black/60'
+                                    ? 'marquee-word-outlined text-black/60 dark:text-white/60'
+                                    : 'text-black/60 dark:text-white/60'
                             }`}
                         >
                             {word}
-                            <span className="ml-8 md:ml-12 text-white/20 dark:text-black/20">·</span>
+                            <span className="ml-8 md:ml-12 text-black/20 dark:text-white/20">·</span>
                         </span>
                     ))}
                 </div>
@@ -871,8 +857,8 @@ function FounderSpotlight({ data }: { data: Record<string, AboutSection> }) {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 <ScrollReveal>
                     <div className="inline-flex items-center gap-3 mb-12">
-                        <span className="w-12 h-[1px] bg-primary-500" />
-                        <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary-500">A Letter from Our Founder</span>
+                        <span className="w-12 h-[1px] bg-primary-500 dark:bg-white" />
+                        <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary-500 dark:text-white">A Letter from Our Founder</span>
                     </div>
                 </ScrollReveal>
 
@@ -941,9 +927,9 @@ function CultureBento({ data }: { data: Record<string, AboutSection> }) {
                 <ScrollReveal>
                     <div className="text-center mb-16">
                         <div className="inline-flex items-center gap-3 mb-8">
-                            <span className="w-12 h-[1px] bg-primary-500" />
-                            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary-500">Studio Culture</span>
-                            <span className="w-12 h-[1px] bg-primary-500" />
+                            <span className="w-12 h-[1px] bg-primary-500 dark:bg-white" />
+                            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary-500 dark:text-white">Studio Culture</span>
+                            <span className="w-12 h-[1px] bg-primary-500 dark:bg-white" />
                         </div>
                         <h2 className="text-5xl md:text-7xl font-bold text-black dark:text-white font-display tracking-tight">
                             More Than{' '}
@@ -1017,9 +1003,9 @@ function OrbitalStats({ data }: { data: Record<string, AboutSection> }) {
                 <ScrollReveal>
                     <div className="text-center mb-20">
                         <div className="inline-flex items-center gap-3 mb-8">
-                            <span className="w-12 h-[1px] bg-primary-500" />
-                            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary-500">Proven Results</span>
-                            <span className="w-12 h-[1px] bg-primary-500" />
+                            <span className="w-12 h-[1px] bg-primary-500 dark:bg-white" />
+                            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary-500 dark:text-white">Proven Results</span>
+                            <span className="w-12 h-[1px] bg-primary-500 dark:bg-white" />
                         </div>
                         <h2 className="text-5xl md:text-7xl font-bold text-black dark:text-white font-display tracking-tight">
                             Numbers That{' '}
@@ -1109,9 +1095,9 @@ function TestimonialsWall({ data }: { data: Record<string, AboutSection> }) {
                 <ScrollReveal>
                     <div className="text-center mb-20">
                         <div className="inline-flex items-center gap-3 mb-8">
-                            <span className="w-12 h-[1px] bg-primary-500" />
-                            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary-500">What They Say</span>
-                            <span className="w-12 h-[1px] bg-primary-500" />
+                            <span className="w-12 h-[1px] bg-primary-500 dark:bg-white" />
+                            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary-500 dark:text-white">What They Say</span>
+                            <span className="w-12 h-[1px] bg-primary-500 dark:bg-white" />
                         </div>
                         <h2 className="text-5xl md:text-7xl font-bold text-black dark:text-white font-display tracking-tight">
                             Client{' '}
@@ -1169,9 +1155,9 @@ function TimelineSection({ data }: { data: Record<string, AboutSection> }) {
                 <ScrollReveal>
                     <div className="text-center mb-24">
                         <div className="inline-flex items-center gap-3 mb-8">
-                            <span className="w-12 h-[1px] bg-primary-500" />
-                            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary-500">Our Journey</span>
-                            <span className="w-12 h-[1px] bg-primary-500" />
+                            <span className="w-12 h-[1px] bg-primary-500 dark:bg-white" />
+                            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary-500 dark:text-white">Our Journey</span>
+                            <span className="w-12 h-[1px] bg-primary-500 dark:bg-white" />
                         </div>
                         <h2 className="text-5xl md:text-7xl font-bold text-black dark:text-white font-display tracking-tight">
                             The Road{' '}
@@ -1251,9 +1237,9 @@ function ValuesCarousel({ data }: { data: Record<string, AboutSection> }) {
                 <ScrollReveal>
                     <div className="text-center mb-16">
                         <div className="inline-flex items-center gap-3 mb-8">
-                            <span className="w-12 h-[1px] bg-primary-500" />
-                            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary-500">What We Believe</span>
-                            <span className="w-12 h-[1px] bg-primary-500" />
+                            <span className="w-12 h-[1px] bg-primary-500 dark:bg-white" />
+                            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary-500 dark:text-white">What We Believe</span>
+                            <span className="w-12 h-[1px] bg-primary-500 dark:bg-white" />
                         </div>
                         <h2 className="text-5xl md:text-7xl font-bold text-black dark:text-white font-display tracking-tight">
                             Core{' '}
@@ -1307,9 +1293,9 @@ function AwardsWall({ data }: { data: Record<string, AboutSection> }) {
                 <ScrollReveal>
                     <div className="text-center mb-12">
                         <div className="inline-flex items-center gap-3 mb-8">
-                            <span className="w-12 h-[1px] bg-primary-500" />
-                            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary-500">Recognition</span>
-                            <span className="w-12 h-[1px] bg-primary-500" />
+                            <span className="w-12 h-[1px] bg-primary-500 dark:bg-white" />
+                            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary-500 dark:text-white">Recognition</span>
+                            <span className="w-12 h-[1px] bg-primary-500 dark:bg-white" />
                         </div>
                         <h2 className="text-4xl md:text-6xl font-bold text-black dark:text-white font-display tracking-tight">Awards</h2>
                     </div>
@@ -1348,9 +1334,9 @@ function FinalCTA() {
                     transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
                 >
                     <div className="inline-flex items-center gap-3 mb-12">
-                        <span className="w-12 h-[1px] bg-primary-500" />
-                        <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary-500">Ready?</span>
-                        <span className="w-12 h-[1px] bg-primary-500" />
+                        <span className="w-12 h-[1px] bg-primary-500 dark:bg-white" />
+                        <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary-500 dark:text-white">Ready?</span>
+                        <span className="w-12 h-[1px] bg-primary-500 dark:bg-white" />
                     </div>
 
                     <h2 className="flex flex-col items-center leading-[0.85] mb-12">

@@ -21,3 +21,7 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+# Database migrations (contain schema, RLS policies, etc.)
+*.sql
+database/migrations/

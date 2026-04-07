@@ -44,85 +44,6 @@ function CountUp({ end, suffix = '', prefix = '', duration = 2500 }: { end: numb
 }
 
 /* ═══════════════════════════════════════
-   W-14: Process / Timeline Section
-   Vertical timeline with line-draw on scroll
-   ═══════════════════════════════════════ */
-const PROCESS_STEPS = [
-    { title: 'Discovery', description: 'Research · Interviews · Analysis', icon: '🔍' },
-    { title: 'Strategy', description: 'Brand Position · Architecture · Wireframes', icon: '🎯' },
-    { title: 'Design', description: 'Visual Design · Prototyping · Testing', icon: '🎨' },
-    { title: 'Development', description: 'Frontend · Backend · Integration', icon: '⚡' },
-    { title: 'Launch', description: 'Deployment · QA · Handover', icon: '🚀' },
-];
-
-function ProcessTimeline() {
-    const containerRef = useRef<HTMLDivElement>(null);
-    const { scrollYProgress } = useScroll({
-        target: containerRef,
-        offset: ['start 0.8', 'end 0.5']
-    });
-    const lineHeight = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
-
-    return (
-        <section ref={containerRef} className="py-32 md:py-40 relative" id="toc-process">
-            <div className="max-w-7xl mx-auto px-6 lg:px-8">
-                <ScrollReveal className="text-center mb-20">
-                    <div className="flex items-center justify-center gap-4 mb-4">
-                        <span className="w-12 h-[1px] accent-bg" />
-                        <h2 className="text-xs uppercase tracking-[0.5em] accent-text font-bold">The Process</h2>
-                        <span className="w-12 h-[1px] accent-bg" />
-                    </div>
-                    <p className="text-2xl md:text-3xl text-black/60 dark:text-gray-400 font-light font-display mt-6 max-w-2xl mx-auto">
-                        A proven methodology crafted over years of delivering excellence.
-                    </p>
-                </ScrollReveal>
-
-                <div className="relative max-w-3xl mx-auto">
-                    {/* Animated vertical line */}
-                    <div className="absolute left-8 md:left-12 top-0 bottom-0 w-[1px] bg-black/5 dark:bg-white/5">
-                        <motion.div
-                            className="absolute top-0 left-0 w-full bg-gradient-to-b from-[var(--project-accent,#6366f1)] to-[var(--project-accent,#6366f1)]/30"
-                            style={{ height: lineHeight }}
-                        />
-                    </div>
-
-                    {/* Steps */}
-                    <div className="space-y-0">
-                        {PROCESS_STEPS.map((step, i) => (
-                            <ScrollReveal key={i} delay={i * 0.1}>
-                                <div className="relative pl-20 md:pl-28 py-10 md:py-14 group">
-                                    {/* Dot on the line */}
-                                    <div className="absolute left-[25px] md:left-[41px] top-1/2 -translate-y-1/2 z-10">
-                                        <div className="w-5 h-5 md:w-6 md:h-6 rounded-full border-2 border-[var(--project-accent,#6366f1)]/40 bg-white dark:bg-dark-950 flex items-center justify-center group-hover:border-[var(--project-accent,#6366f1)] transition-colors duration-500">
-                                            <div className="w-2 h-2 md:w-2.5 md:h-2.5 rounded-full accent-bg group-hover:scale-125 transition-transform duration-300" />
-                                        </div>
-                                    </div>
-
-                                    {/* Step number watermark */}
-                                    <span className="absolute left-[60px] md:left-[80px] top-1/2 -translate-y-1/2 text-[5rem] md:text-[7rem] font-black text-black/[0.02] dark:text-white/[0.02] leading-none font-display select-none pointer-events-none">
-                                        {String(i + 1).padStart(2, '0')}
-                                    </span>
-
-                                    {/* Content */}
-                                    <div className="relative">
-                                        <h3 className="text-2xl md:text-3xl font-bold text-black dark:text-white font-display mb-3 group-hover:accent-text transition-colors duration-500">
-                                            {step.title}
-                                        </h3>
-                                        <p className="text-sm md:text-base text-black/50 dark:text-gray-500 font-light tracking-wide">
-                                            {step.description}
-                                        </p>
-                                    </div>
-                                </div>
-                            </ScrollReveal>
-                        ))}
-                    </div>
-                </div>
-            </div>
-        </section>
-    );
-}
-
-/* ═══════════════════════════════════════
    W-15: Technology Stack Display
    Animated pill grid with hover effects
    ═══════════════════════════════════════ */
@@ -288,7 +209,6 @@ const TOC_SECTIONS = [
     { id: 'toc-challenge', label: 'Challenge' },
     { id: 'toc-tech', label: 'Technology' },
     { id: 'toc-gallery', label: 'Gallery' },
-    { id: 'toc-process', label: 'Process' },
     { id: 'toc-results', label: 'Results' },
     { id: 'toc-testimonial', label: 'Testimonial' },
     { id: 'toc-related', label: 'Related' },
@@ -543,7 +463,7 @@ export default function WorkDetail() {
                 <motion.div className="absolute inset-0 z-0" style={{ y: heroImageY }}>
                     <div
                         className="absolute inset-0 -top-[20%] -bottom-[20%] bg-cover bg-center"
-                        style={{ backgroundImage: `url(${work.image_url})` }}
+                        style={{ backgroundImage: `url(${work.hero_image_url || work.image_url})` }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-white via-white/50 to-white/20 dark:from-dark-950 dark:via-dark-950/50 dark:to-dark-950/20 transition-colors duration-500" />
                     <div className="absolute inset-0 bg-gradient-to-r from-white/40 to-transparent dark:from-dark-950/40 dark:to-transparent transition-colors duration-500" />
@@ -617,26 +537,61 @@ export default function WorkDetail() {
                 </div>
             </section>
 
-            {/* ═══ CHALLENGE + CONTENT ═══ */}
+            {/* ═══ PROJECT OVERVIEW ═══ */}
             <section className="py-24 md:py-40 relative" id="toc-challenge">
                 <div className="absolute top-0 left-0 h-full w-20 flex items-center justify-center opacity-[0.02] pointer-events-none overflow-hidden select-none">
-                    <span className="text-[10vw] font-black font-display vertical-text tracking-widest leading-none">STRATEGY</span>
+                    <span className="text-[10vw] font-black font-display vertical-text tracking-widest leading-none">OVERVIEW</span>
                 </div>
                 <div className="max-w-7xl mx-auto px-6 lg:px-8">
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 md:gap-20 items-start">
-                        <ScrollReveal delay={0.1} className="lg:col-span-4">
-                            <h2 className="text-xs uppercase tracking-[0.5em] accent-text font-bold mb-10">The Challenge</h2>
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 md:gap-20 items-start mb-24">
+                        {/* LEFT: THE PROBLEM */}
+                        <ScrollReveal delay={0.1} className="lg:col-span-6 lg:pr-12 md:border-r border-black/10 dark:border-white/10">
+                            <h2 className="text-xs uppercase tracking-[0.5em] text-black/40 dark:text-white/40 font-bold mb-8">The Problem</h2>
                             <p className="text-2xl sm:text-3xl md:text-4xl text-black dark:text-white font-light leading-snug font-display transition-colors duration-500">
                                 {work.challenge || work.description}
                             </p>
                         </ScrollReveal>
-                        <ScrollReveal delay={0.3} className="lg:col-span-7 lg:col-start-6">
+
+                        {/* RIGHT: DETAILS */}
+                        <ScrollReveal delay={0.3} className="lg:col-span-5 lg:col-start-8 flex flex-col gap-10 justify-center">
+                            <div>
+                                <h3 className="text-xs uppercase tracking-[0.5em] text-black/40 dark:text-white/40 font-bold mb-3">Client</h3>
+                                <p className="text-lg md:text-xl text-black dark:text-white transition-colors duration-500 font-display whitespace-pre-line leading-relaxed">
+                                    {work.client_description || work.client || 'Confidential'}
+                                </p>
+                            </div>
+                            
+                            {(work.brand_requirements || work.role) && (
+                            <div>
+                                <h3 className="text-xs uppercase tracking-[0.5em] text-black/40 dark:text-white/40 font-bold mb-3">Brand Requirements</h3>
+                                <p className="text-lg md:text-xl text-black dark:text-white transition-colors duration-500 font-display">
+                                    {work.brand_requirements || 'Brand positioning, competitive analysis, and visual identity architecture.'}
+                                </p>
+                            </div>
+                            )}
+
+                            {(work.what_we_did || work.tags) && (
+                            <div>
+                                <h3 className="text-xs uppercase tracking-[0.5em] text-black/40 dark:text-white/40 font-bold mb-3">What We Did</h3>
+                                <p className="text-lg md:text-xl text-black/80 dark:text-gray-300 transition-colors duration-500 font-display">
+                                    {work.what_we_did || (work.tags ? work.tags.join(' · ') : 'Strategy, Design, and Development')}
+                                </p>
+                            </div>
+                            )}
+                        </ScrollReveal>
+                    </div>
+
+                    {/* CENTER BELOW: MARKDOWN CONTENT */}
+                    {work.content && (
+                    <div className="max-w-4xl mx-auto w-full pt-16 mt-16 border-t border-black/10 dark:border-white/10">
+                        <ScrollReveal delay={0.4}>
                             <ComponentRenderer
-                                content={work.content || 'Our architectural approach ensures that every pixel and line of code serves a higher brand purpose...'}
+                                content={work.content}
                                 className="font-light leading-[1.8] text-base sm:text-lg md:text-xl text-black/80 dark:text-gray-300 works-body-text transition-colors duration-500"
                             />
                         </ScrollReveal>
                     </div>
+                    )}
                 </div>
             </section>
 
@@ -723,9 +678,6 @@ export default function WorkDetail() {
                     </div>
                 </section>
             )}
-
-            {/* ═══ W-14: PROCESS TIMELINE ═══ */}
-            <ProcessTimeline />
 
             {/* ═══ W-12: RESULTS / IMPACT ═══ */}
             {results && results.length > 0 && (

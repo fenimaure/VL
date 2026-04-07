@@ -5,6 +5,7 @@ import PageTransition from './components/PageTransition';
 import FloatingContact from './components/FloatingContact';
 import Sidebars from './components/Sidebars';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { SiteConfigProvider } from './contexts/SiteConfigContext';
 
 // Route-based lazy loading — each page is a separate chunk
 const Home = lazy(() => import('./pages/Home'));
@@ -72,7 +73,9 @@ function App() {
   return (
     <ThemeProvider>
       <Router>
-        <AppContent />
+        <SiteConfigProvider>
+          <AppContent />
+        </SiteConfigProvider>
       </Router>
     </ThemeProvider>
   );

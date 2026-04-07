@@ -13,7 +13,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     const [theme, setTheme] = useState<Theme>(() => {
         // Check localStorage for saved theme preference
         const savedTheme = localStorage.getItem('theme') as Theme;
-        const initialTheme = savedTheme || 'light';
+        const initialTheme = savedTheme || 'dark';
 
         // Immediately set the class on document root
         const root = document.documentElement;

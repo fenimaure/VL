@@ -386,6 +386,62 @@ export default function AboutManager() {
         </div>
     );
 
+    async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>, sectionKey: string, field: keyof AboutSection = 'image_url') {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        setUploading(true);
+        try {
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${sectionKey}-${Date.now()}.${fileExt}`;
+            const filePath = `works/${fileName}`;
+            const { error: uploadError } = await supabase.storage.from('assets').upload(filePath, file, { upsert: true });
+            if (uploadError) throw uploadError;
+            const { data: urlData } = supabase.storage.from('assets').getPublicUrl(filePath);
+            if (urlData?.publicUrl) {
+                updateSection(sectionKey, field, urlData.publicUrl);
+                const section = { ...(sections[sectionKey] || {}), section_key: sectionKey, [field]: urlData.publicUrl };
+                await supabase.from('about_content').upsert(section, { onConflict: 'section_key' });
+                showToast('Image uploaded successfully!');
+                fetchContent();
+            }
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            showToast('Failed to upload image', 'error');
+        } finally {
+            setUploading(false);
+        }
+    }
+
+    async function handleItemImageUpload(e: React.ChangeEvent<HTMLInputElement>, sectionKey: string, itemIdx: number, field: string = 'image_url') {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        setUploading(true);
+        try {
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${sectionKey}-${itemIdx}-${Date.now()}.${fileExt}`;
+            const filePath = `works/${fileName}`;
+            const { error: uploadError } = await supabase.storage.from('assets').upload(filePath, file, { upsert: true });
+            if (uploadError) throw uploadError;
+            const { data: urlData } = supabase.storage.from('assets').getPublicUrl(filePath);
+            if (urlData?.publicUrl) {
+                updateItem(sectionKey, itemIdx, field, urlData.publicUrl);
+                
+                const updatedItems = [...(sections[sectionKey]?.items || [])];
+                updatedItems[itemIdx] = { ...updatedItems[itemIdx], [field]: urlData.publicUrl };
+                const section = { ...(sections[sectionKey] || {}), section_key: sectionKey, items: updatedItems };
+                
+                await supabase.from('about_content').upsert(section, { onConflict: 'section_key' });
+                showToast('Image uploaded and saved successfully!');
+                fetchContent();
+            }
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            showToast('Failed to upload image', 'error');
+        } finally {
+            setUploading(false);
+        }
+    }
+
     // ═══════════════════════════════════════════
     //  TAB 3: STORY & NARRATIVE
     // ═══════════════════════════════════════════
@@ -402,9 +458,35 @@ export default function AboutManager() {
                         height={400}
                     />
                 </Field>
-                <Field label="Story Image URL (optional)">
-                    <Input value={sections.story?.image_url || ''} onChange={v => updateSection('story', 'image_url', v)} placeholder="https://example.com/story.jpg" />
-                </Field>
+                <div className="flex items-start gap-8 mt-4">
+                    <div className="flex flex-col items-center gap-3">
+                        <div className="w-48 h-64 rounded-2xl border-2 border-dashed border-white/15 flex items-center justify-center overflow-hidden bg-dark-950">
+                            {sections.story?.image_url ? (
+                                <img src={sections.story.image_url} className="w-full h-full object-cover" alt="Story preview" />
+                            ) : (
+                                <ImageIcon className="h-10 w-10 text-gray-700" />
+                            )}
+                        </div>
+                        <span className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Story Image</span>
+                    </div>
+
+                    <div className="flex-1 space-y-4">
+                        <Field label="Story Image URL (optional)">
+                            <Input value={sections.story?.image_url || ''} onChange={v => updateSection('story', 'image_url', v)} placeholder="https://example.com/story.jpg" />
+                        </Field>
+                        <div>
+                            <input id="story-image-upload" type="file" accept="image/*" onChange={(e) => handleImageUpload(e, 'story')} className="hidden" />
+                            <label
+                                htmlFor="story-image-upload"
+                                className={`inline-flex cursor-pointer items-center gap-2 bg-primary-600 hover:bg-primary-500 text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-colors ${uploading ? 'opacity-50 pointer-events-none' : ''}`}
+                            >
+                                {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                                {uploading ? 'Uploading...' : 'Upload Image'}
+                            </label>
+                            <p className="text-[11px] text-gray-600 mt-2">Upload a portrait image. Used on the homepage split layout.</p>
+                        </div>
+                    </div>
+                </div>
             </SectionCard>
 
             <SectionCard sectionKey="split_narrative" title="📐 Split Narrative Blocks" hint="Alternating image/text chapters. Each block tells a chapter of the agency origin story.">
@@ -424,10 +506,35 @@ export default function AboutManager() {
                             <Field label="Content">
                                 <Input multiline value={block.content || ''} onChange={v => updateItem('split_narrative', idx, 'content', v)} placeholder="It started with a single laptop..." />
                             </Field>
-                            <Field label="Image URL">
-                                <Input value={block.image_url || ''} onChange={v => updateItem('split_narrative', idx, 'image_url', v)} placeholder="https://example.com/chapter.jpg" />
-                            </Field>
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="flex items-start gap-8 mt-4">
+                                <div className="flex flex-col items-center gap-3">
+                                    <div className="w-40 h-48 rounded-2xl border-2 border-dashed border-white/15 flex items-center justify-center overflow-hidden bg-dark-950">
+                                        {block.image_url ? (
+                                            <img src={block.image_url} className="w-full h-full object-cover" alt="Block preview" />
+                                        ) : (
+                                            <ImageIcon className="h-8 w-8 text-gray-700" />
+                                        )}
+                                    </div>
+                                    <span className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Preview</span>
+                                </div>
+                                <div className="flex-1 space-y-4">
+                                    <Field label="Image URL">
+                                        <Input value={block.image_url || ''} onChange={v => updateItem('split_narrative', idx, 'image_url', v)} placeholder="https://example.com/chapter.jpg" />
+                                    </Field>
+                                    <div>
+                                        <input id={`block-image-upload-${idx}`} type="file" accept="image/*" onChange={(e) => handleItemImageUpload(e, 'split_narrative', idx, 'image_url')} className="hidden" />
+                                        <label
+                                            htmlFor={`block-image-upload-${idx}`}
+                                            className={`inline-flex cursor-pointer items-center gap-2 bg-primary-600 hover:bg-primary-500 text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-colors ${uploading ? 'opacity-50 pointer-events-none' : ''}`}
+                                        >
+                                            {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                                            {uploading ? 'Uploading...' : 'Upload Image'}
+                                        </label>
+                                        <p className="text-[11px] text-gray-600 mt-2">Optimal: Portrait ratio (4:5 or 3:4).</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="grid grid-cols-2 gap-4 mt-4">
                                 <Field label="Image Position">
                                     <Select value={block.layout || 'left'} onChange={v => updateItem('split_narrative', idx, 'layout', v)} options={[
                                         { value: 'left', label: 'Image Left / Text Right' },

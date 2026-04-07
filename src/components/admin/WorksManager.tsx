@@ -20,7 +20,11 @@ interface Work {
     live_url: string;
     contact_email: string;
     challenge: string;
+    brand_requirements?: string;
+    what_we_did?: string;
+    client_description?: string;
     is_featured?: boolean;
+    hero_image_url?: string;
 }
 
 export default function WorksManager() {
@@ -57,7 +61,7 @@ export default function WorksManager() {
         }
     }
 
-    async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: 'image_url' | 'hero_image_url' = 'image_url') => {
         try {
             setUploading(true);
             if (!e.target.files || e.target.files.length === 0) return;
@@ -77,7 +81,7 @@ export default function WorksManager() {
                 .from('assets')
                 .getPublicUrl(filePath);
 
-            setFormData(prev => ({ ...prev, image_url: publicUrl }));
+            setFormData(prev => ({ ...prev, [field]: publicUrl }));
             alert('Image uploaded successfully!');
         } catch (error) {
             console.error('Error uploading image:', error);
@@ -85,7 +89,7 @@ export default function WorksManager() {
         } finally {
             setUploading(false);
         }
-    }
+    };
 
     function handleEdit(work: Work) {
         setEditing(work);
@@ -95,8 +99,8 @@ export default function WorksManager() {
 
     function handleAddNew() {
         const defaultCategory = services.length > 0 ? services[0].title : 'General';
-        setEditing({ id: '', title: '', category: '', description: '', image_url: '', tags: [], slug: '', content: '', client: '', duration: '', role: '', live_url: '', contact_email: '', challenge: '', is_featured: false });
-        setFormData({ title: '', category: defaultCategory, description: '', image_url: '', tags: [], slug: '', content: '', client: '', duration: '', role: '', live_url: '', contact_email: '', challenge: '', is_featured: false });
+        setEditing({ id: '', title: '', category: '', description: '', image_url: '', hero_image_url: '', tags: [], slug: '', content: '', client: '', duration: '', role: '', live_url: '', contact_email: '', challenge: '', brand_requirements: '', what_we_did: '', client_description: '', is_featured: false });
+        setFormData({ title: '', category: defaultCategory, description: '', image_url: '', hero_image_url: '', tags: [], slug: '', content: '', client: '', duration: '', role: '', live_url: '', contact_email: '', challenge: '', brand_requirements: '', what_we_did: '', client_description: '', is_featured: false });
         setIsNew(true);
     }
 
@@ -170,17 +174,18 @@ export default function WorksManager() {
             </div>
 
             {editing && createPortal(
-                <div className="fixed inset-0 bg-black/90 flex items-center justify-center p-4 z-[100]">
-                    <div className="bg-dark-900 border border-white/10 rounded-xl p-6 w-full h-full max-w-[1600px] max-h-[95vh] overflow-y-auto shadow-2xl relative">
-                        <div className="flex justify-between items-center mb-6 sticky top-0 bg-dark-900/95 backdrop-blur-sm z-10 py-2 border-b border-white/5">
+                <div className="fixed inset-0 bg-black/90 p-4 sm:p-6 lg:p-8 z-[100] flex justify-center items-center">
+                    <div className="bg-dark-900 border border-white/10 rounded-xl w-full max-w-[1600px] h-full flex flex-col shadow-2xl relative overflow-hidden">
+                        <div className="flex justify-between items-center px-6 py-4 border-b border-white/5 bg-dark-900/95 z-20 shrink-0">
                             <h3 className="text-xl font-bold text-white">{isNew ? 'New Work' : 'Edit Work'}</h3>
-                            <button onClick={() => setEditing(null)} className="text-gray-400 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors">
+                            <button type="button" onClick={() => setEditing(null)} className="text-gray-400 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors">
                                 <X className="h-6 w-6" />
                             </button>
                         </div>
 
-                        <form onSubmit={handleSave} className="space-y-6">
-                            {/* Homepage Card Section */}
+                        <div className="flex-1 overflow-y-auto relative z-10 w-full h-full min-h-0 bg-dark-900">
+                            <form id="edit-work-form" onSubmit={handleSave} className="p-6 space-y-6">
+                                {/* Homepage Card Section */}
                             <div className="bg-white/5 p-6 rounded-2xl space-y-4 border border-white/5">
                                 <h4 className="text-sm font-bold text-primary-400 uppercase tracking-wider mb-2 flex items-center gap-2">
                                     <span className="w-2 h-2 rounded-full bg-primary-500"></span>
@@ -255,22 +260,76 @@ export default function WorksManager() {
                                                 id="work-image-upload"
                                                 className="hidden"
                                                 accept="image/*"
-                                                onChange={handleUpload}
+                                                onChange={(e) => handleUpload(e, 'image_url')}
                                                 disabled={uploading}
                                             />
                                             <label
                                                 htmlFor="work-image-upload"
-                                                className={`flex items-center justify-center gap-3 w-full py-4 border-2 border-dashed border-white/10 rounded-xl cursor-pointer hover:border-primary-500/50 hover:bg-white/5 transition-all duration-300 ${uploading ? 'opacity-50 pointer-events-none' : ''}`}
+                                                className={`flex flex-col items-center justify-center gap-2 w-full py-6 border-2 border-dashed border-white/10 rounded-xl cursor-pointer hover:border-primary-500/50 hover:bg-white/5 transition-all duration-300 ${uploading ? 'opacity-50 pointer-events-none' : ''}`}
                                             >
                                                 {uploading ? (
                                                     <>
-                                                        <Loader2 className="h-5 w-5 animate-spin text-primary-500" />
+                                                        <Loader2 className="h-6 w-6 animate-spin text-primary-500 mb-1" />
                                                         <span className="text-sm font-bold uppercase tracking-wider text-white/40">Uploading...</span>
                                                     </>
                                                 ) : (
                                                     <>
-                                                        <Upload className="h-5 w-5 text-primary-500 group-hover:scale-110 transition-transform" />
-                                                        <span className="text-sm font-bold uppercase tracking-wider text-white/40 group-hover:text-white/60">Upload New Image</span>
+                                                        <Upload className="h-6 w-6 text-primary-500 group-hover:scale-110 mb-1 transition-transform" />
+                                                        <span className="text-sm font-bold uppercase tracking-wider text-white/40 group-hover:text-white/60">Upload Thumbnail Image</span>
+                                                    </>
+                                                )}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm text-gray-400 mb-2 font-medium">Hero Background Image (Optional)</label>
+                                    <p className="text-xs text-white/30 mb-4">Leave empty to use the Thumbnail Image. Recommended size for hero: 1920x1080px (16:9)</p>
+                                    <div className="flex flex-col gap-4">
+                                        <div className="flex gap-4">
+                                            <div className="flex-1">
+                                                <div className="flex gap-2">
+                                                    <input
+                                                        type="text"
+                                                        value={formData.hero_image_url || ''}
+                                                        onChange={(e) => setFormData({ ...formData, hero_image_url: e.target.value })}
+                                                        className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary-500 outline-none transition-all"
+                                                        placeholder="Hero Image URL"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="w-16 h-16 bg-black/50 rounded-xl flex items-center justify-center border border-white/10 overflow-hidden shrink-0 shadow-lg">
+                                                {formData.hero_image_url ? (
+                                                    <img src={formData.hero_image_url} alt="Preview" className="w-full h-full object-cover" />
+                                                ) : (
+                                                    <ImageIcon className="h-6 w-6 text-gray-600" />
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        <div className="relative group">
+                                            <input
+                                                type="file"
+                                                id="hero-image-upload"
+                                                className="hidden"
+                                                accept="image/*"
+                                                onChange={(e) => handleUpload(e, 'hero_image_url')}
+                                                disabled={uploading}
+                                            />
+                                            <label
+                                                htmlFor="hero-image-upload"
+                                                className={`flex flex-col items-center justify-center gap-2 w-full py-6 border-2 border-dashed border-white/10 rounded-xl cursor-pointer hover:border-primary-500/50 hover:bg-white/5 transition-all duration-300 ${uploading ? 'opacity-50 pointer-events-none' : ''}`}
+                                            >
+                                                {uploading ? (
+                                                    <>
+                                                        <Loader2 className="h-6 w-6 animate-spin text-primary-500 mb-1" />
+                                                        <span className="text-sm font-bold uppercase tracking-wider text-white/40">Uploading...</span>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <Upload className="h-6 w-6 text-primary-500 group-hover:scale-110 mb-1 transition-transform" />
+                                                        <span className="text-sm font-bold uppercase tracking-wider text-white/40 group-hover:text-white/60">Upload Hero Image</span>
                                                     </>
                                                 )}
                                             </label>
@@ -329,9 +388,35 @@ export default function WorksManager() {
                                             placeholder="Describe the main challenge or problem solved..."
                                         />
                                     </div>
-                                    <div>
-                                        <label className="block text-sm text-gray-400 mb-2 font-medium">Client Name</label>
-                                        <input className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-secondary-500 outline-none transition-all" value={formData.client || ''} onChange={e => setFormData({ ...formData, client: e.target.value })} />
+                                    <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <label className="block text-sm text-gray-400 mb-2 font-medium">Brand Requirements</label>
+                                            <textarea
+                                                value={formData.brand_requirements || ''}
+                                                onChange={(e) => setFormData({ ...formData, brand_requirements: e.target.value })}
+                                                className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-secondary-500 outline-none h-24 resize-none transition-all"
+                                                placeholder="Brand requirements for the project..."
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm text-gray-400 mb-2 font-medium">What We Did</label>
+                                            <textarea
+                                                value={formData.what_we_did || ''}
+                                                onChange={(e) => setFormData({ ...formData, what_we_did: e.target.value })}
+                                                className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-secondary-500 outline-none h-24 resize-none transition-all"
+                                                placeholder="Key deliverables and services provided..."
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <label className="block text-sm text-gray-400 mb-2 font-medium">Client Name</label>
+                                            <input className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-secondary-500 outline-none transition-all" value={formData.client || ''} onChange={e => setFormData({ ...formData, client: e.target.value })} />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm text-gray-400 mb-2 font-medium">Client Description (Optional)</label>
+                                            <textarea className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-secondary-500 outline-none transition-all h-12 resize-none" placeholder="Extended details about the client..." value={formData.client_description || ''} onChange={e => setFormData({ ...formData, client_description: e.target.value })} />
+                                        </div>
                                     </div>
                                     <div>
                                         <label className="block text-sm text-gray-400 mb-2 font-medium">Year</label>
@@ -359,23 +444,25 @@ export default function WorksManager() {
                                     </div>
                                 </div>
                             </div>
-
-                            <div className="flex justify-end gap-3 pt-4 border-t border-white/5 sticky bottom-0 bg-dark-900/95 backdrop-blur-sm p-4 -mx-6 -mb-6 rounded-b-xl z-10">
-                                <button
-                                    type="button"
-                                    onClick={() => setEditing(null)}
-                                    className="px-6 py-3 text-gray-400 hover:text-white transition-colors font-bold uppercase tracking-wider text-xs"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-500 hover:to-secondary-500 text-white px-8 py-3 rounded-xl transition-all shadow-lg shadow-primary-500/20 hover:shadow-primary-500/40 flex items-center gap-2 font-bold uppercase tracking-wider text-xs"
-                                >
-                                    <Save className="h-4 w-4" /> Save Work
-                                </button>
-                            </div>
                         </form>
+                    </div>
+
+                        <div className="flex justify-end gap-3 px-6 py-4 border-t border-white/5 bg-dark-900/95 z-20 shrink-0 relative">
+                            <button
+                                type="button"
+                                onClick={() => setEditing(null)}
+                                className="px-6 py-3 text-gray-400 hover:text-white transition-colors font-bold uppercase tracking-wider text-xs"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="submit"
+                                form="edit-work-form"
+                                className="bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-500 hover:to-secondary-500 text-white px-8 py-3 rounded-xl transition-all shadow-lg shadow-primary-500/20 hover:shadow-primary-500/40 flex items-center gap-2 font-bold uppercase tracking-wider text-xs"
+                            >
+                                <Save className="h-4 w-4" /> Save Work
+                            </button>
+                        </div>
                     </div>
                 </div>,
                 document.body

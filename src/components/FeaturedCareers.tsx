@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { Link } from 'react-router-dom';
-import { Briefcase, ArrowUpRight, Sparkles } from 'lucide-react';
+import { ArrowUpRight, Briefcase } from 'lucide-react';
+import { motion } from 'framer-motion';
+import MagneticHover from './MagneticHover';
 
 interface Career {
     id: string;
@@ -20,14 +22,12 @@ export default function FeaturedCareers() {
     useEffect(() => {
         async function fetchCareers() {
             try {
-                // Fetch only the latest 3 active careers
                 const { data, error } = await supabase
                     .from('careers')
                     .select('*')
                     .eq('is_active', true)
                     .order('created_at', { ascending: false })
-                    .limit(3);
-
+                    .limit(4);
                 if (error) throw error;
                 setCareers(data || []);
             } catch (error) {
@@ -39,120 +39,125 @@ export default function FeaturedCareers() {
         fetchCareers();
     }, []);
 
-    // Intersection Observer for animations
-    useEffect(() => {
-        if (loading || careers.length === 0) return;
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.05 });
-
-        const items = document.querySelectorAll('#careers .stagger-item');
-        items.forEach(item => observer.observe(item));
-
-        return () => observer.disconnect();
-    }, [loading, careers]);
-
-
     return (
-        <section id="careers" className="py-24 relative overflow-hidden bg-white dark:bg-dark-950 transition-colors duration-500">
-            {/* Dynamic Background Elements */}
-            <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-primary-500/5 blur-[120px] rounded-full animate-pulse-slow"></div>
-                <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-primary-500/5 blur-[120px] rounded-full animate-pulse-slow" style={{ animationDelay: '3s' }}></div>
-            </div>
-
+        <section id="careers" className="py-32 md:py-40 relative overflow-hidden bg-white dark:bg-black transition-colors duration-500">
             <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
-                {/* Section Header */}
-                <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8 stagger-item">
-                    <div className="max-w-xl">
-                        <div className="flex items-center gap-3 mb-6">
-                            <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary-500/10 text-primary-500">
-                                <Sparkles className="w-4 h-4 fill-current" />
-                            </span>
-                            <span className="text-primary-500 font-bold tracking-[0.3em] text-[10px] uppercase">
-                                Join Our Vision
-                            </span>
-                        </div>
-                        <h2 className="text-5xl md:text-6xl font-bold font-display text-black dark:text-white transition-colors duration-500 leading-tight">
-                            Build the <span className="text-stroke-light dark:text-stroke-white italic font-light font-serif">Future</span> With Us.
-                        </h2>
-                    </div>
 
-                    <Link
-                        to="/careers"
-                        className="group relative px-8 py-4 bg-black dark:bg-white text-white dark:text-black rounded-full text-xs font-bold uppercase tracking-[0.2em] transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-primary-500/20 overflow-hidden"
+                {/* ── Editorial Header ── */}
+                <div className="mb-24 md:mb-32">
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                        className="flex items-center gap-4 mb-8"
                     >
-                        <span className="relative z-10 flex items-center gap-3">
-                            View All Openings
-                            <ArrowUpRight className="h-4 w-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                        <span className="w-16 h-[1px] bg-primary-500" />
+                        <span className="text-primary-500 font-bold tracking-[0.4em] text-[10px] uppercase">
+                            Open Positions
                         </span>
-                        <div className="absolute inset-0 bg-primary-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0"></div>
-                    </Link>
+                    </motion.div>
+
+                    <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-10">
+                        <motion.h2
+                            initial={{ opacity: 0, y: 40 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                            className="text-5xl md:text-7xl lg:text-8xl font-bold font-display text-black dark:text-white leading-[0.9] tracking-tighter transition-colors duration-500"
+                        >
+                            Join the<br />
+                            <span className="text-stroke-light dark:text-stroke-white italic font-light font-serif">Studio.</span>
+                        </motion.h2>
+
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                            className="max-w-md"
+                        >
+                            <p className="text-black/50 dark:text-white/40 text-lg font-light leading-relaxed mb-8">
+                                We're always looking for exceptional people who push boundaries and challenge convention.
+                            </p>
+                            <MagneticHover strength={0.2}>
+                                <Link
+                                    to="/careers"
+                                    className="group inline-flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.3em] text-black dark:text-white hover:text-primary-500 transition-colors duration-300"
+                                >
+                                    <span>View All Openings</span>
+                                    <ArrowUpRight className="h-4 w-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" />
+                                </Link>
+                            </MagneticHover>
+                        </motion.div>
+                    </div>
                 </div>
 
-                <div className="grid grid-cols-1 gap-6">
-                    {careers.length > 0 ? (
-                        careers.map((job) => (
-                            <Link
-                                to={`/careers/${job.slug}`}
+                {/* ── Editorial Role Listings ── */}
+                {careers.length > 0 ? (
+                    <div className="border-t border-black/10 dark:border-white/10">
+                        {careers.map((job, i) => (
+                            <motion.div
                                 key={job.id}
-                                className="group stagger-item relative block"
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true, margin: "-50px" }}
+                                transition={{ duration: 0.8, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
                             >
-                                <div className="relative overflow-hidden bg-white/50 dark:bg-white/[0.03] backdrop-blur-md border border-black/5 dark:border-white/5 p-8 md:p-10 rounded-[2rem] transition-all duration-500 hover:border-black/10 dark:hover:border-white/20 hover:bg-white dark:hover:bg-white/[0.06] hover:shadow-2xl hover:shadow-black/5 dark:hover:shadow-black/50">
-                                    {/* Animated Gradient Border Effect */}
-                                    <div className="absolute inset-x-0 bottom-0 h-[2px] bg-gradient-to-r from-transparent via-primary-500 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-700"></div>
+                                <Link
+                                    to={`/careers/${job.slug}`}
+                                    className="group block border-b border-black/10 dark:border-white/10 transition-colors duration-500"
+                                >
+                                    <div className="py-10 md:py-14 flex items-start md:items-center gap-6 md:gap-10">
+                                        {/* Index */}
+                                        <span className="text-[11px] font-bold text-black/20 dark:text-white/15 tracking-wider pt-2 md:pt-0 select-none min-w-[2rem]">
+                                            {String(i + 1).padStart(2, '0')}
+                                        </span>
 
-                                    <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
-                                        <div className="flex-1">
-                                            <div className="flex flex-wrap items-center gap-4 text-[10px] font-bold tracking-[0.2em] uppercase mb-4">
-                                                <span className="px-3 py-1 rounded-full border border-primary-500/20 text-primary-500 bg-primary-500/5">
+                                        {/* Content */}
+                                        <div className="flex-1 flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-8">
+                                            <div className="flex-1">
+                                                <h3 className="text-2xl md:text-4xl font-bold font-display text-black dark:text-white group-hover:text-primary-500 transition-colors duration-500 leading-tight tracking-tight mb-2 md:mb-0">
+                                                    {job.title}
+                                                </h3>
+                                                {/* Description teaser — editorial intro */}
+                                                <p className="text-sm text-black/40 dark:text-white/30 font-light line-clamp-1 max-w-lg md:hidden">
+                                                    {job.description}
+                                                </p>
+                                            </div>
+
+                                            {/* Meta pills — clean & minimal */}
+                                            <div className="flex items-center gap-6 flex-shrink-0">
+                                                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-black/30 dark:text-white/25 hidden sm:block">
                                                     {job.department}
                                                 </span>
-                                                <span className="text-black/30 dark:text-white/30">•</span>
-                                                <span className="text-black/60 dark:text-white/60">
+                                                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-black/30 dark:text-white/25 hidden lg:block">
                                                     {job.location}
                                                 </span>
+                                                <span className="text-[10px] font-bold uppercase tracking-[0.2em] px-3 py-1.5 rounded-full border border-black/8 dark:border-white/8 text-black/40 dark:text-white/30">
+                                                    {job.type}
+                                                </span>
                                             </div>
-
-                                            <h3 className="text-3xl md:text-4xl font-bold font-display text-black dark:text-white group-hover:text-primary-500 dark:group-hover:text-primary-400 transition-colors duration-300 mb-2">
-                                                {job.title}
-                                            </h3>
                                         </div>
 
-                                        <div className="flex items-center justify-between md:justify-end gap-10 min-w-[200px]">
-                                            <span className="hidden md:block text-xs font-bold uppercase tracking-widest text-black/40 dark:text-white/40 group-hover:text-black dark:group-hover:text-white transition-colors duration-300">
-                                                {job.type}
-                                            </span>
-
-                                            <div className="relative w-14 h-14">
-                                                <div className="absolute inset-0 rounded-full border border-black/10 dark:border-white/10 group-hover:border-primary-500 dark:group-hover:border-primary-400 transition-colors duration-500"></div>
-                                                <div className="absolute inset-0 rounded-full bg-black dark:bg-white scale-0 group-hover:scale-100 transition-transform duration-500 origin-center"></div>
-                                                <div className="absolute inset-0 flex items-center justify-center">
-                                                    <ArrowUpRight className="h-6 w-6 text-black dark:text-white group-hover:text-white dark:group-hover:text-black transition-colors duration-300 group-hover:rotate-45" />
-                                                </div>
-                                            </div>
+                                        {/* Arrow */}
+                                        <div className="w-10 h-10 rounded-full border border-black/10 dark:border-white/10 flex items-center justify-center flex-shrink-0 group-hover:bg-black group-hover:border-black dark:group-hover:bg-white dark:group-hover:border-white transition-all duration-500">
+                                            <ArrowUpRight className="h-4 w-4 text-black/30 dark:text-white/30 group-hover:text-white dark:group-hover:text-black transition-colors duration-300" />
                                         </div>
                                     </div>
-                                </div>
-                            </Link>
-                        ))
-                    ) : (
-                        <div className="text-center py-24 rounded-[2rem] border border-dashed border-black/10 dark:border-white/10 stagger-item bg-white/30 dark:bg-white/5 backdrop-blur-sm">
-                            <div className="w-16 h-16 bg-black/5 dark:bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6">
-                                <Briefcase className="h-6 w-6 text-black/40 dark:text-white/40" />
-                            </div>
-                            <h3 className="text-xl font-bold text-black dark:text-white mb-2">No Open Roles</h3>
-                            <p className="text-black/40 dark:text-white/40 text-sm font-bold uppercase tracking-widest">
-                                Check back soon for new opportunities
-                            </p>
-                        </div>
-                    )}
-                </div>
+                                </Link>
+                            </motion.div>
+                        ))}
+                    </div>
+                ) : !loading ? (
+                    <div className="text-center py-24 border-t border-black/10 dark:border-white/10">
+                        <Briefcase className="h-8 w-8 text-black/20 dark:text-white/15 mx-auto mb-6" />
+                        <h3 className="text-xl font-bold text-black dark:text-white mb-2">No Open Roles</h3>
+                        <p className="text-black/40 dark:text-white/30 text-sm font-light">
+                            Check back soon for new opportunities
+                        </p>
+                    </div>
+                ) : null}
             </div>
         </section>
     );
