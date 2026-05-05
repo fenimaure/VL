@@ -895,7 +895,7 @@ export default function AboutManager() {
 
     return (
         <AboutManagerContext.Provider value={{ saving, onSave: handleSave, onBatchSave: handleSaveMultiple }}>
-        <div className="space-y-6 pb-20 relative">
+        <div className="pb-20 animate-in fade-in duration-500 relative">
             {/* Toast Notification */}
             {toast && (
                 <div className={`fixed top-24 right-8 z-[9999] px-6 py-3.5 rounded-2xl text-sm font-bold shadow-2xl border transition-all animate-fade-in ${
@@ -907,48 +907,61 @@ export default function AboutManager() {
                 </div>
             )}
 
-            {/* Page Header */}
-            <div className="flex items-center justify-between">
+            {/* STICKY HEADER */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 sticky top-0 z-20 bg-dark-950/80 backdrop-blur-md py-6 border-b border-white/5 gap-4">
                 <div>
-                    <h2 className="text-2xl font-bold text-white font-display tracking-tight">About & Site Settings</h2>
-                    <p className="text-sm text-gray-500 mt-1">Manage all content sections for the Homepage, About page, and site-wide settings.</p>
+                    <h2 className="text-3xl font-bold text-white font-display tracking-tight">About & Site Story</h2>
+                    <p className="text-sm text-gray-500 mt-1">Global narrative and brand identity settings.</p>
                 </div>
-                <a href="/about" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs font-bold text-gray-400 hover:text-primary-400 transition-colors px-4 py-2 rounded-xl border border-white/10 hover:border-primary-500/30">
-                    <Eye className="h-3.5 w-3.5" /> Preview About Page
-                </a>
+                <div className="flex items-center gap-3">
+                    <a href="/about" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-white transition-all px-5 py-3 rounded-full border border-white/10 hover:border-white/20 bg-white/5">
+                        <Eye className="h-4 w-4" /> Live Preview
+                    </a>
+                    {saving === 'batch' && (
+                         <div className="bg-primary-600/20 text-primary-400 px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
+                            <Loader2 className="h-4 w-4 animate-spin" /> Saving All...
+                         </div>
+                    )}
+                </div>
             </div>
 
-            {/* Tab Navigation */}
-            <div className="flex gap-1 bg-white/[0.03] p-1.5 rounded-2xl border border-white/[0.06] overflow-x-auto scrollbar-hide">
-                {TABS.map(tab => {
-                    const Icon = tab.icon;
-                    const isActive = activeTab === tab.id;
-                    return (
-                        <button
-                            key={tab.id}
-                            onClick={() => setActiveTab(tab.id)}
-                            className={`flex items-center gap-2.5 px-4 py-3 rounded-xl text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-all duration-300 ${
-                                isActive
-                                    ? 'bg-primary-500/15 text-primary-400 shadow-sm'
-                                    : 'text-gray-500 hover:text-white hover:bg-white/[0.04]'
-                            }`}
-                            title={tab.description}
-                        >
-                            <Icon className={`h-4 w-4 ${isActive ? 'text-primary-400' : 'text-gray-600'}`} />
-                            <span className="hidden md:inline">{tab.label}</span>
-                        </button>
-                    );
-                })}
-            </div>
+            <div className="max-w-5xl mx-auto space-y-12">
+                {/* Tab Navigation */}
+                <div className="bg-white/[0.02] p-2 rounded-[2rem] border border-white/5 shadow-2xl">
+                    <div className="flex gap-1 overflow-x-auto scrollbar-hide">
+                        {TABS.map(tab => {
+                            const Icon = tab.icon;
+                            const isActive = activeTab === tab.id;
+                            return (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => setActiveTab(tab.id)}
+                                    className={`flex items-center gap-3 px-6 py-4 rounded-[1.5rem] text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all duration-500 ${
+                                        isActive
+                                            ? 'bg-primary-600 text-white shadow-xl shadow-primary-600/20'
+                                            : 'text-gray-500 hover:text-white hover:bg-white/5'
+                                    }`}
+                                >
+                                    <Icon className={`h-4 w-4 ${isActive ? 'text-white' : 'text-gray-600'}`} />
+                                    {tab.label}
+                                </button>
+                            );
+                        })}
+                    </div>
+                </div>
 
-            {/* Tab Description */}
-            <p className="text-xs text-gray-500 px-1">
-                {TABS.find(t => t.id === activeTab)?.description}
-            </p>
+                {/* Tab Description */}
+                <div className="px-4 py-3 bg-primary-500/5 border border-primary-500/10 rounded-2xl inline-flex items-center gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary-500 animate-pulse" />
+                    <p className="text-[10px] font-bold text-primary-400 uppercase tracking-widest">
+                        Editing: {TABS.find(t => t.id === activeTab)?.description}
+                    </p>
+                </div>
 
-            {/* Active Tab Content */}
-            <div className="animate-fade-in">
-                {tabContent[activeTab]()}
+                {/* Active Tab Content */}
+                <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+                    {tabContent[activeTab]()}
+                </div>
             </div>
         </div>
         </AboutManagerContext.Provider>

@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
-import { Plus, Trash2, Edit2, X, Save, Image as ImageIcon, Link, List } from 'lucide-react';
+import { Plus, Trash2, Edit2, X, Save, Image as ImageIcon, Link, List, CheckCircle2, AlertCircle, ChevronLeft } from 'lucide-react';
 import MarkdownEditor from './MarkdownEditor';
 import * as Icons from 'lucide-react';
 
@@ -15,9 +15,163 @@ interface Service {
     content: string;
     image_url: string;
     icon_url?: string;
-    features: string[];
-    card_media_type?: 'image' | 'video'; // UI-only field, encoded into icon_name
-    card_tags?: string; // UI-only field, encoded into icon_name
+    features: any[];
+    subtitle?: string;
+    color_accent?: string;
+    tools_used?: string[];
+    stats?: any[];
+    pricing_tiers?: any[];
+    process_steps?: any[];
+    deliverables?: any[];
+    faqs?: any[];
+    card_media_type?: 'image' | 'video';
+    card_tags?: string;
+}
+
+/** 
+ * HELPER COMPONENT: ListEditor
+ * Provides a user-friendly UI for managing arrays of objects (JSONB)
+ */
+function ListEditor<T extends Record<string, any>>({
+    label,
+    items = [],
+    onChange,
+    fields,
+    itemLabelField
+}: {
+    label: string;
+    items: T[];
+    onChange: (items: T[]) => void;
+    fields: { key: keyof T; label: string; type: 'text' | 'textarea' | 'checkbox' | 'list' }[];
+    itemLabelField: keyof T;
+}) {
+    const [editingIdx, setEditingIdx] = useState<number | null>(null);
+    const [tempItem, setTempItem] = useState<Partial<T>>({});
+
+    const handleAdd = () => {
+        setEditingIdx(-1);
+        setTempItem({});
+    };
+
+    const handleEdit = (idx: number) => {
+        setEditingIdx(idx);
+        setTempItem({ ...items[idx] });
+    };
+
+    const handleRemove = (idx: number) => {
+        const newItems = [...items];
+        newItems.splice(idx, 1);
+        onChange(newItems);
+    };
+
+    const handleSaveItem = () => {
+        const newItems = [...items];
+        if (editingIdx === -1) {
+            newItems.push(tempItem as T);
+        } else if (editingIdx !== null) {
+            newItems[editingIdx] = tempItem as T;
+        }
+        onChange(newItems);
+        setEditingIdx(null);
+    };
+
+    return (
+        <div className="bg-white/5 p-4 rounded-xl border border-white/5 space-y-4">
+            <div className="flex justify-between items-center">
+                <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest">{label}</h4>
+                <button
+                    type="button"
+                    onClick={handleAdd}
+                    className="flex items-center gap-1 text-[10px] font-bold uppercase bg-primary-600/20 text-primary-400 px-2 py-1 rounded hover:bg-primary-600/40 transition-colors"
+                >
+                    <Plus className="h-3 w-3" /> Add Item
+                </button>
+            </div>
+
+            {/* List of items */}
+            <div className="space-y-2">
+                {items.length === 0 && !editingIdx && (
+                    <p className="text-xs text-gray-600 italic">No items added yet.</p>
+                )}
+                {items.map((item, idx) => (
+                    <div key={idx} className="flex items-center justify-between p-3 bg-dark-950/50 rounded-lg border border-white/5 group">
+                        <span className="text-sm text-gray-300 font-medium">
+                            {String(item[itemLabelField] || `Item ${idx + 1}`)}
+                        </span>
+                        <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button type="button" onClick={() => handleEdit(idx)} className="p-1 hover:text-white transition-colors"><Edit2 className="h-3.5 w-3.5" /></button>
+                            <button type="button" onClick={() => handleRemove(idx)} className="p-1 hover:text-red-400 transition-colors"><Trash2 className="h-3.5 w-3.5" /></button>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            {/* Inline Editor Modal/Overlay */}
+            {editingIdx !== null && (
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
+                    <div className="bg-dark-900 border border-white/10 rounded-xl p-6 w-full max-w-lg shadow-2xl">
+                        <h5 className="text-lg font-bold text-white mb-6">
+                            {editingIdx === -1 ? `Add ${label} Item` : `Edit ${label} Item`}
+                        </h5>
+                        <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-2 scrollbar-hide">
+                            {fields.map(f => (
+                                <div key={String(f.key)}>
+                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-1.5">{f.label}</label>
+                                    {f.type === 'text' && (
+                                        <input
+                                            type="text"
+                                            value={tempItem[f.key] || ''}
+                                            onChange={e => setTempItem({ ...tempItem, [f.key]: e.target.value })}
+                                            className="w-full bg-dark-950 border border-white/10 rounded-lg px-4 py-2 text-white text-sm"
+                                        />
+                                    )}
+                                    {f.type === 'textarea' && (
+                                        <textarea
+                                            value={tempItem[f.key] || ''}
+                                            onChange={e => setTempItem({ ...tempItem, [f.key]: e.target.value })}
+                                            className="w-full bg-dark-950 border border-white/10 rounded-lg px-4 py-2 text-white text-sm h-24 resize-none"
+                                        />
+                                    )}
+                                    {f.type === 'checkbox' && (
+                                        <div className="flex items-center gap-2">
+                                            <input
+                                                type="checkbox"
+                                                checked={!!tempItem[f.key]}
+                                                onChange={e => setTempItem({ ...tempItem, [f.key]: e.target.checked })}
+                                                className="w-4 h-4 rounded bg-dark-950 border-white/10 text-primary-600"
+                                            />
+                                            <span className="text-xs text-gray-400">Yes / Enable</span>
+                                        </div>
+                                    )}
+                                    {f.type === 'list' && (
+                                        <div className="space-y-2">
+                                            <textarea
+                                                value={Array.isArray(tempItem[f.key]) ? (tempItem[f.key] as string[]).join('\n') : ''}
+                                                onChange={e => setTempItem({ ...tempItem, [f.key]: e.target.value.split('\n').filter(Boolean) })}
+                                                className="w-full bg-dark-950 border border-white/10 rounded-lg px-4 py-2 text-white text-xs h-20 font-mono"
+                                                placeholder="Enter items, one per line..."
+                                            />
+                                            <p className="text-[10px] text-gray-600">Enter each feature/item on a new line.</p>
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                        <div className="flex justify-end gap-3 mt-8 pt-4 border-t border-white/5">
+                            <button type="button" onClick={() => setEditingIdx(null)} className="px-4 py-2 text-sm text-gray-400 hover:text-white transition-colors">Cancel</button>
+                            <button
+                                type="button"
+                                onClick={handleSaveItem}
+                                className="bg-primary-600 hover:bg-primary-500 text-white px-6 py-2 rounded-lg text-sm font-bold transition-all shadow-lg shadow-primary-600/20"
+                            >
+                                Apply Changes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
 }
 
 /** Decode tags that were encoded into icon_name as "tags:Tag1,Tag2,Tag3" */
@@ -157,251 +311,380 @@ export default function ServicesManager() {
         return clean;
     };
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) return (
+        <div className="flex items-center justify-center py-20">
+            <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary-500 border-t-transparent"></div>
+        </div>
+    );
 
-    return (
-        <div className="space-y-6">
-            <div className="flex justify-between items-center">
-                <h2 className="text-xl font-bold text-white">Manage Services</h2>
-                <button onClick={handleAddNew} className="flex items-center gap-2 bg-primary-600 hover:bg-primary-500 text-white px-4 py-2 rounded-lg">
-                    <Plus className="h-4 w-4" /> Add Service
-                </button>
-            </div>
+    // FULL PAGE EDITOR VIEW
+    if (editing) {
+        return (
+            <div className="max-w-5xl mx-auto pb-20 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="flex items-center justify-between mb-8 sticky top-0 z-20 bg-dark-950/80 backdrop-blur-md py-4 border-b border-white/5">
+                    <div className="flex items-center gap-4">
+                        <button
+                            onClick={() => setEditing(null)}
+                            className="p-2 hover:bg-white/5 rounded-xl text-gray-400 hover:text-white transition-all"
+                        >
+                            <ChevronLeft className="h-6 w-6" />
+                        </button>
+                        <div>
+                            <h2 className="text-2xl font-bold text-white font-display">
+                                {isNew ? 'Create New Service' : `Edit ${editing.title}`}
+                            </h2>
+                            <p className="text-sm text-gray-500">Configure your service offerings and appearance.</p>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <button
+                            type="button"
+                            onClick={() => setEditing(null)}
+                            className="px-6 py-2.5 text-sm font-bold text-gray-400 hover:text-white transition-colors"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            onClick={handleSave}
+                            className="bg-primary-600 hover:bg-primary-500 text-white px-8 py-2.5 rounded-full flex items-center gap-2 font-bold shadow-xl shadow-primary-600/20 transition-all active:scale-95"
+                        >
+                            <Save className="h-5 w-5" /> Save Changes
+                        </button>
+                    </div>
+                </div>
 
-            {editing && (
-                <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
-                    <div className="bg-dark-900 border border-white/10 rounded-xl p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-                        <div className="flex justify-between items-center mb-6">
-                            <h3 className="text-xl font-bold text-white">{isNew ? 'New Service' : 'Edit Service'}</h3>
-                            <button onClick={() => setEditing(null)} className="text-gray-400 hover:text-white">
-                                <X className="h-6 w-6" />
-                            </button>
+                <form onSubmit={handleSave} className="space-y-12">
+                    {/* SECTION 1: CORE CARD INFO */}
+                    <div className="space-y-6">
+                        <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-full bg-primary-600/20 flex items-center justify-center text-primary-400 text-xs font-bold">1</div>
+                            <h4 className="text-sm font-bold text-white uppercase tracking-widest">Card Appearance</h4>
                         </div>
 
-                        <form onSubmit={handleSave} className="space-y-6">
-                            {/* Basic Info */}
-                            <div className="bg-white/5 p-4 rounded-lg space-y-4">
-                                <h4 className="text-sm font-bold text-primary-400 uppercase tracking-wider mb-2">Card Info</h4>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="block text-sm text-gray-400 mb-1">Title</label>
-                                        <input
-                                            type="text"
-                                            value={formData.title || ''}
-                                            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                            className="w-full bg-dark-950 border border-white/10 rounded-lg px-4 py-2 text-white"
-                                            required
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm text-gray-400 mb-1">Short Description</label>
-                                        <textarea
-                                            value={formData.description || ''}
-                                            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                            className="w-full bg-dark-950 border border-white/10 rounded-lg px-4 py-2 text-white h-[42px] resize-none"
-                                            required
-                                        />
-                                    </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/[0.02] p-8 rounded-3xl border border-white/5 shadow-2xl">
+                            <div className="space-y-5">
+                                <div>
+                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-2 ml-1">Service Title</label>
+                                    <input
+                                        type="text"
+                                        value={formData.title || ''}
+                                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                        className="w-full bg-dark-950 border border-white/5 rounded-2xl px-5 py-4 text-white focus:border-primary-500 transition-all text-lg font-medium outline-none focus:ring-1 focus:ring-primary-500/50"
+                                        placeholder="e.g. Social Media Management"
+                                        required
+                                    />
                                 </div>
                                 <div>
-                                    <label className="block text-sm text-gray-400 mb-1">Card Tags <span className="text-gray-600">(comma-separated, shown as pills on card)</span></label>
+                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-2 ml-1">Short Description</label>
+                                    <textarea
+                                        value={formData.description || ''}
+                                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                        className="w-full bg-dark-950 border border-white/5 rounded-2xl px-5 py-4 text-white h-32 resize-none focus:border-primary-500 transition-all outline-none focus:ring-1 focus:ring-primary-500/50"
+                                        placeholder="A brief summary that appears on the homepage card..."
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="space-y-5">
+                                <div>
+                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-2 ml-1">Card Tags (Pills)</label>
                                     <input
                                         type="text"
                                         value={(formData as any).card_tags || ''}
                                         onChange={(e) => setFormData({ ...formData, card_tags: e.target.value } as any)}
-                                        className="w-full bg-dark-950 border border-white/10 rounded-lg px-4 py-2 text-white"
-                                        placeholder="e.g. Web Design, Development, Copywriting"
+                                        className="w-full bg-dark-950 border border-white/5 rounded-2xl px-5 py-4 text-white placeholder:text-gray-700 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500/50 transition-all"
+                                        placeholder="e.g. Content Strategy, Monthly Audit"
                                     />
+                                    <p className="text-[10px] text-gray-600 mt-2 px-1">Separate tags with commas.</p>
                                 </div>
-                            </div>
-
-                            {/* Card Right Panel Media */}
-                            <div className="bg-primary-500/5 border border-primary-500/20 p-4 rounded-lg space-y-4">
-                                <h4 className="text-sm font-bold text-primary-400 uppercase tracking-wider mb-2">🖼️ Card Right Panel — Image or Video</h4>
-                                <p className="text-xs text-gray-500 -mt-2">This appears on the right side of the service card on the homepage.</p>
-
-                                {/* URL Guidance */}
-                                <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3 text-xs text-yellow-200 space-y-1.5">
-                                    <p className="font-bold text-yellow-300">⚠️ URL Requirements</p>
-                                    <p>✅ <strong>Pexels images:</strong> Right-click the photo → "Copy image address" → use that CDN url<br />
-                                        <span className="text-yellow-400/70 font-mono">https://images.pexels.com/photos/ID/photo.jpeg</span></p>
-                                    <p>✅ <strong>Pexels videos:</strong> Paste the video page URL below and set type to <strong>Video</strong>. Or download and upload to Supabase Storage.</p>
-                                    <p>❌ <strong>Does NOT work:</strong> <span className="font-mono text-red-400/80">pexels.com/download/video/...</span> — requires login to serve.</p>
-                                    <p>✅ <strong>Best option:</strong> Upload to <strong>Supabase Storage → assets bucket</strong> → paste public URL here.</p>
-                                </div>
-
-                                {/* Media URL + Type Row */}
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                                    <div className="md:col-span-2">
-                                        <label className="block text-sm text-gray-400 mb-1">Media URL</label>
-                                        <input
-                                            type="text"
-                                            value={getRawUrl(formData.icon_url || '')}
-                                            onChange={(e) => {
-                                                const override = getMediaTypeOverride(formData.icon_url || '');
-                                                setFormData({ ...formData, icon_url: applyMediaTypeOverride(e.target.value, override) });
-                                            }}
-                                            className="w-full bg-dark-950 border border-white/10 rounded-lg px-4 py-2 text-white text-sm"
-                                            placeholder="https://images.pexels.com/photos/.../photo.jpeg"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm text-gray-400 mb-1">Media Type</label>
-                                        <select
-                                            value={getMediaTypeOverride(formData.icon_url || '')}
-                                            onChange={(e) => {
-                                                const raw = getRawUrl(formData.icon_url || '');
-                                                setFormData({ ...formData, icon_url: applyMediaTypeOverride(raw, e.target.value as 'auto' | 'video' | 'image') });
-                                            }}
-                                            className="w-full bg-dark-950 border border-white/10 rounded-lg px-4 py-2 text-white text-sm"
-                                        >
-                                            <option value="auto">🔍 Auto-detect</option>
-                                            <option value="image">🖼️ Force Image</option>
-                                            <option value="video">🎬 Force Video</option>
-                                        </select>
-                                        {/* Effective type badge */}
-                                        {formData.icon_url && (
-                                            <p className={`text-xs mt-1 font-medium ${detectMediaType(formData.icon_url) === 'video' ? 'text-blue-400' : 'text-green-400'
-                                                }`}>
-                                                {detectMediaType(formData.icon_url) === 'video' ? '🎬 Will render as Video' : '🖼️ Will render as Image'}
-                                            </p>
-                                        )}
-                                    </div>
-                                </div>
-
-                                {/* Live Preview */}
-                                {getRawUrl(formData.icon_url || '') && (
-                                    <div className="rounded-xl overflow-hidden border border-white/10 bg-dark-950">
-                                        <p className="text-xs text-gray-500 px-3 py-1.5 border-b border-white/5">Preview (if URL fails to load, it's blocked by CORS/hotlink protection)</p>
-                                        <div className="h-40 flex items-center justify-center">
-                                            {detectMediaType(formData.icon_url || '') === 'video' ? (
-                                                <video
-                                                    src={getRawUrl(formData.icon_url || '')}
-                                                    className="max-h-40 max-w-full object-cover rounded"
-                                                    muted autoPlay loop playsInline
-                                                />
-                                            ) : (
-                                                <img
-                                                    src={getRawUrl(formData.icon_url || '')}
-                                                    className="max-h-40 max-w-full object-cover rounded"
-                                                    alt="Preview"
-                                                    onError={(e) => {
-                                                        const el = e.target as HTMLImageElement;
-                                                        el.style.display = 'none';
-                                                        el.parentElement!.innerHTML = '<p class="text-xs text-red-400 p-4 text-center">⚠️ Image failed to load — URL may be blocked or invalid. Try a different source.</p>';
-                                                    }}
-                                                />
-                                            )}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Fallback: Lucide icon if no URL */}
-                                {!formData.icon_url && (
-                                    <div>
-                                        <label className="block text-sm text-gray-400 mb-1">Fallback: Lucide Icon Name <span className="text-gray-600">(used when no media URL is set)</span></label>
-                                        <div className="flex gap-2">
+                                <div className="flex items-center gap-6">
+                                    <div className="flex-1">
+                                        <label className="block text-xs font-bold text-gray-500 uppercase mb-2 ml-1">Brand Color Accent</label>
+                                        <div className="relative group">
                                             <input
-                                                className="w-full bg-dark-950 border border-white/10 rounded-lg px-4 py-2 text-white text-sm"
-                                                placeholder="e.g. Code, Palette, Smartphone"
-                                                value={formData.icon_name || ''}
-                                                onChange={e => setFormData({ ...formData, icon_name: e.target.value })}
+                                                type="text"
+                                                value={formData.color_accent || '#6366f1'}
+                                                onChange={(e) => setFormData({ ...formData, color_accent: e.target.value })}
+                                                className="w-full bg-dark-950 border border-white/5 rounded-2xl px-5 py-4 text-white font-mono text-sm outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500/50 transition-all"
                                             />
-                                            <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-dark-950 rounded border border-white/10">
-                                                <IconPreview name={formData.icon_name || ''} className="h-5 w-5 text-white" />
-                                            </div>
+                                            <input
+                                                type="color"
+                                                value={formData.color_accent || '#6366f1'}
+                                                onChange={(e) => setFormData({ ...formData, color_accent: e.target.value })}
+                                                className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg bg-transparent border-none cursor-pointer"
+                                            />
                                         </div>
                                     </div>
-                                )}
+                                    <div className="w-14 h-14 rounded-2xl mt-6 border border-white/10 shadow-2xl transition-transform hover:scale-105" style={{ backgroundColor: formData.color_accent || '#6366f1' }} />
+                                </div>
                             </div>
+                        </div>
+                    </div>
 
-                            {/* Page Details Section */}
-                            <div className="bg-white/5 p-4 rounded-lg space-y-4">
-                                <h4 className="text-sm font-bold text-secondary-400 uppercase tracking-wider mb-2">Page Details (Service Page)</h4>
+                    {/* SECTION 2: MEDIA & HERO */}
+                    <div className="space-y-6">
+                        <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-full bg-secondary-600/20 flex items-center justify-center text-secondary-400 text-xs font-bold">2</div>
+                            <h4 className="text-sm font-bold text-white uppercase tracking-widest">Visuals & Hero</h4>
+                        </div>
 
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/[0.02] p-8 rounded-3xl border border-white/5 shadow-2xl">
+                            <div className="space-y-5">
                                 <div>
-                                    <label className="block text-sm text-gray-400 mb-1 flex items-center gap-2">
-                                        <Link className="h-3 w-3" /> Page Slug (URL)
-                                    </label>
+                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-2 ml-1">Card Media URL (Image/Video)</label>
                                     <input
                                         type="text"
-                                        value={formData.slug || ''}
-                                        onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                                        className="w-full bg-dark-950 border border-white/10 rounded-lg px-4 py-2 text-white font-mono text-sm"
-                                        placeholder="auto-generated-from-title"
+                                        value={getRawUrl(formData.icon_url || '')}
+                                        onChange={(e) => {
+                                            const override = getMediaTypeOverride(formData.icon_url || '');
+                                            setFormData({ ...formData, icon_url: applyMediaTypeOverride(e.target.value, override) });
+                                        }}
+                                        className="w-full bg-dark-950 border border-white/5 rounded-2xl px-5 py-4 text-white text-sm outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500/50 transition-all"
+                                        placeholder="https://..."
                                     />
+                                    <p className="text-[10px] text-gray-600 mt-2 px-1">Supports Pexels, Cloudinary, and Supabase Storage.</p>
                                 </div>
-
                                 <div>
-                                    <label className="block text-sm text-gray-400 mb-1 flex items-center gap-2">
-                                        <ImageIcon className="h-3 w-3" /> Hero Image URL
-                                    </label>
+                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-2 ml-1">Hero Image URL</label>
                                     <input
                                         type="text"
                                         value={formData.image_url || ''}
                                         onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                                        className="w-full bg-dark-950 border border-white/10 rounded-lg px-4 py-2 text-white"
-                                    />
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm text-gray-400 mb-1 flex items-center gap-2">
-                                        <List className="h-3 w-3" /> Key Features (Comma separated)
-                                    </label>
-                                    <textarea
-                                        value={formData.features ? formData.features.join(', ') : ''}
-                                        onChange={(e) => setFormData({ ...formData, features: e.target.value.split(',').map(s => s.trim()) })}
-                                        className="w-full bg-dark-950 border border-white/10 rounded-lg px-4 py-2 text-white h-20"
-                                        placeholder="Strategy, Content Creation, Analytics Reporting"
-                                    />
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm text-gray-400 mb-1">Detailed Content (Markdown)</label>
-                                    <MarkdownEditor
-                                        value={formData.content || ''}
-                                        onChange={(val) => setFormData({ ...formData, content: val })}
-                                        height={500}
-                                        placeholder="# Detailed Service Information..."
+                                        className="w-full bg-dark-950 border border-white/5 rounded-2xl px-5 py-4 text-white text-sm outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500/50 transition-all"
+                                        placeholder="https://..."
                                     />
                                 </div>
                             </div>
 
-                            <div className="flex justify-end gap-3">
-                                <button type="button" onClick={() => setEditing(null)} className="px-4 py-2 text-gray-400 hover:text-white">Cancel</button>
-                                <button type="submit" className="bg-primary-600 hover:bg-primary-500 text-white px-6 py-2 rounded-lg flex items-center gap-2">
-                                    <Save className="h-4 w-4" /> Save Service
-                                </button>
+                            <div className="space-y-5">
+                                <div>
+                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-2 ml-1">Hero Subtitle</label>
+                                    <input
+                                        type="text"
+                                        value={formData.subtitle || ''}
+                                        onChange={(e) => setFormData({ ...formData, subtitle: e.target.value })}
+                                        className="w-full bg-dark-950 border border-white/5 rounded-2xl px-5 py-4 text-white outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500/50 transition-all"
+                                        placeholder="The catchy phrase below the title..."
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-2 ml-1">Slug (URL Path)</label>
+                                    <input
+                                        type="text"
+                                        value={formData.slug || ''}
+                                        onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+                                        className="w-full bg-dark-950 border border-white/5 rounded-2xl px-5 py-4 text-white font-mono outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500/50 transition-all"
+                                        placeholder="auto-generated-from-title"
+                                    />
+                                </div>
                             </div>
-                        </form>
-                    </div>
-                </div>
-            )}
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {services.map((service) => (
-                    <div key={service.id} className="bg-dark-900 border border-white/10 p-6 rounded-xl hover:border-primary-500/30 transition-colors group relative">
-                        <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button onClick={() => handleEdit(service)} className="text-gray-400 hover:text-white"><Edit2 className="h-4 w-4" /></button>
-                            <button onClick={() => handleDelete(service.id)} className="text-red-400 hover:text-red-300"><Trash2 className="h-4 w-4" /></button>
                         </div>
-                        <div className="h-32 mb-4 rounded-lg overflow-hidden relative group-hover:opacity-80 transition-opacity">
+                    </div>
+
+                    {/* SECTION 3: STRUCTURED OFFERINGS */}
+                    <div className="space-y-6">
+                        <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-full bg-green-600/20 flex items-center justify-center text-green-400 text-xs font-bold">3</div>
+                            <h4 className="text-sm font-bold text-white uppercase tracking-widest">Offerings & Details</h4>
+                        </div>
+
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            <ListEditor
+                                label="Pricing Tiers"
+                                items={formData.pricing_tiers || []}
+                                onChange={(items) => setFormData({ ...formData, pricing_tiers: items })}
+                                itemLabelField="name"
+                                fields={[
+                                    { key: 'name', label: 'Tier Name', type: 'text' },
+                                    { key: 'price', label: 'Price (e.g. ₱15,000)', type: 'text' },
+                                    { key: 'period', label: 'Period (e.g. /mo)', type: 'text' },
+                                    { key: 'features', label: 'Included Features', type: 'list' },
+                                    { key: 'cta', label: 'Button Text', type: 'text' },
+                                    { key: 'highlighted', label: 'Highlight as "Best Value"', type: 'checkbox' },
+                                ]}
+                            />
+
+                            <ListEditor
+                                label="Process Steps"
+                                items={formData.process_steps || []}
+                                onChange={(items) => setFormData({ ...formData, process_steps: items })}
+                                itemLabelField="title"
+                                fields={[
+                                    { key: 'title', label: 'Step Title', type: 'text' },
+                                    { key: 'phase', label: 'Phase (e.g. 01)', type: 'text' },
+                                    { key: 'duration', label: 'Duration (e.g. 1 Week)', type: 'text' },
+                                    { key: 'description', label: 'Description', type: 'textarea' },
+                                ]}
+                            />
+
+                            <ListEditor
+                                label="Key Stats"
+                                items={formData.stats || []}
+                                onChange={(items) => setFormData({ ...formData, stats: items })}
+                                itemLabelField="label"
+                                fields={[
+                                    { key: 'value', label: 'Big Number (e.g. 300%)', type: 'text' },
+                                    { key: 'label', label: 'Label (e.g. ROI)', type: 'text' },
+                                ]}
+                            />
+
+                            <ListEditor
+                                label="Deliverables"
+                                items={formData.deliverables || []}
+                                onChange={(items) => setFormData({ ...formData, deliverables: items })}
+                                itemLabelField="item"
+                                fields={[
+                                    { key: 'item', label: 'Deliverable Name', type: 'text' },
+                                    { key: 'format', label: 'Format (e.g. PDF/Figma)', type: 'text' },
+                                ]}
+                            />
+
+                            <ListEditor
+                                label="FAQs"
+                                items={formData.faqs || []}
+                                onChange={(items) => setFormData({ ...formData, faqs: items })}
+                                itemLabelField="question"
+                                fields={[
+                                    { key: 'question', label: 'Question', type: 'text' },
+                                    { key: 'answer', label: 'Answer', type: 'textarea' },
+                                ]}
+                            />
+
+                            <div className="bg-white/[0.02] p-8 rounded-3xl border border-white/5 space-y-6 shadow-2xl">
+                                <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest">Tools & Capabilities</h4>
+                                <div>
+                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-3 ml-1">Tools Used (One per line)</label>
+                                    <textarea
+                                        value={formData.tools_used ? formData.tools_used.join('\n') : ''}
+                                        onChange={(e) => setFormData({ ...formData, tools_used: e.target.value.split('\n').filter(Boolean) })}
+                                        className="w-full bg-dark-950 border border-white/5 rounded-2xl px-5 py-4 text-white text-xs h-32 font-mono outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500/50 transition-all"
+                                        placeholder="Figma&#10;Canva&#10;Buffer"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-3 ml-1">Search Keywords (CSV)</label>
+                                    <textarea
+                                        value={formData.features ? (Array.isArray(formData.features) ? formData.features.join(', ') : '') : ''}
+                                        onChange={(e) => setFormData({ ...formData, features: e.target.value.split(',').map(s => s.trim()).filter(Boolean) })}
+                                        className="w-full bg-dark-950 border border-white/5 rounded-2xl px-5 py-4 text-white text-xs h-32 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500/50 transition-all"
+                                        placeholder="Strategy, Content, Audit, Monthly..."
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* SECTION 4: LONG CONTENT */}
+                    <div className="space-y-6">
+                        <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-full bg-yellow-600/20 flex items-center justify-center text-yellow-400 text-xs font-bold">4</div>
+                            <h4 className="text-sm font-bold text-white uppercase tracking-widest">In-Depth Content</h4>
+                        </div>
+
+                        <div className="bg-white/[0.02] p-8 rounded-3xl border border-white/5 shadow-2xl">
+                            <label className="block text-xs font-bold text-gray-500 uppercase mb-4 ml-1">Detailed Page Content (Markdown)</label>
+                            <div className="rounded-2xl overflow-hidden border border-white/5">
+                                <MarkdownEditor
+                                    value={formData.content || ''}
+                                    onChange={(val) => setFormData({ ...formData, content: val })}
+                                    height={600}
+                                    placeholder="# Start typing your detailed service breakdown..."
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex justify-end gap-4 pt-10 border-t border-white/5">
+                        <button
+                            type="button"
+                            onClick={() => setEditing(null)}
+                            className="px-8 py-4 text-gray-400 hover:text-white font-bold transition-all"
+                        >
+                            Discard Changes
+                        </button>
+                        <button
+                            type="submit"
+                            className="bg-primary-600 hover:bg-primary-500 text-white px-12 py-4 rounded-full flex items-center gap-2 font-bold shadow-2xl shadow-primary-600/30 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                        >
+                            <Save className="h-5 w-5" /> Save All Progress
+                        </button>
+                    </div>
+                </form>
+            </div>
+        );
+    }
+
+    return (
+        <div className="space-y-8 animate-in fade-in duration-500">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h2 className="text-3xl font-bold text-white font-display">Manage Services</h2>
+                    <p className="text-gray-500 mt-1">Design and configure your service portfolio.</p>
+                </div>
+                <button
+                    onClick={handleAddNew}
+                    className="flex items-center gap-2 bg-primary-600 hover:bg-primary-500 text-white px-6 py-3 rounded-full font-bold shadow-lg shadow-primary-600/20 transition-all hover:scale-105 active:scale-95"
+                >
+                    <Plus className="h-5 w-5" /> Create New Service
+                </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {services.map((service) => (
+                    <div key={service.id} className="bg-dark-900 border border-white/10 p-6 rounded-2xl hover:border-primary-500/30 transition-all group relative flex flex-col h-full">
+                        <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                            <button onClick={() => handleEdit(service)} className="p-2 bg-black/50 backdrop-blur-md rounded-lg text-gray-300 hover:text-white transition-colors"><Edit2 className="h-4 w-4" /></button>
+                            <button onClick={() => handleDelete(service.id)} className="p-2 bg-red-500/20 backdrop-blur-md rounded-lg text-red-400 hover:text-red-300 transition-colors"><Trash2 className="h-4 w-4" /></button>
+                        </div>
+
+                        <div className="h-40 mb-6 rounded-xl overflow-hidden relative group-hover:scale-[1.02] transition-transform duration-500">
                             {service.icon_url ? (
-                                <img src={service.icon_url} className="w-full h-full object-cover" />
+                                <div className="w-full h-full">
+                                    {detectMediaType(service.icon_url) === 'video' ? (
+                                        <video src={getRawUrl(service.icon_url)} className="w-full h-full object-cover" muted loop autoPlay playsInline />
+                                    ) : (
+                                        <img src={getRawUrl(service.icon_url)} className="w-full h-full object-cover" />
+                                    )}
+                                </div>
                             ) : (
                                 <div className={`w-full h-full bg-gradient-to-br ${service.color_theme || 'from-gray-700 to-gray-600'} flex items-center justify-center`}>
-                                    <IconPreview name={service.icon_name} className="h-8 w-8 text-white" />
+                                    <IconPreview name={service.icon_name} className="h-10 w-10 text-white" />
                                 </div>
                             )}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                            <div className="absolute bottom-4 left-4">
+                                <span className="text-[10px] font-bold uppercase tracking-widest text-primary-400 bg-primary-500/10 px-2 py-1 rounded">
+                                    {service.slug}
+                                </span>
+                            </div>
                         </div>
-                        <h3 className="text-lg font-bold text-white mb-2">{service.title}</h3>
-                        <p className="text-gray-400 text-sm mb-4">{service.description}</p>
-                        {service.slug && <span className="text-xs font-mono text-primary-400 bg-primary-500/10 px-2 py-1 rounded">/{service.slug}</span>}
+
+                        <h3 className="text-lg font-bold text-white mb-2 font-display">{service.title}</h3>
+                        <p className="text-gray-400 text-sm mb-6 line-clamp-3 leading-relaxed flex-grow">{service.description}</p>
+
+                        <div className="flex items-center justify-between pt-4 border-t border-white/5">
+                            <div className="flex items-center gap-2">
+                                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: service.color_accent || '#6366f1' }} />
+                                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Active</span>
+                            </div>
+                            <div className="flex gap-1">
+                                {service.pricing_tiers && service.pricing_tiers.length > 0 && <AlertCircle className="h-3.5 w-3.5 text-primary-400" title="Has Pricing" />}
+                                {service.faqs && service.faqs.length > 0 && <CheckCircle2 className="h-3.5 w-3.5 text-green-400" title="Has FAQs" />}
+                            </div>
+                        </div>
                     </div>
                 ))}
+
                 {services.length === 0 && (
-                    <div className="col-span-full py-12 text-center text-gray-500 bg-dark-900/50 rounded-xl border border-dashed border-white/10">
-                        No services found.
+                    <div className="col-span-full py-20 text-center space-y-4 bg-dark-900/50 rounded-3xl border border-dashed border-white/10">
+                        <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mx-auto">
+                            <List className="h-8 w-8 text-gray-700" />
+                        </div>
+                        <p className="text-gray-500 font-medium">No services found. Start by adding your first digital expertise.</p>
+                        <button onClick={handleAddNew} className="text-primary-400 hover:text-primary-300 font-bold uppercase text-xs tracking-widest">
+                            Add Service →
+                        </button>
                     </div>
                 )}
             </div>

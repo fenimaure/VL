@@ -1,8 +1,7 @@
 
 import { useState, useEffect } from 'react';
-import { createPortal } from 'react-dom';
 import { supabase } from '../../lib/supabase';
-import { Plus, Trash2, Edit2, X, Save, Image as ImageIcon, Link, Upload, Loader2, Check } from 'lucide-react';
+import { Plus, Trash2, Edit2, X, Save, Image as ImageIcon, Link, Upload, Loader2, Check, ChevronLeft } from 'lucide-react';
 import MarkdownEditor from './MarkdownEditor';
 
 interface Work {
@@ -82,7 +81,6 @@ export default function WorksManager() {
                 .getPublicUrl(filePath);
 
             setFormData(prev => ({ ...prev, [field]: publicUrl }));
-            alert('Image uploaded successfully!');
         } catch (error) {
             console.error('Error uploading image:', error);
             alert('Error uploading image!');
@@ -113,7 +111,6 @@ export default function WorksManager() {
     async function handleSave(e: React.FormEvent) {
         e.preventDefault();
         try {
-            // Auto-generate slug if empty
             const dataToSave = { ...formData };
             if (!dataToSave.slug && dataToSave.title) {
                 dataToSave.slug = dataToSave.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
@@ -123,10 +120,7 @@ export default function WorksManager() {
                 const { error } = await supabase.from('works').insert([dataToSave]);
                 if (error) throw error;
             } else {
-                const { error } = await supabase
-                    .from('works')
-                    .update(dataToSave)
-                    .eq('id', editing?.id);
+                const { error } = await supabase.from('works').update(dataToSave).eq('id', editing?.id);
                 if (error) throw error;
             }
             setEditing(null);
@@ -143,7 +137,7 @@ export default function WorksManager() {
             const { data, error } = await supabase.from('works').delete().eq('id', id).select();
             if (error) throw error;
             if (!data || data.length === 0) {
-                alert('Delete was blocked by Supabase RLS. Please add a DELETE policy for authenticated users on the "works" table.');
+                alert('Delete was blocked by Supabase RLS.');
                 return;
             }
             fetchData();
@@ -153,360 +147,305 @@ export default function WorksManager() {
         }
     }
 
-    if (loading) return <div className="text-center p-8 text-gray-400">Loading works...</div>;
+    if (loading) return (
+        <div className="flex items-center justify-center py-20">
+            <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary-500 border-t-transparent"></div>
+        </div>
+    );
 
-    return (
-        <div className="space-y-6">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-dark-900/50 p-8 rounded-[2rem] border border-white/5 backdrop-blur-xl">
-                <div>
-                    <h2 className="text-3xl font-bold text-white font-display mb-2">Portfolio Management</h2>
-                    <p className="text-sm text-white/40 font-light uppercase tracking-widest">Active Exhibition: {works.length} Works</p>
-                </div>
-                <button
-                    onClick={handleAddNew}
-                    className="flex items-center gap-3 bg-white text-dark-950 px-8 py-4 rounded-full font-bold uppercase tracking-[0.2em] text-[10px] hover:scale-105 active:scale-95 transition-all shadow-xl shadow-white/10 group"
-                >
-                    <div className="bg-dark-950 rounded-full p-2 group-hover:rotate-90 transition-transform duration-500">
-                        <Plus className="h-4 w-4 text-white" />
+    // FULL PAGE EDITOR VIEW
+    if (editing) {
+        return (
+            <div className="max-w-5xl mx-auto pb-20 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="flex items-center justify-between mb-8 sticky top-0 z-20 bg-dark-950/80 backdrop-blur-md py-4 border-b border-white/5">
+                    <div className="flex items-center gap-4">
+                        <button
+                            onClick={() => setEditing(null)}
+                            className="p-2 hover:bg-white/5 rounded-xl text-gray-400 hover:text-white transition-all"
+                        >
+                            <ChevronLeft className="h-6 w-6" />
+                        </button>
+                        <div>
+                            <h2 className="text-2xl font-bold text-white font-display">
+                                {isNew ? 'New Portfolio Piece' : `Edit ${editing.title}`}
+                            </h2>
+                            <p className="text-sm text-gray-500">Curate the details of your latest project.</p>
+                        </div>
                     </div>
-                    Curate New Work
-                </button>
-            </div>
+                    <div className="flex items-center gap-3">
+                        <button type="button" onClick={() => setEditing(null)} className="px-6 py-2.5 text-sm font-bold text-gray-400 hover:text-white transition-colors">Cancel</button>
+                        <button
+                            onClick={handleSave}
+                            className="bg-primary-600 hover:bg-primary-500 text-white px-8 py-2.5 rounded-full flex items-center gap-2 font-bold shadow-xl shadow-primary-600/20 transition-all active:scale-95"
+                        >
+                            <Save className="h-5 w-5" /> Save Work
+                        </button>
+                    </div>
+                </div>
 
-            {editing && createPortal(
-                <div className="fixed inset-0 bg-black/90 p-4 sm:p-6 lg:p-8 z-[100] flex justify-center items-center">
-                    <div className="bg-dark-900 border border-white/10 rounded-xl w-full max-w-[1600px] h-full flex flex-col shadow-2xl relative overflow-hidden">
-                        <div className="flex justify-between items-center px-6 py-4 border-b border-white/5 bg-dark-900/95 z-20 shrink-0">
-                            <h3 className="text-xl font-bold text-white">{isNew ? 'New Work' : 'Edit Work'}</h3>
-                            <button type="button" onClick={() => setEditing(null)} className="text-gray-400 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors">
-                                <X className="h-6 w-6" />
-                            </button>
+                <form onSubmit={handleSave} className="space-y-12">
+                    {/* SECTION 1: CORE CARD INFO */}
+                    <div className="space-y-6">
+                        <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-full bg-primary-600/20 flex items-center justify-center text-primary-400 text-xs font-bold">1</div>
+                            <h4 className="text-sm font-bold text-white uppercase tracking-widest">Portfolio Card</h4>
                         </div>
 
-                        <div className="flex-1 overflow-y-auto relative z-10 w-full h-full min-h-0 bg-dark-900">
-                            <form id="edit-work-form" onSubmit={handleSave} className="p-6 space-y-6">
-                                {/* Homepage Card Section */}
-                            <div className="bg-white/5 p-6 rounded-2xl space-y-4 border border-white/5">
-                                <h4 className="text-sm font-bold text-primary-400 uppercase tracking-wider mb-2 flex items-center gap-2">
-                                    <span className="w-2 h-2 rounded-full bg-primary-500"></span>
-                                    Portfolio Card
-                                </h4>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div>
-                                        <label className="block text-sm text-gray-400 mb-2 font-medium">Title</label>
-                                        <input
-                                            type="text"
-                                            value={formData.title || ''}
-                                            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                            className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary-500 outline-none focus:ring-1 focus:ring-primary-500/50 transition-all"
-                                            placeholder="Work Name"
-                                            required
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm text-gray-400 mb-2 font-medium">Category</label>
-                                        <select
-                                            value={formData.category || ''}
-                                            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                                            className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary-500 outline-none focus:ring-1 focus:ring-primary-500/50 transition-all appearance-none cursor-pointer"
-                                            required
-                                        >
-                                            {services.map(s => (
-                                                <option key={s.title} value={s.title}>{s.title}</option>
-                                            ))}
-                                            {services.length === 0 && <option value="General">No services found - using General</option>}
-                                        </select>
-                                    </div>
-                                </div>
-
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/[0.02] p-8 rounded-3xl border border-white/5 shadow-2xl">
+                            <div className="space-y-5">
                                 <div>
-                                    <label className="block text-sm text-gray-400 mb-2 font-medium">Short Description</label>
-                                    <textarea
-                                        value={formData.description || ''}
-                                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                        className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary-500 outline-none h-24 resize-none transition-all"
-                                        placeholder="Brief summary for the work card..."
+                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-2 ml-1">Project Title</label>
+                                    <input
+                                        type="text"
+                                        value={formData.title || ''}
+                                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                        className="w-full bg-dark-950 border border-white/5 rounded-2xl px-5 py-4 text-white focus:border-primary-500 transition-all text-lg font-medium outline-none focus:ring-1 focus:ring-primary-500/50"
+                                        placeholder="e.g. Modern E-commerce"
                                         required
                                     />
                                 </div>
-
                                 <div>
-                                    <label className="block text-sm text-gray-400 mb-2 font-medium">Work Image</label>
-                                    <div className="flex flex-col gap-4">
-                                        <div className="flex gap-4">
-                                            <div className="flex-1">
-                                                <div className="flex gap-2">
-                                                    <input
-                                                        type="text"
-                                                        value={formData.image_url || ''}
-                                                        onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                                                        className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary-500 outline-none transition-all"
-                                                        placeholder="Image URL"
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div className="w-16 h-16 bg-black/50 rounded-xl flex items-center justify-center border border-white/10 overflow-hidden shrink-0 shadow-lg">
-                                                {formData.image_url ? (
-                                                    <img src={formData.image_url} alt="Preview" className="w-full h-full object-cover" />
-                                                ) : (
-                                                    <ImageIcon className="h-6 w-6 text-gray-600" />
-                                                )}
-                                            </div>
-                                        </div>
-
-                                        <div className="relative group">
-                                            <input
-                                                type="file"
-                                                id="work-image-upload"
-                                                className="hidden"
-                                                accept="image/*"
-                                                onChange={(e) => handleUpload(e, 'image_url')}
-                                                disabled={uploading}
-                                            />
-                                            <label
-                                                htmlFor="work-image-upload"
-                                                className={`flex flex-col items-center justify-center gap-2 w-full py-6 border-2 border-dashed border-white/10 rounded-xl cursor-pointer hover:border-primary-500/50 hover:bg-white/5 transition-all duration-300 ${uploading ? 'opacity-50 pointer-events-none' : ''}`}
-                                            >
-                                                {uploading ? (
-                                                    <>
-                                                        <Loader2 className="h-6 w-6 animate-spin text-primary-500 mb-1" />
-                                                        <span className="text-sm font-bold uppercase tracking-wider text-white/40">Uploading...</span>
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <Upload className="h-6 w-6 text-primary-500 group-hover:scale-110 mb-1 transition-transform" />
-                                                        <span className="text-sm font-bold uppercase tracking-wider text-white/40 group-hover:text-white/60">Upload Thumbnail Image</span>
-                                                    </>
-                                                )}
-                                            </label>
-                                        </div>
-                                    </div>
+                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-2 ml-1">Service Category</label>
+                                    <select
+                                        value={formData.category || ''}
+                                        onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                                        className="w-full bg-dark-950 border border-white/5 rounded-2xl px-5 py-4 text-white focus:border-primary-500 outline-none focus:ring-1 focus:ring-primary-500/50 transition-all cursor-pointer appearance-none"
+                                        required
+                                    >
+                                        {services.map(s => (
+                                            <option key={s.title} value={s.title}>{s.title}</option>
+                                        ))}
+                                        {services.length === 0 && <option value="General">No services found</option>}
+                                    </select>
                                 </div>
+                            </div>
 
+                            <div className="space-y-5">
                                 <div>
-                                    <label className="block text-sm text-gray-400 mb-2 font-medium">Hero Background Image (Optional)</label>
-                                    <p className="text-xs text-white/30 mb-4">Leave empty to use the Thumbnail Image. Recommended size for hero: 1920x1080px (16:9)</p>
-                                    <div className="flex flex-col gap-4">
-                                        <div className="flex gap-4">
-                                            <div className="flex-1">
-                                                <div className="flex gap-2">
-                                                    <input
-                                                        type="text"
-                                                        value={formData.hero_image_url || ''}
-                                                        onChange={(e) => setFormData({ ...formData, hero_image_url: e.target.value })}
-                                                        className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary-500 outline-none transition-all"
-                                                        placeholder="Hero Image URL"
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div className="w-16 h-16 bg-black/50 rounded-xl flex items-center justify-center border border-white/10 overflow-hidden shrink-0 shadow-lg">
-                                                {formData.hero_image_url ? (
-                                                    <img src={formData.hero_image_url} alt="Preview" className="w-full h-full object-cover" />
-                                                ) : (
-                                                    <ImageIcon className="h-6 w-6 text-gray-600" />
-                                                )}
-                                            </div>
-                                        </div>
-
-                                        <div className="relative group">
-                                            <input
-                                                type="file"
-                                                id="hero-image-upload"
-                                                className="hidden"
-                                                accept="image/*"
-                                                onChange={(e) => handleUpload(e, 'hero_image_url')}
-                                                disabled={uploading}
-                                            />
-                                            <label
-                                                htmlFor="hero-image-upload"
-                                                className={`flex flex-col items-center justify-center gap-2 w-full py-6 border-2 border-dashed border-white/10 rounded-xl cursor-pointer hover:border-primary-500/50 hover:bg-white/5 transition-all duration-300 ${uploading ? 'opacity-50 pointer-events-none' : ''}`}
-                                            >
-                                                {uploading ? (
-                                                    <>
-                                                        <Loader2 className="h-6 w-6 animate-spin text-primary-500 mb-1" />
-                                                        <span className="text-sm font-bold uppercase tracking-wider text-white/40">Uploading...</span>
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <Upload className="h-6 w-6 text-primary-500 group-hover:scale-110 mb-1 transition-transform" />
-                                                        <span className="text-sm font-bold uppercase tracking-wider text-white/40 group-hover:text-white/60">Upload Hero Image</span>
-                                                    </>
-                                                )}
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm text-gray-400 mb-2 font-medium">Tags</label>
-                                    <input
-                                        type="text"
-                                        value={formData.tags ? formData.tags.join(', ') : ''}
-                                        onChange={(e) => setFormData({ ...formData, tags: e.target.value.split(',').map(t => t.trim()) })}
-                                        className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary-500 outline-none transition-all"
-                                        placeholder="React, TypeScript, Tailwind (comma separated)"
+                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-2 ml-1">Project Summary</label>
+                                    <textarea
+                                        value={formData.description || ''}
+                                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                        className="w-full bg-dark-950 border border-white/5 rounded-2xl px-5 py-4 text-white h-32 resize-none focus:border-primary-500 transition-all outline-none focus:ring-1 focus:ring-primary-500/50"
+                                        placeholder="Brief overview for the card..."
+                                        required
                                     />
                                 </div>
-
-                                <div className="flex items-center gap-3 p-4 bg-primary-500/5 border border-primary-500/10 rounded-xl hover:bg-primary-500/10 transition-colors cursor-pointer" onClick={() => setFormData({ ...formData, is_featured: !formData.is_featured })}>
-                                    <div className={`w-5 h-5 rounded border flex items-center justify-center transition-all ${formData.is_featured ? 'bg-primary-500 border-primary-500' : 'border-white/20 bg-black/50'}`}>
-                                        {formData.is_featured && <Check className="h-3 w-3 text-white" />}
+                                <div className="flex items-center gap-3 p-4 bg-primary-500/5 border border-white/5 rounded-2xl transition-all cursor-pointer hover:bg-primary-500/10" onClick={() => setFormData({ ...formData, is_featured: !formData.is_featured })}>
+                                    <div className={`w-6 h-6 rounded-lg border flex items-center justify-center transition-all ${formData.is_featured ? 'bg-primary-500 border-primary-500 shadow-glow' : 'border-white/20 bg-black/50'}`}>
+                                        {formData.is_featured && <Check className="h-4 w-4 text-white" />}
                                     </div>
-                                    <label className="text-white font-medium cursor-pointer select-none">
-                                        Feature this work on homepage
+                                    <label className="text-sm font-bold text-white cursor-pointer select-none">Feature on Homepage</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* SECTION 2: VISUALS */}
+                    <div className="space-y-6">
+                        <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-full bg-secondary-600/20 flex items-center justify-center text-secondary-400 text-xs font-bold">2</div>
+                            <h4 className="text-sm font-bold text-white uppercase tracking-widest">Visual Assets</h4>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/[0.02] p-8 rounded-3xl border border-white/5 shadow-2xl">
+                            {/* Thumbnail */}
+                            <div className="space-y-4">
+                                <label className="block text-xs font-bold text-gray-500 uppercase mb-2 ml-1">Thumbnail Image</label>
+                                <div className="flex items-center gap-4 mb-4">
+                                    <div className="flex-1">
+                                        <input
+                                            type="text"
+                                            value={formData.image_url || ''}
+                                            onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
+                                            className="w-full bg-dark-950 border border-white/5 rounded-2xl px-5 py-3 text-white text-xs outline-none focus:border-primary-500 transition-all"
+                                            placeholder="URL..."
+                                        />
+                                    </div>
+                                    <div className="w-12 h-12 rounded-xl border border-white/10 overflow-hidden shrink-0 bg-black/50">
+                                        {formData.image_url && <img src={formData.image_url} className="w-full h-full object-cover" />}
+                                    </div>
+                                </div>
+                                <div className="relative group">
+                                    <input type="file" id="thumb-upload" className="hidden" accept="image/*" onChange={(e) => handleUpload(e, 'image_url')} />
+                                    <label htmlFor="thumb-upload" className={`flex flex-col items-center justify-center py-6 border-2 border-dashed border-white/10 rounded-2xl cursor-pointer hover:border-primary-500/50 hover:bg-white/5 transition-all ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
+                                        {uploading ? <Loader2 className="h-5 w-5 animate-spin text-primary-500" /> : <Upload className="h-5 w-5 text-gray-500 group-hover:text-primary-400 transition-colors" />}
+                                        <span className="text-[10px] font-bold uppercase tracking-widest mt-2 text-gray-500">Upload Thumbnail</span>
                                     </label>
                                 </div>
                             </div>
 
-                            {/* Case Study Section */}
-                            <div className="bg-white/5 p-6 rounded-2xl space-y-6 border border-white/5">
-                                <h4 className="text-sm font-bold text-secondary-400 uppercase tracking-wider mb-2 flex items-center gap-2">
-                                    <Link className="h-4 w-4" />
-                                    Case Study Details
-                                </h4>
-
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div className="md:col-span-2">
-                                        <label className="block text-sm text-gray-400 mb-2 font-medium flex items-center gap-2">
-                                            Page Slug <span className="text-white/20 text-xs font-normal">(URL)</span>
-                                            <button type="button" onClick={generateSlug} className="text-xs text-primary-400 hover:text-white bg-white/5 px-2 py-0.5 rounded ml-2" title="Generate from Title">Generate</button>
-                                        </label>
+                            {/* Hero Image */}
+                            <div className="space-y-4">
+                                <label className="block text-xs font-bold text-gray-500 uppercase mb-2 ml-1">Hero Background</label>
+                                <div className="flex items-center gap-4 mb-4">
+                                    <div className="flex-1">
                                         <input
                                             type="text"
-                                            value={formData.slug || ''}
-                                            onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                                            className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white font-mono text-sm focus:border-secondary-500 outline-none transition-all"
-                                            placeholder="my-work-slug"
+                                            value={formData.hero_image_url || ''}
+                                            onChange={(e) => setFormData({ ...formData, hero_image_url: e.target.value })}
+                                            className="w-full bg-dark-950 border border-white/5 rounded-2xl px-5 py-3 text-white text-xs outline-none focus:border-primary-500 transition-all"
+                                            placeholder="Hero URL..."
                                         />
                                     </div>
-                                    <div className="md:col-span-2">
-                                        <label className="block text-sm text-gray-400 mb-2 font-medium">The Challenge</label>
-                                        <textarea
-                                            value={formData.challenge || ''}
-                                            onChange={(e) => setFormData({ ...formData, challenge: e.target.value })}
-                                            className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-secondary-500 outline-none h-24 resize-none transition-all"
-                                            placeholder="Describe the main challenge or problem solved..."
-                                        />
-                                    </div>
-                                    <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        <div>
-                                            <label className="block text-sm text-gray-400 mb-2 font-medium">Brand Requirements</label>
-                                            <textarea
-                                                value={formData.brand_requirements || ''}
-                                                onChange={(e) => setFormData({ ...formData, brand_requirements: e.target.value })}
-                                                className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-secondary-500 outline-none h-24 resize-none transition-all"
-                                                placeholder="Brand requirements for the project..."
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block text-sm text-gray-400 mb-2 font-medium">What We Did</label>
-                                            <textarea
-                                                value={formData.what_we_did || ''}
-                                                onChange={(e) => setFormData({ ...formData, what_we_did: e.target.value })}
-                                                className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-secondary-500 outline-none h-24 resize-none transition-all"
-                                                placeholder="Key deliverables and services provided..."
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        <div>
-                                            <label className="block text-sm text-gray-400 mb-2 font-medium">Client Name</label>
-                                            <input className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-secondary-500 outline-none transition-all" value={formData.client || ''} onChange={e => setFormData({ ...formData, client: e.target.value })} />
-                                        </div>
-                                        <div>
-                                            <label className="block text-sm text-gray-400 mb-2 font-medium">Client Description (Optional)</label>
-                                            <textarea className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-secondary-500 outline-none transition-all h-12 resize-none" placeholder="Extended details about the client..." value={formData.client_description || ''} onChange={e => setFormData({ ...formData, client_description: e.target.value })} />
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm text-gray-400 mb-2 font-medium">Year</label>
-                                        <input className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-secondary-500 outline-none transition-all" value={formData.duration || ''} onChange={e => setFormData({ ...formData, duration: e.target.value })} placeholder="e.g. 2024" />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm text-gray-400 mb-2 font-medium">My Role</label>
-                                        <input className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-secondary-500 outline-none transition-all" value={formData.role || ''} onChange={e => setFormData({ ...formData, role: e.target.value })} />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm text-gray-400 mb-2 font-medium">Live URL</label>
-                                        <input className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-secondary-500 outline-none transition-all" value={formData.live_url || ''} onChange={e => setFormData({ ...formData, live_url: e.target.value })} />
+                                    <div className="w-12 h-12 rounded-xl border border-white/10 overflow-hidden shrink-0 bg-black/50">
+                                        {formData.hero_image_url && <img src={formData.hero_image_url} className="w-full h-full object-cover" />}
                                     </div>
                                 </div>
-
-                                <div>
-                                    <label className="block text-sm text-gray-400 mb-2 font-medium">Case Study Content</label>
-                                    <div className="border border-white/10 rounded-lg overflow-hidden">
-                                        <MarkdownEditor
-                                            value={formData.content || ''}
-                                            onChange={(val) => setFormData({ ...formData, content: val })}
-                                            height={600}
-                                            placeholder="# Work Overview\n\nTell the story of this work..."
-                                        />
-                                    </div>
+                                <div className="relative group">
+                                    <input type="file" id="hero-upload" className="hidden" accept="image/*" onChange={(e) => handleUpload(e, 'hero_image_url')} />
+                                    <label htmlFor="hero-upload" className={`flex flex-col items-center justify-center py-6 border-2 border-dashed border-white/10 rounded-2xl cursor-pointer hover:border-primary-500/50 hover:bg-white/5 transition-all ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
+                                        {uploading ? <Loader2 className="h-5 w-5 animate-spin text-primary-500" /> : <Upload className="h-5 w-5 text-gray-500 group-hover:text-primary-400 transition-colors" />}
+                                        <span className="text-[10px] font-bold uppercase tracking-widest mt-2 text-gray-500">Upload Hero Image</span>
+                                    </label>
                                 </div>
                             </div>
-                        </form>
-                    </div>
-
-                        <div className="flex justify-end gap-3 px-6 py-4 border-t border-white/5 bg-dark-900/95 z-20 shrink-0 relative">
-                            <button
-                                type="button"
-                                onClick={() => setEditing(null)}
-                                className="px-6 py-3 text-gray-400 hover:text-white transition-colors font-bold uppercase tracking-wider text-xs"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                type="submit"
-                                form="edit-work-form"
-                                className="bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-500 hover:to-secondary-500 text-white px-8 py-3 rounded-xl transition-all shadow-lg shadow-primary-500/20 hover:shadow-primary-500/40 flex items-center gap-2 font-bold uppercase tracking-wider text-xs"
-                            >
-                                <Save className="h-4 w-4" /> Save Work
-                            </button>
                         </div>
                     </div>
-                </div>,
-                document.body
-            )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {/* SECTION 3: CASE STUDY DETAILS */}
+                    <div className="space-y-6">
+                        <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-full bg-green-600/20 flex items-center justify-center text-green-400 text-xs font-bold">3</div>
+                            <h4 className="text-sm font-bold text-white uppercase tracking-widest">Case Study Context</h4>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white/[0.02] p-8 rounded-3xl border border-white/5 shadow-2xl">
+                            <div className="space-y-5">
+                                <div>
+                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-2 ml-1 flex items-center justify-between">
+                                        URL Slug
+                                        <button type="button" onClick={generateSlug} className="text-[9px] bg-primary-500/10 text-primary-400 px-2 py-0.5 rounded hover:bg-primary-500/20 transition-all">Generate</button>
+                                    </label>
+                                    <input type="text" value={formData.slug || ''} onChange={e => setFormData({ ...formData, slug: e.target.value })} className="w-full bg-dark-950 border border-white/5 rounded-2xl px-5 py-3 text-white font-mono text-sm outline-none focus:border-primary-500 transition-all" />
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-xs font-bold text-gray-500 uppercase mb-2 ml-1">Client Name</label>
+                                        <input type="text" value={formData.client || ''} onChange={e => setFormData({ ...formData, client: e.target.value })} className="w-full bg-dark-950 border border-white/5 rounded-2xl px-5 py-3 text-white outline-none focus:border-primary-500 transition-all" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold text-gray-500 uppercase mb-2 ml-1">Year</label>
+                                        <input type="text" value={formData.duration || ''} onChange={e => setFormData({ ...formData, duration: e.target.value })} className="w-full bg-dark-950 border border-white/5 rounded-2xl px-5 py-3 text-white outline-none focus:border-primary-500 transition-all" placeholder="e.g. 2024" />
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-xs font-bold text-gray-500 uppercase mb-2 ml-1">Role</label>
+                                        <input type="text" value={formData.role || ''} onChange={e => setFormData({ ...formData, role: e.target.value })} className="w-full bg-dark-950 border border-white/5 rounded-2xl px-5 py-3 text-white outline-none focus:border-primary-500 transition-all" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold text-gray-500 uppercase mb-2 ml-1">Live Link</label>
+                                        <input type="text" value={formData.live_url || ''} onChange={e => setFormData({ ...formData, live_url: e.target.value })} className="w-full bg-dark-950 border border-white/5 rounded-2xl px-5 py-3 text-white outline-none focus:border-primary-500 transition-all" />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-2 ml-1">Tech Tags (CSV)</label>
+                                    <input type="text" value={formData.tags ? formData.tags.join(', ') : ''} onChange={e => setFormData({ ...formData, tags: e.target.value.split(',').map(t => t.trim()) })} className="w-full bg-dark-950 border border-white/5 rounded-2xl px-5 py-3 text-white outline-none focus:border-primary-500 transition-all" placeholder="React, Figma, API..." />
+                                </div>
+                            </div>
+
+                            <div className="space-y-5">
+                                <div>
+                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-2 ml-1">The Challenge</label>
+                                    <textarea value={formData.challenge || ''} onChange={e => setFormData({ ...formData, challenge: e.target.value })} className="w-full bg-dark-950 border border-white/5 rounded-2xl px-5 py-3 text-white h-24 resize-none outline-none focus:border-primary-500 transition-all" />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-2 ml-1">Brand Requirements</label>
+                                    <textarea value={formData.brand_requirements || ''} onChange={e => setFormData({ ...formData, brand_requirements: e.target.value })} className="w-full bg-dark-950 border border-white/5 rounded-2xl px-5 py-3 text-white h-24 resize-none outline-none focus:border-primary-500 transition-all" />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-gray-500 uppercase mb-2 ml-1">What We Did</label>
+                                    <textarea value={formData.what_we_did || ''} onChange={e => setFormData({ ...formData, what_we_did: e.target.value })} className="w-full bg-dark-950 border border-white/5 rounded-2xl px-5 py-3 text-white h-24 resize-none outline-none focus:border-primary-500 transition-all" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* SECTION 4: DETAILED NARRATIVE */}
+                    <div className="space-y-6">
+                        <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-full bg-yellow-600/20 flex items-center justify-center text-yellow-400 text-xs font-bold">4</div>
+                            <h4 className="text-sm font-bold text-white uppercase tracking-widest">Case Study Narrative</h4>
+                        </div>
+
+                        <div className="bg-white/[0.02] p-8 rounded-3xl border border-white/5 shadow-2xl">
+                            <label className="block text-xs font-bold text-gray-500 uppercase mb-4 ml-1">In-Depth Project Breakdown (Markdown)</label>
+                            <div className="rounded-2xl overflow-hidden border border-white/5">
+                                <MarkdownEditor
+                                    value={formData.content || ''}
+                                    onChange={(val) => setFormData({ ...formData, content: val })}
+                                    height={600}
+                                    placeholder="# Work Overview\n\nTell the story of this work..."
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex justify-end gap-4 pt-10 border-t border-white/5">
+                        <button type="button" onClick={() => setEditing(null)} className="px-8 py-4 text-gray-400 hover:text-white font-bold transition-all">Discard Changes</button>
+                        <button type="submit" className="bg-primary-600 hover:bg-primary-500 text-white px-12 py-4 rounded-full flex items-center gap-2 font-bold shadow-2xl shadow-primary-600/30 transition-all hover:scale-[1.02] active:scale-[0.98]">
+                            <Save className="h-5 w-5" /> Save Progress
+                        </button>
+                    </div>
+                </form>
+            </div>
+        );
+    }
+
+    return (
+        <div className="space-y-8 animate-in fade-in duration-500">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h2 className="text-3xl font-bold text-white font-display">Portfolio Management</h2>
+                    <p className="text-gray-500 mt-1">Active Exhibition: {works.length} Projects</p>
+                </div>
+                <button
+                    onClick={handleAddNew}
+                    className="flex items-center gap-2 bg-primary-600 hover:bg-primary-500 text-white px-6 py-3 rounded-full font-bold shadow-lg shadow-primary-600/20 transition-all hover:scale-105 active:scale-95"
+                >
+                    <Plus className="h-5 w-5" /> Curate New Work
+                </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {works.map((work) => (
-                    <div key={work.id} className="bg-dark-900 border border-white/10 rounded-xl overflow-hidden group">
-                        <div className="h-48 overflow-hidden relative">
+                    <div key={work.id} className="bg-dark-900 border border-white/10 rounded-3xl overflow-hidden hover:border-primary-500/30 transition-all group relative flex flex-col">
+                        <div className="h-56 overflow-hidden relative">
                             <img
                                 src={work.image_url || 'https://via.placeholder.com/800x600?text=No+Image'}
                                 alt={work.title}
-                                className="w-full h-full object-cover"
+                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                             />
-                            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                                <button
-                                    onClick={() => handleEdit(work)}
-                                    className="p-2 bg-white text-black rounded-lg hover:bg-gray-200 transition-colors"
-                                >
-                                    <Edit2 className="h-4 w-4" />
-                                </button>
-                                <button
-                                    onClick={() => handleDelete(work.id)}
-                                    className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
-                                >
-                                    <Trash2 className="h-4 w-4" />
-                                </button>
+                            <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3 backdrop-blur-sm">
+                                <button onClick={() => handleEdit(work)} className="p-3 bg-white text-black rounded-xl hover:bg-primary-500 hover:text-white transition-all transform hover:scale-110"><Edit2 className="h-5 w-5" /></button>
+                                <button onClick={() => handleDelete(work.id)} className="p-3 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-all transform hover:scale-110"><Trash2 className="h-5 w-5" /></button>
+                            </div>
+                            <div className="absolute top-4 left-4 flex gap-2">
+                                {work.is_featured && <span className="bg-yellow-500 text-black text-[9px] font-black px-2 py-1 rounded shadow-lg uppercase tracking-tighter">Featured</span>}
+                                <span className="bg-primary-500 text-white text-[9px] font-black px-2 py-1 rounded shadow-lg uppercase tracking-tighter">{work.category}</span>
                             </div>
                         </div>
-                        <div className="p-4">
-                            <div className="flex justify-between items-start mb-2">
-                                <h3 className="font-bold text-white truncate">{work.title}</h3>
-                                <div className="flex gap-2 items-center">
-                                    {work.is_featured && (
-                                        <span className="text-xs bg-primary-500 text-white px-2 py-1 rounded font-bold">⭐ FEATURED</span>
-                                    )}
-                                    <span className="text-xs text-primary-400 bg-primary-500/10 px-2 py-1 rounded">{work.category}</span>
-                                </div>
+                        <div className="p-6 flex-1 flex flex-col">
+                            <h3 className="text-xl font-bold text-white mb-2 font-display">{work.title}</h3>
+                            <p className="text-gray-400 text-sm line-clamp-2 mb-4 leading-relaxed flex-grow">{work.description}</p>
+                            <div className="flex items-center justify-between pt-4 border-t border-white/5">
+                                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em] flex items-center gap-2">
+                                    <Link className="h-3 w-3" /> /{work.slug}
+                                </span>
+                                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em]">{work.duration}</span>
                             </div>
-                            <p className="text-gray-400 text-sm line-clamp-2 mb-2">{work.description}</p>
-                            {work.slug && <div className="text-xs text-gray-500 font-mono flex items-center gap-1"><Link className="h-3 w-3" /> /{work.slug}</div>}
                         </div>
                     </div>
                 ))}
+
+                {works.length === 0 && (
+                    <div className="col-span-full py-20 text-center space-y-4 bg-dark-900/50 rounded-3xl border border-dashed border-white/10">
+                        <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mx-auto"><ImageIcon className="h-8 w-8 text-gray-700" /></div>
+                        <p className="text-gray-500 font-medium">No works found in the collection.</p>
+                        <button onClick={handleAddNew} className="text-primary-400 hover:text-primary-300 font-bold uppercase text-xs tracking-widest">Start Curating →</button>
+                    </div>
+                )}
             </div>
         </div>
     );

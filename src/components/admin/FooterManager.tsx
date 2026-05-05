@@ -1,7 +1,6 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
-import { Save, Loader2, Linkedin, Youtube, Facebook, Instagram, Twitter, Mail, MessageCircle, MessageSquare, Image, Upload, Send } from 'lucide-react';
+import { Save, Loader2, Linkedin, Youtube, Facebook, Instagram, Twitter, Mail, MessageCircle, MessageSquare, Image, Upload, Send, ChevronRight } from 'lucide-react';
 
 const TikTokIcon = ({ className }: { className?: string }) => (
     <svg className={className} viewBox="0 0 24 24" fill="currentColor">
@@ -54,7 +53,6 @@ export default function FooterManager() {
                 .getPublicUrl(filePath);
 
             handleChange('fab_icon_url', publicUrl);
-            alert('FAB Icon uploaded!');
         } catch (error) {
             console.error('Error uploading:', error);
             alert('Error uploading icon!');
@@ -73,7 +71,7 @@ export default function FooterManager() {
 
             const { error } = await supabase.from('footer_content').upsert(updates, { onConflict: 'key_name' });
             if (error) throw error;
-            alert('Settings saved!');
+            alert('Configuration saved successfully!');
         } catch (error) {
             console.error(error);
             alert('Failed to save');
@@ -86,7 +84,11 @@ export default function FooterManager() {
         setLinks(prev => ({ ...prev, [key]: value }));
     };
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) return (
+        <div className="flex items-center justify-center py-20">
+            <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary-500 border-t-transparent"></div>
+        </div>
+    );
 
     const socialFields = [
         { key: 'contact_email', label: 'Contact Email', icon: Mail },
@@ -99,131 +101,145 @@ export default function FooterManager() {
     ];
 
     const fabFields = [
-        { key: 'whatsapp_url', label: 'WhatsApp URL (e.g. https://wa.me/...)', icon: MessageCircle },
-        { key: 'messenger_url', label: 'Messenger URL (e.g. https://m.me/...)', icon: MessageSquare },
+        { key: 'whatsapp_url', label: 'WhatsApp Link', icon: MessageCircle, placeholder: 'https://wa.me/...' },
+        { key: 'messenger_url', label: 'Messenger Link', icon: MessageSquare, placeholder: 'https://m.me/...' },
     ];
 
     const contactFormFields = [
-        { key: 'whatsapp_number', label: 'WhatsApp Number (e.g. 639123456789)', icon: MessageCircle, placeholder: '639123456789' },
-        { key: 'messenger_id', label: 'Facebook Page ID/Username', icon: MessageSquare, placeholder: 'your.page.username' },
-        { key: 'contact_email', label: 'Contact Email', icon: Mail, placeholder: 'hello@example.com' },
+        { key: 'whatsapp_number', label: 'WhatsApp Direct (API)', icon: MessageCircle, placeholder: '639123456789' },
+        { key: 'messenger_id', label: 'Facebook ID/User', icon: MessageSquare, placeholder: 'your.page.username' },
+        { key: 'contact_email', label: 'Contact Destination', icon: Mail, placeholder: 'hello@example.com' },
     ];
 
     return (
-        <div className="space-y-12 pb-20">
-            <div>
-                <h2 className="text-2xl font-bold text-white mb-6">Interaction Hub (FAB)</h2>
-                <div className="bg-dark-900 p-8 rounded-2xl border border-white/10 space-y-8">
-                    {/* FAB Icon Upload */}
-                    <div>
-                        <label className="block text-sm text-gray-400 mb-4 flex items-center gap-2">
-                            <Image className="h-4 w-4" /> Floating Button Picture
-                        </label>
-                        <div className="flex items-center gap-6">
-                            <div className="h-24 w-24 rounded-full bg-dark-950 border border-white/10 overflow-hidden shrink-0 flex items-center justify-center">
-                                {links.fab_icon_url ? (
-                                    <img src={links.fab_icon_url} alt="FAB Icon" className="h-full w-full object-cover" />
-                                ) : (
-                                    <Send className="h-8 w-8 text-white/20" />
-                                )}
-                            </div>
-                            <div className="flex-1">
-                                <input
-                                    type="file"
-                                    id="fab-upload"
-                                    className="hidden"
-                                    accept="image/*"
-                                    onChange={handleUpload}
-                                    disabled={uploading}
-                                />
-                                <label
-                                    htmlFor="fab-upload"
-                                    className={`flex items-center justify-center gap-3 w-full py-4 border-2 border-dashed border-white/10 rounded-xl cursor-pointer hover:border-primary-500/50 hover:bg-white/5 transition-all ${uploading ? 'opacity-50' : ''}`}
-                                >
-                                    {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4 text-primary-500" />}
-                                    <span className="text-xs font-bold uppercase tracking-widest text-white/40">Upload Brand Icon</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {fabFields.map(({ key, label, icon: Icon }) => (
-                            <div key={key}>
-                                <label className="block text-sm text-gray-400 mb-2 flex items-center gap-2">
-                                    <Icon className="h-3 w-3" /> {label}
-                                </label>
-                                <input
-                                    className="w-full bg-dark-950 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:border-primary-500 transition-colors"
-                                    value={links[key] || ''}
-                                    onChange={e => handleChange(key, e.target.value)}
-                                    placeholder={`https://...`}
-                                />
-                            </div>
-                        ))}
-                    </div>
+        <div className="max-w-5xl mx-auto pb-20 animate-in fade-in duration-500">
+            {/* STICKY HEADER */}
+            <div className="flex items-center justify-between mb-12 sticky top-0 z-20 bg-dark-950/80 backdrop-blur-md py-4 border-b border-white/5">
+                <div>
+                    <h2 className="text-3xl font-bold text-white font-display">Branding & Interaction</h2>
+                    <p className="text-sm text-gray-500">Configure how your brand connects with the world.</p>
                 </div>
-            </div>
-
-            <div>
-                <h2 className="text-2xl font-bold text-white mb-6">Contact Form Messaging</h2>
-                <p className="text-sm text-gray-400 mb-4">Configure instant messaging options shown after form submission</p>
-                <div className="bg-dark-900 p-8 rounded-2xl border border-white/10 space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {contactFormFields.map(({ key, label, icon: Icon, placeholder }) => (
-                            <div key={key}>
-                                <label className="block text-sm text-gray-400 mb-2 flex items-center gap-2">
-                                    <Icon className="h-3 w-3" /> {label}
-                                </label>
-                                <input
-                                    className="w-full bg-dark-950 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:border-primary-500 transition-colors"
-                                    value={links[key] || ''}
-                                    onChange={e => handleChange(key, e.target.value)}
-                                    placeholder={placeholder}
-                                />
-                            </div>
-                        ))}
-                    </div>
-                    <div className="mt-4 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
-                        <p className="text-xs text-blue-400 leading-relaxed">
-                            <strong>WhatsApp:</strong> Use international format without + or spaces (e.g., 639123456789)<br />
-                            <strong>Messenger:</strong> Your Facebook Page username or ID (found in Page settings)<br />
-                            <strong>Email:</strong> The email address where inquiries should be sent
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div>
-                <h2 className="text-2xl font-bold text-white mb-6">Social Context</h2>
-                <div className="bg-dark-900 p-8 rounded-2xl border border-white/10 space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {socialFields.map(({ key, label, icon: Icon }) => (
-                            <div key={key}>
-                                <label className="block text-sm text-gray-400 mb-2 flex items-center gap-2">
-                                    <Icon className="h-3 w-3" /> {label}
-                                </label>
-                                <input
-                                    className="w-full bg-dark-950 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:border-primary-500 transition-colors"
-                                    value={links[key] || ''}
-                                    onChange={e => handleChange(key, e.target.value)}
-                                    placeholder={`https://...`}
-                                />
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </div>
-
-            <div className="sticky bottom-10 flex justify-end">
                 <button
                     onClick={handleSave}
                     disabled={saving}
-                    className="bg-primary-600 hover:bg-primary-500 text-white px-10 py-4 rounded-full flex items-center gap-3 shadow-2xl shadow-primary-500/20 font-bold uppercase tracking-widest text-xs transition-all hover:scale-105 active:scale-95"
+                    className="bg-primary-600 hover:bg-primary-500 text-white px-10 py-3 rounded-full flex items-center gap-2 font-bold shadow-xl shadow-primary-600/20 transition-all hover:scale-105 active:scale-95 disabled:opacity-50"
                 >
                     {saving ? <Loader2 className="h-5 w-5 animate-spin" /> : <Save className="h-5 w-5" />}
-                    Lock In Configuration
+                    Save Branding
                 </button>
+            </div>
+
+            <div className="space-y-16">
+                {/* SECTION 1: INTERACTION HUB */}
+                <div className="space-y-6">
+                    <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-primary-600/20 flex items-center justify-center text-primary-400 text-xs font-bold">1</div>
+                        <h4 className="text-sm font-bold text-white uppercase tracking-widest">Floating Interaction (FAB)</h4>
+                    </div>
+
+                    <div className="bg-white/[0.02] p-8 rounded-3xl border border-white/5 shadow-2xl space-y-8">
+                        <div>
+                            <label className="block text-xs font-bold text-gray-500 uppercase mb-4 ml-1 flex items-center gap-2">
+                                <Image className="h-3 w-3" /> Floating Button Profile
+                            </label>
+                            <div className="flex items-center gap-8">
+                                <div className="h-24 w-24 rounded-full bg-dark-950 border border-white/5 overflow-hidden shrink-0 flex items-center justify-center shadow-2xl relative group">
+                                    {links.fab_icon_url ? (
+                                        <img src={links.fab_icon_url} alt="" className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                                    ) : (
+                                        <Send className="h-8 w-8 text-white/10" />
+                                    )}
+                                </div>
+                                <div className="flex-1 max-w-sm">
+                                    <input type="file" id="fab-upload" className="hidden" accept="image/*" onChange={handleUpload} disabled={uploading} />
+                                    <label htmlFor="fab-upload" className={`flex items-center justify-center gap-3 w-full py-5 border-2 border-dashed border-white/10 rounded-2xl cursor-pointer hover:border-primary-500/50 hover:bg-white/5 transition-all ${uploading ? 'opacity-50' : ''}`}>
+                                        {uploading ? <Loader2 className="h-5 w-5 animate-spin text-primary-500" /> : <Upload className="h-5 w-5 text-primary-500" />}
+                                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">Update Profile Pic</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+                            {fabFields.map(({ key, label, icon: Icon, placeholder }) => (
+                                <div key={key}>
+                                    <label className="block text-[10px] font-black text-gray-500 uppercase tracking-widest mb-3 ml-1 flex items-center gap-2">
+                                        <Icon className="h-3 w-3" /> {label}
+                                    </label>
+                                    <input
+                                        className="w-full bg-dark-950 border border-white/5 rounded-2xl px-5 py-4 text-white text-sm focus:border-primary-500 outline-none focus:ring-1 focus:ring-primary-500/50 transition-all font-mono"
+                                        value={links[key] || ''}
+                                        onChange={e => handleChange(key, e.target.value)}
+                                        placeholder={placeholder}
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                {/* SECTION 2: MESSAGING LOGIC */}
+                <div className="space-y-6">
+                    <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-secondary-600/20 flex items-center justify-center text-secondary-400 text-xs font-bold">2</div>
+                        <h4 className="text-sm font-bold text-white uppercase tracking-widest">Inquiry Routing</h4>
+                    </div>
+
+                    <div className="bg-white/[0.02] p-8 rounded-3xl border border-white/5 shadow-2xl">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            {contactFormFields.map(({ key, label, icon: Icon, placeholder }) => (
+                                <div key={key}>
+                                    <label className="block text-[10px] font-black text-gray-500 uppercase tracking-widest mb-3 ml-1 flex items-center gap-2">
+                                        <Icon className="h-3 w-3" /> {label}
+                                    </label>
+                                    <input
+                                        className="w-full bg-dark-950 border border-white/5 rounded-2xl px-5 py-4 text-white text-sm focus:border-primary-500 outline-none focus:ring-1 focus:ring-primary-500/50 transition-all"
+                                        value={links[key] || ''}
+                                        onChange={e => handleChange(key, e.target.value)}
+                                        placeholder={placeholder}
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                        <div className="mt-8 p-6 bg-blue-500/5 border border-blue-500/10 rounded-2xl flex gap-4">
+                            <div className="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400 shrink-0 mt-1 uppercase font-bold text-xs">!</div>
+                            <div className="space-y-2">
+                                <p className="text-xs text-blue-400/80 font-bold uppercase tracking-widest">Setup Guide</p>
+                                <p className="text-xs text-blue-400/60 leading-relaxed">
+                                    <strong>WhatsApp:</strong> Use international format (639123456789). No + or spaces.<br />
+                                    <strong>Messenger:</strong> Use your Facebook Page username (found in page settings).<br />
+                                    <strong>Email:</strong> Primary address for system notifications and client replies.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* SECTION 3: SOCIAL CONTEXT */}
+                <div className="space-y-6">
+                    <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-green-600/20 flex items-center justify-center text-green-400 text-xs font-bold">3</div>
+                        <h4 className="text-sm font-bold text-white uppercase tracking-widest">Global Social Links</h4>
+                    </div>
+
+                    <div className="bg-white/[0.02] p-8 rounded-3xl border border-white/5 shadow-2xl">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {socialFields.map(({ key, label, icon: Icon }) => (
+                                <div key={key}>
+                                    <label className="block text-[10px] font-black text-gray-500 uppercase tracking-widest mb-3 ml-1 flex items-center gap-2">
+                                        <Icon className="h-3.5 w-3.5" /> {label}
+                                    </label>
+                                    <input
+                                        className="w-full bg-dark-950 border border-white/5 rounded-2xl px-5 py-4 text-white text-sm focus:border-primary-500 outline-none focus:ring-1 focus:ring-primary-500/50 transition-all font-mono"
+                                        value={links[key] || ''}
+                                        onChange={e => handleChange(key, e.target.value)}
+                                        placeholder="https://..."
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );

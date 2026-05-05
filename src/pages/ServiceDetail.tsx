@@ -261,28 +261,38 @@ export default function ServiceDetail() {
     );
 
     const featureIcons = [Sparkles, Zap, Shield, Target];
-    const features = service.features || ['Premium Integration', 'Strategic Thinking', 'Technical Excellence', 'Measured Results'];
+    const features = service.features?.length > 0 ? service.features : [
+        { title: 'Strategic Planning', description: 'Data-driven roadmaps tailored to your specific business goals and target audience.' },
+        { title: 'Creative Execution', description: 'High-impact visual and narrative storytelling that captures attention and builds brand equity.' },
+        { title: 'Performance Focus', description: 'Relentless optimization to ensure every initiative delivers measurable results and ROI.' },
+        { title: 'Quality Assurance', description: 'Meticulous attention to detail and adherence to the highest industry standards of excellence.' }
+    ];
     const deliverables = service.deliverables || [];
-    const processSteps = service.process_steps || [];
+    const processSteps = service.process_steps?.length > 0 ? service.process_steps : [
+        { title: 'Discovery & Audit', phase: '01', duration: '1 Week', description: 'We dive deep into your current state, market position, and competitors to identify opportunities.' },
+        { title: 'Strategy Development', phase: '02', duration: '1-2 Weeks', description: 'A comprehensive roadmap is created, aligning creative vision with business objectives.' },
+        { title: 'Implementation', phase: '03', duration: 'Ongoing', description: 'Our team executes the strategy with precision, focusing on quality and consistency across all touchpoints.' },
+        { title: 'Review & Optimize', phase: '04', duration: 'Monthly', description: 'Continuous monitoring and data-driven adjustments to ensure long-term growth and success.' }
+    ];
     const faqs = service.faqs || [];
     const pricingTiers = service.pricing_tiers || [];
     const testimonials = service.testimonials || [];
     const tools = service.tools_used || [];
-    const stats = service.stats || [
-        { value: '300%', label: 'Average ROI' },
-        { value: '48hr', label: 'Response Time' },
+    const stats = service.stats?.length > 0 ? service.stats : [
+        { value: '100%', label: 'Commitment' },
+        { value: '24/7', label: 'Support' },
         { value: '98%', label: 'Satisfaction' },
-        { value: '50+', label: 'Delivered' },
+        { value: '50+', label: 'Clients' },
     ];
 
-    // Default scope items from features
+    // Default scope items
     const scopeItems = service.deliverables?.length > 0
-        ? service.deliverables.map((d: any) => ({ title: d.item, description: d.format, items: [] }))
+        ? service.deliverables.map((d: any) => ({ title: d.item, description: d.format || 'Professional delivery', items: [] }))
         : [
-            { title: 'Strategy & Research', description: 'Market research, competitor analysis, user personas, brand positioning.', items: ['Market Research', 'Competitor Audit', 'User Personas', 'Brand Positioning'] },
-            { title: 'Design & Prototyping', description: 'High-fidelity design and interactive prototyping.', items: ['UI/UX Design', 'Figma Prototypes', 'Design System', 'Responsive Layouts'] },
-            { title: 'Development & QA', description: 'Clean code, rigorous testing, performance optimization.', items: ['Frontend Development', 'Backend Integration', 'QA Testing', 'Performance Audit'] },
-            { title: 'Launch & Training', description: 'Deployment, onboarding, and handover documentation.', items: ['Deployment', 'Client Training', 'Documentation', 'Post-Launch Support'] },
+            { title: 'Analysis & Strategy', description: 'Comprehensive research and data-backed planning for your brand.', items: ['Market Research', 'Competitor Audit', 'Brand Positioning', 'Action Plan'] },
+            { title: 'Creative Direction', description: 'Establishing the visual and narrative voice of your presence.', items: ['Visual Identity', 'Tone of Voice', 'Content Strategy', 'Design Systems'] },
+            { title: 'Execution & Management', description: 'Professional implementation and day-to-day operations.', items: ['Production', 'Scheduling', 'Quality Control', 'Engagement'] },
+            { title: 'Reporting & Insights', description: 'Measuring success and identifying growth opportunities.', items: ['Data Analytics', 'Performance Reports', 'ROI Analysis', 'Future Roadmap'] },
         ];
 
     // S-28: JSON-LD

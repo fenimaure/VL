@@ -78,10 +78,10 @@ function HorizontalShowcase({ works }: { works: Work[] }) {
     if (works.length === 0) return null;
 
     return (
-        <section ref={containerRef} className="relative" style={{ height: `${works.length * 100}vh` }}>
+        <section ref={containerRef} className="relative" style={{ height: `${works.length * 60}vh` }}>
             <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
                 {/* Section label */}
-                <div className="max-w-7xl mx-auto px-6 lg:px-8 w-full mb-8">
+                <div className="max-w-7xl mx-auto px-6 lg:px-8 w-full mb-4">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -142,7 +142,7 @@ function HorizontalShowcase({ works }: { works: Work[] }) {
                 </motion.div>
 
                 {/* Progress bar */}
-                <div className="max-w-7xl mx-auto px-6 lg:px-8 w-full mt-8">
+                <div className="max-w-7xl mx-auto px-6 lg:px-8 w-full mt-4">
                     <div className="relative h-[2px] bg-black/10 dark:bg-white/10 rounded-full overflow-hidden">
                         <motion.div
                             className="absolute inset-y-0 left-0 bg-primary-500 rounded-full"
@@ -172,7 +172,7 @@ function FeaturedSpotlight({ work }: { work: Work }) {
         <motion.section
             ref={ref}
             style={{ opacity: bgOpacity }}
-            className="relative min-h-[50vh] md:min-h-[60vh] flex items-center justify-center overflow-hidden rounded-2xl mx-4 sm:mx-6 lg:mx-8 mb-16"
+            className="relative min-h-[50vh] md:min-h-[60vh] flex items-center justify-center overflow-hidden rounded-2xl mx-4 sm:mx-6 lg:mx-8 mb-6"
         >
             {/* Background */}
             <motion.div className="absolute inset-0 z-0" style={{ scale: bgScale }}>
@@ -400,7 +400,7 @@ export default function Works() {
             <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(99,102,241,0.08),transparent_60%)] dark:bg-[radial-gradient(circle_at_50%_50%,rgba(99,102,241,0.04),transparent_60%)]" />
 
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-40 pb-32">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-40 pb-12">
                     <div className="text-center max-w-5xl mx-auto">
                         {/* Label */}
                         <motion.div
@@ -415,7 +415,7 @@ export default function Works() {
                         </motion.div>
 
                         {/* Title — word-level reveal */}
-                        <div className="mb-16">
+                        <div className="mb-12">
                             <h1 className="flex flex-col items-center leading-[0.85]">
                                 <div className="overflow-hidden">
                                     <motion.span
@@ -445,7 +445,7 @@ export default function Works() {
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 1, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                            className="text-xl sm:text-2xl text-black/60 dark:text-gray-400 leading-relaxed max-w-3xl mx-auto mb-20 font-light"
+                            className="text-xl sm:text-2xl text-black/60 dark:text-gray-400 leading-relaxed max-w-3xl mx-auto mb-16 font-light"
                         >
                             A curated collection of <span className="text-primary-500 dark:text-white font-semibold">transformative</span> digital experiences where strategy meets craft.
                         </motion.p>
@@ -506,7 +506,7 @@ export default function Works() {
             )}
 
             {/* ═══ FILTER BAR WITH COUNTS + W-7 SEARCH + W-8 VIEW TOGGLE ═══ */}
-            <section className="py-6 sticky top-24 z-40 backdrop-blur-2xl bg-white/80 dark:bg-dark-950/80 border-y border-black/5 dark:border-white/5 shadow-sm transition-colors duration-500">
+            <section className="py-3 sticky top-20 z-40 backdrop-blur-2xl bg-white/80 dark:bg-dark-950/80 border-y border-black/5 dark:border-white/5 shadow-sm transition-colors duration-500">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex items-center gap-4 flex-wrap">
                         {/* Filter icon */}
@@ -590,7 +590,7 @@ export default function Works() {
             </section>
 
             {/* ═══ W-2: MASONRY GRID / W-8: LIST VIEW ═══ */}
-            <section className="py-24 md:py-32 relative">
+            <section className="pt-4 pb-24 md:pt-6 md:pb-32 relative">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     {loading ? (
                         <div className="flex items-center justify-center py-40">
@@ -620,7 +620,7 @@ export default function Works() {
                         </div>
                     ) : (
                         <>
-                            <div className="flex items-center justify-between mb-16">
+                            <div className="flex items-center justify-between mb-4">
                                 <div className="text-black/30 dark:text-gray-600 text-sm">
                                     Showing <span className="text-black dark:text-white font-bold">{visibleWorks.length}</span> of <span className="text-black dark:text-white font-bold">{filteredWorks.length}</span> {filteredWorks.length === 1 ? 'work' : 'works'}
                                 </div>
